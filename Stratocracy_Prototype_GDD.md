@@ -591,7 +591,7 @@ The first match runs on the one shipped scenario at **Easy** by default (player 
 
 | Turn | Constraint | Directive | Teaches | Retires when |
 |---|---|---|---|---|
-| 1a | Only one marked Infantry selectable; others dimmed (hover: `Locked this turn.`). End Turn is inert until that Infantry has moved (hover: `Move the marked Infantry first.`) — this is what makes 1a retire inside turn 1 in every branch, and it is the only guided-opening constraint that gates a player *input* rather than a selection, so it is carried as **pending Q27** (§4.7) rather than adopted silently | `Select the marked Infantry. Lit hexes are its true reach. Click one to move.` | Selection; the highlight is the real move set (§2.5) | Move completes |
+| 1a | Only one marked Infantry selectable; others dimmed (hover: `Locked this turn.`). End Turn is inert until that Infantry has moved (hover: `Move the marked Infantry first.`) — this is what makes 1a retire inside turn 1 in every branch, and it is the only guided-opening constraint that gates a player *input* rather than a selection, adopted under **Q27** (§4.7), ruled — it was registered rather than assumed because it gates an input | `Select the marked Infantry. Lit hexes are its true reach. Click one to move.` | Selection; the highlight is the real move set (§2.5) | Move completes |
 | 1b | End Turn pulses | `End turn. The enemy moves; then you.` | IGOUGO (§2.1) — the player watches a full AI turn | Enemy turn ends |
 | 2 *(standing)* | None on selection. The scenario's designated neutral factory (`guidedOpening.objective`, §2.13.1) is ringed from turn 1; its info-panel line appends `Only Infantry captures.` | `Move the Infantry onto the ringed Factory. Only Infantry captures.` | Capture; the Infantry-only rule (§2.7) | A capture pip appears — on whatever turn that happens. *Standing* means it stays **outstanding**, not that it holds the strip. How many turns it actually holds the line is decided by rules 1–2 and by when the pip lands, and the schedule table's three branches are exhaustive: **twice** — turn 2, then a turn-4 rule-2 last call, if the pip has still not landed (wandered); **once** — turn 2 only, retiring on a turn-2 or turn-3 pip; or **never** — the pip lands on turn 1 and beat 2 retires before rule 1 can select it (fast lane). On every turn it does not hold the line it runs on the ring and the unit marker. Hard-expires at end of turn 4 |
 | 3 | None. Fame ≥ 100 guaranteed by 200 start + home income (§2.7) | `Spend Fame at your Factory. Infantry costs 100.` | Fame → factory → unit | A unit spawns — on whatever turn that happens, including turn 1 |
@@ -728,10 +728,11 @@ throttle.
   rectangle has a *vertical* mirror axis at any dimension and no map in the
   set is drawn to the *horizontal* one, which exists only on an odd row
   count (see the symmetry note at the end of this section); and `rot180` is
-  well-formed only on an **even row count**. Both constraints are pending
-  Q24, §4.7. Whether the horizontal mirror is worth a third enum value — it
-  being available and merely unused rather than impossible — is **Q26**, which
-  owns that question in full.
+  well-formed only on an **even row count**. Both constraints are **ruled**
+  (Q24, §4.7) and are the shipped rule, not an assumption awaiting one.
+  Whether the horizontal mirror was worth a third enum value — it being
+  available and merely unused rather than impossible — was **answered no at
+  Q26**: the enum stays at two values and T-SCN-10 stays unwritten.
 - **Opening-capture reachability** — the invariant the guided opening
   (§2.11.6-B, turn 2) rests on, and the reason it can cite a scenario
   guarantee at all. For **each seat**, at least one Infantry deployment hex
@@ -763,13 +764,53 @@ throttle.
      *Longwater March* carries 2 MP of slack on both lanes, *The Causeway* 3
      on both; being symmetric, each carries the *same* slack in both seats,
      which is what makes them usable as controlled tests. Both stretch lanes
-     are also clear of that seat's own four other starting units, so they
-     price identically under either reading of Q21 (§4.7) — the shipped map
-     is the only one whose numbers a Q21 ruling could move.
-  3. **Uncontested, not merely reachable.** The designated lane is the seat's
-     *own* neutral — West → South, East → North on the shipped map — so the
-     first lesson is not a race. Player-first IGOUGO (§2.1) also means the
-     player occupies the hex before the AI's second turn.
+     are also clear of that seat's own four other starting units. Since the
+     Q22/Q28 fix moved East's second Infantry to (9,1), which lies on none of
+     the eight routes *Ferrum Crossing* prices, **no map's numbers move under
+     either reading of Q21 (§4.7) as drawn** — Q21 is ruled terrain-only, and
+     the shipped map is simply the one where a *future* deployment edit
+     landing in a priced route would flip a gate.
+  3. **Uncontested, and exactly what that buys.** The designated lane is the
+     seat's *own* neutral — West → South, East → North on the shipped map —
+     and under Q22/Q28 that is a **measured inequality**, not an authorial
+     claim: the opposing seat's cheapest Infantry route to the same
+     objective, ranging over **every** Infantry that seat deploys, must cost
+     **strictly more MP** than the owning seat's lane (T-SCN-11, §4.7).
+     Measured on the set: *Ferrum Crossing* **5 against 6** in both seats,
+     *The Causeway* **3 against 5**, *Longwater March* **4 against 8**.
+
+     An earlier draft of this note said "the first lesson is not a race" and
+     stopped there. That was wrong on both counts. It was unmeasured; and on
+     the shipped map as first drawn, East's *second* Infantry at (9,5) tied
+     West's South lane at 5 MP flat — a race under any reading, and the
+     reason §2.13.2's deployment now reads (9,1). What is true, stated at
+     the resolution the number supports:
+
+     - **No opposing Infantry can arrive for fewer MP.** That is the whole
+       of the inequality, it holds on all six lanes in the set, and it is
+       the property the gate checks.
+     - **On the shipped map it does not buy a turn.** 5 MP and 6 MP are
+       *both* two turns at Infantry Move 3 (§2.4). A 1 MP margin is daylight
+       in movement points, not in turns. What converts it into "you get
+       there first" is **player-first IGOUGO** (§2.1): the player's seat
+       moves before the AI inside every turn, so on the shared arrival turn
+       the player stands on the factory hex first and an opposing Infantry
+       walking the same lane finds the hex occupied and the capture pip
+       already placed.
+     - **Deployment carries the rest of the load, and is meant to.** After
+       the correction neither East Infantry has a cheaper errand in the
+       south: both sit 5 MP from East's *own* North objective and 6–7 MP
+       from West's South one. The southern contest is not merely lost on
+       distance, it is uneconomic — which is a stronger guarantee than the
+       gate can express and a weaker one than the gate can enforce, so the
+       gate keeps the inequality and this note keeps the reasoning.
+     - **The stretch maps do buy a turn**, and that is the difference an
+       honest note has to show. *The Causeway*'s 3-against-5 is a one-turn
+       lane against a two-turn one; *Longwater March*'s 4-against-8 is two
+       turns against three. The shipped map is the tightest in the set, on
+       slack (1 MP, note 2) and on contest (1 MP) alike, and both facts have
+       the same cause: it is the only map in the set that is not drawn to a
+       symmetry.
 
   **Declared symmetry does imply equal lane cost — and that is what makes it
   worth declaring.** A 180° rotation of a hex board is an isometry: it
@@ -804,8 +845,9 @@ throttle.
      such an axis and is deliberately not drawn to it (§2.13.4) — an
      asymmetry that is a design choice, not a geometric accident. Whether a
      horizontal `mirror` therefore becomes a declarable value alongside
-     `rot180`, with an odd-row-count precondition, is open as **Q26** (§4.7),
-     which owns that question; no map in the set declares one today.
+     `rot180`, with an odd-row-count precondition, was **answered no at Q26**
+     (§4.7): the enum stays at two values and T-SCN-10 stays unwritten. No map
+     in the set declares one, and a later ruling could add it purely additively.
   2. **An odd-r rectangle admits a 180° rotation only when the row count is
      even.** The rotation pairs row r with row H−1−r. With H odd those two
      rows share a parity, so each must land on a row carrying the same ½-hex
@@ -874,9 +916,77 @@ default.
 | Unit | West | East |
 |---|---|---|
 | Flag Tank | (0,4) | (10,4) |
-| Infantry ×2 | (1,3), (1,5) | (9,3), (9,5) |
+| Infantry ×2 | (1,3), **(1,5)** | **(9,3)**, (9,1) |
 | Artillery | (0,3) | (10,5) |
 | Recon | (0,5) | (10,3) |
+
+**Guided opening** (§2.13.1). `guidedOpening.infantry` = **(1,5)** West /
+**(9,3)** East; `guidedOpening.objective` = **South (5,7)** West / **North
+(6,2)** East. Distinct objectives (T-SCN-07); **5 MP each**, Bridge-free
+(T-SCN-06); 1 MP of slack against the 6 MP ceiling, in both seats. This map
+previously named its guided units only in §2.13.1's lane table; they are
+declared here now, with the map they belong to.
+
+**Non-contention, measured (T-SCN-11; Q22 ruled, Q28 ruled).** Q28 rules
+that "the opposing seat's Infantry" means **every** Infantry that seat owns,
+not only its marked guided unit — so this map is checked on **eight** routes,
+not two. All eight, priced identically: Stub-3 cheapest path, terrain alone
+with occupancy excluded (Q21), every hex entered counted including the
+objective, Bridges permitted on opposing routes and forbidden on the two
+guided lanes.
+
+| Infantry | → North **(6,2)** | → South **(5,7)** |
+|---|---|---|
+| West (1,3) | **6** — (2,3)(3,2)(4,2)(4,1)(5,1)B(6,2) | **6** — (2,4)(3,4)(3,5)(4,5)(5,6)(5,7) |
+| West **(1,5)** *guided* | 7 — (2,4)(2,3)(3,2)(3,1)T(4,1)(5,1)B(6,2) | **5** — (2,6)(3,6)(3,7)(4,7)(5,7) |
+| East **(9,3)** *guided* | **5** — (8,3)(7,3)(6,3)w(6,2) | **6** — (9,4)F(8,5)(8,6)(7,7)(6,7)(5,7) |
+| East (9,1) | 5 — (9,2)(8,2)(7,2)w(6,2) | **7** — (9,2)(8,3)(8,4)(7,5)(7,6)T(6,7)(5,7) |
+
+**Both entries pass, and both report the same pair: 5 against 6.** West's
+South lane costs 5; East's cheapest Infantry route to (5,7) costs 6, from
+the guided hex (9,3). East's North lane costs 5; West's cheapest route to
+(6,2) costs 6, from (1,3) over the north Bridge. Strictly longer in both
+seats, which is the ruled comparison — equality fails, and equality is what
+this map used to report.
+
+Two structural facts the table makes visible. **Every route to North costs
+exactly 1 MP more than its hex distance**, because the Water column forces
+West onto a Bridge and the Woods ring — (6,1)(7,2)(6,3), the only land
+approaches to (6,2) that are not the Bridge — forces East through cover.
+**Every route to South is a plain geodesic at 1 MP per hex**, because rows
+6–8 are open Plains that the two pass Mountains do not close. That is the
+map's economy in two lines: the north is priced by terrain, the south is
+priced by distance alone, and the south is therefore the half where
+deployment is the *only* thing standing between two Infantry and the same
+factory.
+
+**Why East's second Infantry sits at (9,1) and not (9,5).** At (9,5) it was
+5 MP from *West's* South objective — a dead tie with West's own lane, which
+T-SCN-11 refuses, correctly: a tie is a race and a race is what the
+invariant exists to prevent. It could not be nudged and stay southern.
+Every **free** hex in East's southern quarter measures 4–5 MP to (5,7); the
+only two hexes down there that clear 5 are (10,5) and (10,4) — the
+Artillery's and the Flag Tank's — so staying southern means pushing a
+fragile ranged unit or the flag itself onto the outer column for 1 MP of
+margin. The cause is geometric and worth stating: East's south town (7,6)
+is only 2 hexes from South (5,7), so by the triangle inequality anything
+within 3 MP of that town is within 5 MP of that factory. A capturer that
+covers East's southern town is *necessarily* a racer for West's southern
+factory.
+
+So the fix is a change of flank, not a shuffle — and it costs East nothing
+in opening income. East's second Infantry was ever only the early capturer
+for **one** town; at (9,1) it is adjacent to the north town **(8,1)** and
+captures on turn 1 exactly as it did at (9,5) for (7,6). One town in the
+opening either way; north instead of south. What East actually gives up is
+the southern picket: town (7,6) now waits for a turn-1 Infantry build — 100
+of the 200 starting Fame (§2.7), spawning on the deliberately empty home
+factory (9,4), 3 MP and therefore one turn from (7,6) — and East's opening
+south flank is Artillery (10,5) behind the Flag Tank (10,4). That is a
+one-turn, 25-Fame-per-turn delay on one town, paid for out of starting Fame,
+against a guided lane that stops being a race. It is also the deployment
+finally agreeing with the sentence this section has always printed: *East's
+prize is North.*
 
 **Terrain as economics, hex by hex.** The river spans rows 0–5 only, crossed
 at two Bridges (−10% defense, §2.3): a unit forcing a crossing under
@@ -903,13 +1013,21 @@ into halves that lose either fight.
 
 **Asymmetry and its handicap story.** Starting Fame and forces are
 identical; the asymmetry is purely spatial and intended to be
-self-balancing — each seat is closer to a different neutral factory, and
-each seat's advantage (West: tempo and open approaches; East: cover and a
-crossing-free path to its prize) is the other's problem. If §4.1 self-play
-shows either seat above ~55% win rate, the corrective is the existing §2.9
-dial — a per-seat starting-Fame offset — never a terrain rework. This is
-also the replay lever: the two seats are two different deterministic
-puzzles (see 2.13.4).
+self-balancing. Each seat is closer to a *different* neutral factory —
+measured, and by exactly **1 MP in each seat**: West's cheapest Infantry
+route is **5 MP to South against 6 to North**, East's is **5 MP to North
+against 6 to South** (all four figures in the eight-route table above).
+Earlier drafts asserted that sentence without pricing it, and for East it
+was simply false: with an Infantry at (9,5), East was **equidistant** — 5 MP
+to South and 5 MP to North — so the seat the map called the northern one had
+no measurable preference at all, and West's southern lane was a tie rather
+than a lane. The deployment above is what makes the sentence true, and the
+four numbers, not the sentence, are the claim. Each seat's advantage (West:
+tempo and open approaches; East: cover and a crossing-free path to its
+prize) is the other's problem. If §4.1 self-play shows either seat above
+~55% win rate, the corrective is the existing §2.9 dial — a per-seat
+starting-Fame offset — never a terrain rework. This is also the replay
+lever: the two seats are two different deterministic puzzles (see 2.13.4).
 
 **If one side holds both bridges:** the other side is not locked out — the
 southern pass exists precisely so bridge control here is *tempo*, not a
@@ -1269,15 +1387,15 @@ Author the **core in C++ with the agent** (the on-thesis path — hex math, path
 
 | Wk | Goal |
 |---|---|
-| 1 | Headless C++ core (grid, units, move, combat, win) **+ test suite.** Playable via debug commands. **UI-scaffolder agent starts UMG widget skeletons in parallel** — the whole game is played through UI, so it can't wait until wk 2. |
-| 2 | Engine presentation + UI wiring (select/move/attack) onto the wk-1 skeletons, plus the one scenario loading, validating and rendering. **Move + attack only** — no capture, no production, no AI opponent. |
-| 3 | Capture + production (§4.11 rows 4–5), then the baseline objective-seeker AI (row 6) → **working vertical slice.** AI second pass (utility + threat map) and the custom MCP scenario toolset follow only if the slice lands early; both are off the critical path (§4.2, §4.11). |
-| 4 | Self-play balance sims and tuning; scenario polish (additional scenarios only as stretch). |
-| 5 | UI polish, feedback/juice, save/load, onboarding. |
+| 1 | Headless C++ core — §4.11 **rows 1–3** (grid and hex math, the §4.8 tables, movement and pathfinding) on top of the already-verified Combat/Repair at `5ffa8d6` — **+ test suite.** Playable via debug commands. Win and tiebreak detection is **row 5**, bundled with the turn loop and landing wk 3 (Q23); this cell used to name it here, one week ahead of the Capture & Fame row it depends on. **UI-scaffolder agent starts UMG widget skeletons in parallel** — the whole game is played through UI, so it can't wait until wk 2. |
+| 2 | Engine presentation + UI wiring (select/move/attack) onto the wk-1 skeletons, plus the one scenario loading, validating and rendering, **and the §4.10 save/replay format + headless replayer** (Q20, ruled). The format is a *test instrument*, not a feature: T-INT-02's input file is a save, so the week-2 parity gate cannot run without it — and neither can the week-4 self-play logs (T-SAVE-07). **Week 2's command set is exactly `{Move, Attack}`** (§4.9): `Capture`, `Build` and `EndTurn` arrive with §4.11 rows 4–5 in wk 3, so a wk-2 log's entries are all `{turn 1, one side}`. The wk-2 parity and replay gates therefore **run over that subset and re-open when it widens** — T-INT-01/04 and T-SAVE-04 close here, the rest do not (§4.11 rows 9–10). That is a real gate rather than a placeholder: T-INT-02 replays a *fixed* log, so its divergence surface is the state-mutating math only, and every field of the §4.10 hash is an integer except the transients inside `resolveDamage` — which `Attack` already reaches. What it cannot cover is code that does not exist yet, which is exactly why rows 4–5 re-open it. No save button, slot, or `USaveGame` wrapper here; those are week 5. **Move + attack only** — no capture, no production, no AI opponent. |
+| 3 | Capture + production (§4.11 rows 4–5), then the baseline objective-seeker AI (row 6) → **working vertical slice.** Rows 4–5 add precisely the three commands week 2 lacked, so the wk-2 gates re-run over the complete set and **close here**: T-INT-02/03/05 and T-SAVE-01/03/05/06 on rows 4–5, and T-SAVE-02 on row 6, whose determinism gate (T-AI-06) it composes. Only T-SAVE-07 still waits — for wk 4's self-play logs. AI second pass (utility + threat map) and the custom MCP scenario toolset follow only if the slice lands early; both are off the critical path (§4.2, §4.11). |
+| 4 | Self-play balance sims and tuning — every match emitted in the wk-2 §4.10 format, so **T-SAVE-07 (harness compatibility) closes here**, not in wk 5: one format, no dialect drift between a save and a balance log; scenario polish (additional scenarios only as stretch). |
+| 5 | UI polish, feedback/juice, **the save-slot UI and its slot I/O** — the §4.10 format and headless replayer landed in wk 2 (Q20), so what remains here is the player-facing surface only: the single `slot0` file, the `USaveGame` wrapper, and whatever §2.11 decides about overwrite-confirm (§4.10 records that surface as unowned); onboarding. |
 | 6 | Playtest, bug fix, balance lock. LLM-commander stretch **only if on track.** |
 | 7 | Final polish, **package/build the shippable game** (the deliverable), and write up the agent pipeline + provenance ledger (supporting evidence). |
 
-**On weeks 2–3 (Q23, ruled).** The vertical slice sits in week 3, not week 2, because §4.11's critical path is `1 → 3 → 4 → 5 → 6/8`: the baseline AI (row 6) needs the turn loop (row 5), which needs Capture & Fame (row 4). A week-2 slice *with* an AI opponent would have required building rows 4–6 a week before §2.10 says capture and production land — the document previously asserted both and could not have delivered either. Week 2 therefore delivers move + attack against a static board, which is the honest subset of the slice that rows 1–3 actually support, and §2.10's *"these land wk 3, not wk 1–2"* now describes the schedule rather than contradicting it. The save/replay half of the same question (**Q20**) is still open.
+**On weeks 2–3 (Q23, ruled).** The vertical slice sits in week 3, not week 2, because §4.11's critical path is `1 → 3 → 4 → 5 → 6/8`: the baseline AI (row 6) needs the turn loop (row 5), which needs Capture & Fame (row 4). A week-2 slice *with* an AI opponent would have required building rows 4–6 a week before §2.10 says capture and production land — the document previously asserted both and could not have delivered either. Week 2 therefore delivers move + attack against a static board, which is the honest subset of the slice that rows 1–3 actually support, and §2.10's *"these land wk 3, not wk 1–2"* now describes the schedule rather than contradicting it. **The save/replay half of the same question (Q20) is now ruled — and split rather than moved.** The §4.10 *format and headless replayer* go to **week 2**, where T-INT-02 needs a save file as its input, and are therefore in hand by **week 4** for the self-play logs T-SAVE-07 validates; only the **save-slot UI and slot I/O** stay in week 5. The two rulings run on one principle in opposite directions: each piece lands in the week the thing that consumes it runs, so a milestone that outran its dependencies moved *later* (Q23) and an instrument its own gates outran moved *earlier* (Q20). Stated once, so the table stops drifting: **a format is a test instrument; slot I/O is a feature.** One consequence of that principle needed stating too, because the first application of it promised a week-2 gate this document's own build order could not support: **an integration or replay gate is scoped to the command set of the log it runs on.** It *runs* as soon as that log can be produced and it *closes* only when the log carries every §4.9 command — so week 2's `{Move, Attack}` pass is a run, not a closure, and §4.11 rows 9–10 now state those two dependency sets separately instead of one. The seam that repairs: row 9 required "rows 1–5 built" while Q23 had just limited week 2 to rows 1–3, so §4.4 and §4.11 described two schedules for the third time. Neither week number moved to fix it; the gate's scope was named. And because a gate that runs green over a subset is not a verified system, **no §3 ledger row flips on a partial pass** (Q29).
 
 ### 4.5 Risks & mitigations
 
@@ -1335,8 +1453,10 @@ state transition, Invariants (one per assertable rule), Determinism, Acceptance
 test IDs. All rules code is **headless** — `namespace strat`, pure C++17, zero
 engine dependencies, compiled by the same `g++`/`clang++` + `python run.py` gate
 that certified Combat (§3 ledger). Where a stub needs a rule the GDD does not
-state, the gate is parameterized on a numbered open question (Q1–Q27, Open
-questions below) — the Director rules, the gate then pins the ruling.
+state, the gate is parameterized on a numbered open question — the Director
+rules, the gate then pins the ruling. The register below is the single place
+their extent is stated; nothing else in this document names a range of them,
+because every range named elsewhere has gone stale within a revision.
 
 **Shared conventions (Director-owned contract):**
 
@@ -1563,7 +1683,7 @@ Format:  one versioned JSON file per scenario; strat::loadScenario parses and
                                    state, not rules state, so it stays out of
                                    the Stub-8 snapshot.
            symmetry        enum    REQUIRED. `rot180` or `none`, the two values
-                                   §2.13.1 declares (pending Q24). The enum is
+                                   §2.13.1 declares (Q24, ruled). The enum is
                                    narrow by SCOPE, not by impossibility, and
                                    the difference is load-bearing. An odd-r
                                    rectangle has no VERTICAL mirror axis at any
@@ -1578,8 +1698,8 @@ Format:  one versioned JSON file per scenario; strat::loadScenario parses and
                                    it. So `mirror` is a claim the schema gives
                                    an author no way to STATE, not one the
                                    validator could never ACCEPT — two different
-                                   failure modes, and Q26 asks which one is
-                                   intended. Admitting the value could widen
+                                   failure modes, and Q26 ruled which one is
+                                   intended: the narrow enum stands. Admitting the value could widen
                                    nothing: rot180 needs an even H and a
                                    horizontal mirror an odd one, their
                                    composition would be the vertical mirror
@@ -1652,9 +1772,14 @@ Invariants:
             unitId is the CanCapture row and whose isFlag is false; `objective`
             is a Factory hex that `ownership` leaves neutral (§2.7); and the two
             entries name DIFFERENT objectives — §2.13.1's "the seat's own
-            neutral," gated at its distinctness floor. The stronger
-            non-contention property §2.13.1 also claims is unruled (Q22) and
-            nothing here asserts it.
+            neutral," gated at its distinctness floor. Distinctness is now
+            exactly that: a FLOOR, not the requirement. The stronger
+            non-contention property §2.13.1 claims is RULED (Q22) and is
+            asserted by T-SCN-11, which prices a path and therefore lands
+            with row 3 rather than with this check. Two seats can name
+            DIFFERENT objectives and still race each other to one of them —
+            which is what T-SCN-11 exists to refuse and what this invariant,
+            being structural, cannot see.
   T-SCN-08  measured, not inferred: the validator COMPUTES and REPORTS each
             entry's lane cost as an integer, from Stub-3 pathing. The declared-
             symmetry flag (§2.13.1) is not an input and cannot substitute. Not
@@ -1683,8 +1808,20 @@ Invariants:
                   reports 4 and 4 — COMPUTED equal, never assumed equal.
               (c) A scenario whose lanes both cost 7 FAILS the T-SCN-06
                   ceiling, and the refusal reason CARRIES BOTH MEASURED
-                  INTEGERS: an author needs to read 7 against 6, not merely
-                  "too far" (Determinism, "refuses with a reason").
+                  INTEGERS: an author needs to read the measured 7 against
+                  the 6 MP CEILING, not merely "too far" (Determinism,
+                  "refuses with a reason"). This is the only "against" in
+                  this stub that is not owning-vs-opposing: it compares a
+                  MEASUREMENT to a BUDGET, and it SAYS SO at the site —
+                  the right-hand term is printed as "the 6 MP ceiling",
+                  never as a bare integer, per T-SCN-11's print
+                  convention. NAMING THE RELATION IS THE WHOLE OF THE
+                  DISAMBIGUATION. Integer order does not separate the two,
+                  because a T-SCN-11 refusal whose opposing route is
+                  cheaper prints the larger integer first as well; the
+                  earlier reading — that this was the one relation whose
+                  failing form led with the larger number — was false and
+                  is withdrawn.
             The reported integers are the source of truth for §2.13.1's lane
             table, so a map edit that lengthens a lane surfaces as a changed
             number rather than a still-green boolean.
@@ -1713,7 +1850,7 @@ Invariants:
             The EVEN ROW COUNT is a PRECONDITION, not a comparison: on odd H
             that constant W - H/2 is a half-integer, so no hex has a hex image
             and the file is REFUSED WITH A REASON before any comparison runs
-            (§2.13.1, pending Q24). On 9 x 9 the constant is 4.5 and (1,1)
+            (§2.13.1; Q24, ruled). On 9 x 9 the constant is 4.5 and (1,1)
             rotates to column 6.5 — one refusal, rather than the offset index
             permutation quietly producing geometrically meaningless
             comparisons.
@@ -1725,17 +1862,222 @@ Invariants:
    when H is odd, mirroring rot180's even-H precondition, and the two are
    therefore mutually exclusive on one map. It is a true isometry, not an index
    permutation: it sends (dq, dr) to (dq+dr, -dr), which permutes the three
-   terms of the axial metric and leaves the distance unchanged. Blocked on Q26;
-   no gate is written until the schema admits the value.)
+   terms of the axial metric and leaves the distance unchanged. RESERVED BY
+   DECISION, not blocked on an answer: Q26 is RULED — the enum stays at
+   rot180 | none, so a horizontal mirror is undeclarable and there is nothing
+   for a gate to verify. Nothing is waiting. It stays reserved rather than
+   deleted because admitting the value later is purely additive — one enum
+   value, this mu, and this invariant — and nothing passing today would then
+   fail. Contrast T-MOVE-07 above, which IS blocked, on the unruled Q2.)
+  T-SCN-11  NON-CONTENTION (Q22 ruled; unit set Q28 ruled): for EACH
+            guidedOpening entry, the OPPOSING seat's cheapest land path to
+            that same `objective` costs STRICTLY MORE MP than the owning
+            seat's lane, as reported by T-SCN-08. The opposing route is
+            minimised over EVERY CanCapture-row unit that seat deploys
+            (Q28), not over that seat's `guidedOpening.infantry` alone:
+                min over the opposing seat's Infantry of cost(hex, objective)
+                  >  the owning lane's cost
+            PRINT CONVENTION, stated here at the definition and used at
+            every site below: THE RELATION IS NAMED AT THE SITE, and
+            integer order identifies nothing. Two relations in this stub
+            print an "against":
+              - OWNING against OPPOSING (this invariant). Both terms are
+                measured route costs; the pair is written BARE — "5
+                against 6" — and always owning first.
+              - MEASURED against BUDGET (T-SCN-06's ceiling, reported by
+                T-SCN-08 fixture (c)). The right-hand term is written as
+                the CEILING it is — "7 against the 6 MP ceiling" — never
+                as a bare integer. A bare pair is therefore always the
+                first relation.
+            ORDER CARRIES NO INFORMATION, neither about which relation is
+            in play nor about pass or fail, and that is a correction
+            rather than a restatement: BOTH relations print the larger
+            integer first on their FAILING form. T-SCN-06 fails when the
+            measurement exceeds its ceiling; T-SCN-11 fails whenever the
+            opposing route is no dearer than the owning lane, which prints
+            "7 against 5" when the enemy is closer and "5 against 5" on a
+            tie. Magnitude order separates neither the two relations from
+            each other nor a pass from a refusal — only the naming does,
+            so every site names its relation and no site relies on which
+            integer is bigger. Two integers joined by "and" instead
+            (T-SCN-08's fixtures, "3 and 3") are the two SEATS' own
+            lanes — a different pair, asserting no inequality.
+            This is the gate for §2.13.1's "uncontested, not merely
+            reachable" — a promise that until this revision was a property of
+            the drawn map rather than a checkable rule, and one the map
+            failed the first time it was checked (fixture (b)).
+            IMPLEMENTATION, because the ruled reading looks more expensive
+            than it is: the minimisation is ONE reverse Dijkstra per
+            objective, not one path per unit. Root it at the `objective` with
+            d(objective) = 0 and relax d(h) = min over neighbours n of
+            (MoveCost(n) + d(n)); the result is every hex's cost TO that
+            objective under the T-MOVE-01 accounting, so all of the opposing
+            seat's Infantry are read off one pass and the cost is independent
+            of how many units that seat deploys. That identity holds ONLY
+            because Q21 priced the lane on terrain alone — under an "as
+            deployed" reading each unit sees a different graph and the budget
+            returns to one path per unit.
+            Both sides of the comparison are priced IDENTICALLY, which is what
+            makes the inequality mean anything: Stub-3 cheapest path, terrain
+            alone with occupancy excluded (Q21, ruled), cost counting every
+            hex entered INCLUDING the objective (Factory MoveCost 1) — the
+            T-MOVE-01 accounting T-SCN-06 already uses, so the validator
+            cannot price the two routes two different ways.
+            EQUALITY FAILS. "Strictly longer" is the ruled comparison, and a
+            tie is precisely the race the rule exists to forbid; a >= would
+            have passed the one lane in the PRE-FIX set that a human would
+            call contested — West's South lane against East's second
+            Infantry at (9,5), kept as fixture (b). Q28 moved that Infantry
+            to (9,1), so the set AS SHIPPED holds no such lane today: the
+            failing case survives as a fixture, not as a live refusal, and
+            the operator stays > for the next map that needs it.
+            Three asymmetries with T-SCN-06 are deliberate:
+              (i)   NO CEILING. T-SCN-06 is a budget (<= 2 x Move). This is a
+                    comparison: the opposing route may cost anything at all,
+                    it must merely cost MORE.
+              (ii)  BRIDGES ARE ALLOWED on the opposing route, and on the
+                    shipped map that allowance is LOAD-BEARING rather than
+                    merely permitted. T-SCN-06's Bridge-free clause is a
+                    property of the GUIDED lane — what makes the first
+                    lesson a walk rather than a crossing — not a constraint
+                    the enemy is under. Excluding Bridges would make the
+                    opposing route NON-EXISTENT on a bisected map (The
+                    Causeway, §2.13.6) and pass that map vacuously, so
+                    allowing them is the STRICTER reading and it is the one
+                    asserted. Measured PER MAP, never quantified over the
+                    set:
+                    - Ferrum Crossing (§2.13.2) EXERCISES it, but on ONE
+                      of fixture (a)'s TWO opposing routes, not both.
+                      West's cheapest route to North (6,2) — 6 MP from
+                      (1,3) — runs over the north Bridge (5,1).
+                      Bridge-free, the cheapest route from that hex to
+                      that objective costs 14 MP:
+                      (2,3)(3,4)(3,5)(4,5)(5,6)(6,6)m(6,5)(6,4)w(6,3)w
+                      (6,2) — around the river's southern end, then up
+                      through the Woods ring. More than double. The
+                      OTHER opposing route in that fixture is already
+                      Bridge-free and does not move: East's cheapest
+                      route to South (5,7), 6 MP from (9,3), is
+                      (9,4)F(8,5)(8,6)(7,7)(6,7)(5,7), which reaches
+                      column 5 only at the objective itself, on row 7,
+                      below the river's southern end at (5,5) — the
+                      river spans rows 0–5 only. Excluding an edge can
+                      only RAISE a shortest path, and that 6 MP witness
+                      uses no excluded edge, so 6 stands under either
+                      reading. The allowance binds ONE of this map's two
+                      objectives, the northern one.
+                    - The Causeway (§2.13.6) EXERCISES it too, passing
+                      3 against 5 in both seats with the crossing
+                      permitted; exclude Bridges and it reports "no route"
+                      instead of 5 (fixture (c)).
+                    - Longwater March (§2.13.5) is the ONE map with no
+                      Bridge on any opposing route, and only because it
+                      has no Water and no Bridge hexes at all — its
+                      terrain distribution is Water 0, Bridge 0.
+                    WHY THIS IS STATED AS A REASON AND NOT A PERMISSION:
+                    a Bridge-free reading does not FAIL Ferrum Crossing
+                    in EITHER seat, so no gate in this suite catches it.
+                    North still passes, at 5 against 14 — strictly more
+                    than the owning lane, on a number that describes a
+                    walk around the entire river. South still passes at
+                    5 against 6, exactly as drawn, because its opposing
+                    route never crossed a Bridge. What the counterfactual
+                    changes is ONE margin of the two: North's opposing
+                    figure goes from 6 to 14 against an unchanged owning
+                    5, widening that margin from 1 MP to 9 MP — a
+                    single-digit widening, and an unremarked one, because
+                    this invariant asserts a strict inequality and NO
+                    CEILING (asymmetry (i)). South's margin stays at 1 MP
+                    and never depended on the allowance at all.
+                    THE SPLIT IS THE REASON. The allowance is what keeps
+                    the NORTHERN opposing route honest, and neither half
+                    of the split is gate-catchable, because no invariant
+                    in this stub reads a MARGIN — only the strict
+                    inequality, which both seats satisfy either way. So
+                    the Bridge is what makes the northern margin a
+                    margin, and this suite would go on reporting green
+                    while that integer stopped meaning anything.
+              (iii) THE UNIT SET IS BROADER THAN THE LANE, per Q28 (ruled).
+                    "The opposing seat's cheapest Infantry route" ranges over
+                    EVERY CanCapture-row unit that seat deploys, not over
+                    that seat's own `guidedOpening.infantry` alone. The
+                    narrow reading was available, would have passed the
+                    shipped map unchanged, and was refused: the property
+                    guarded here is a RACE, and a race does not care which
+                    Infantry wins it. T-SCN-06's NAMED-hex quantifier is not
+                    a precedent against this — it names a hex because the
+                    guided lane must be the one turn-1a actually marks,
+                    whereas nothing is being marked on the opposing side and
+                    the only question is who can arrive.
+                    WHAT THE STRICT READING COST, PAID ONCE: one deployment
+                    hex. Ferrum Crossing's East second Infantry was at (9,5),
+                    5 MP from WEST's South objective and therefore tied with
+                    West's own 5 MP lane; it now deploys at (9,1) (§2.13.2)
+                    and the map passes in both seats at 5 against 6. No rule
+                    was weakened, no terrain moved, and the tie survives as
+                    fixture (b) rather than as an exception.
+                    The relocation was forced, not chosen, which is the part
+                    worth knowing before anyone edits that map: East's south
+                    town (7,6) is 2 hexes from South (5,7), so by the
+                    triangle inequality any hex covering that town is within
+                    5 MP of that factory. On Ferrum Crossing a southern
+                    town-capturer IS a racer for West's southern factory —
+                    the conflict is geometric, not a placement slip.
+            Reported like T-SCN-08: a refusal carries BOTH measured integers,
+            owning and opposing, so an author reads "5 against 5" rather than
+            "contested" — and a map edit that shortens an enemy approach
+            surfaces as a changed number, not a still-green boolean.
+            Fixtures:
+              (a) Ferrum Crossing (§2.13.2) PASSES in BOTH seats, reporting
+                  5 against 6 each way: West's South lane 5 from (1,5)
+                  against East's cheapest 6 from (9,3); East's North lane 5
+                  from (9,3) against West's cheapest 6 from (1,3) over the
+                  north Bridge (5,1). A 1 MP margin each way — the thinnest
+                  in the set, on the one map that declares `symmetry: none`.
+                  It is also the fixture that catches ASYMMETRIC PRICING: an
+                  implementation that counts the objective hex on the owning
+                  lane but not on the opposing route reports 5 against 5 and
+                  refuses the shipped map.
+              (b) THE FAILING FIXTURE IS REAL, NOT CONSTRUCTED. The same map
+                  with East's second Infantry at its PRE-FIX hex (9,5) — one
+                  placement changed, nothing else — must FAIL, reporting
+                  5 against 5: (9,6),(8,7),(7,7),(6,7),(5,7), five cost-1
+                  hexes, and the axial distance from (9,5) to (5,7) is 5, so
+                  no cheaper route exists and no implementation detail can
+                  make the number anything else. This deployment passed every
+                  other invariant in this stub, T-SCN-07's distinctness floor
+                  included; T-SCN-11 is the only check in the suite that sees
+                  it. It also pins the QUANTIFIER and not merely the
+                  comparison: under the Q28 reading REFUSED, (b) passes at
+                  5 against 6, so an implementation that minimises over the
+                  guidedOpening unit alone fails this fixture and nothing
+                  else in the suite.
+              (c) The Causeway (§2.13.6) passes 3 against 5 in both seats
+                  with the Bridge crossing PERMITTED on the opposing route.
+                  It is the fixture for asymmetry (ii): excluding Bridges
+                  makes both opposing routes NON-EXISTENT on a bisected map
+                  and passes it vacuously, so an implementation that inherits
+                  T-SCN-06's Bridge-free clause onto the opposing side
+                  reports "no route" here instead of 5.
 Determinism: pure parse + validation; any failure refuses the whole file with a
          reason. scenarioHash is platform-stable by canonical ordering. The
-         T-SCN-06/08 lane costs are Stub-3 path costs and inherit its
+         T-SCN-06/08/11 lane costs are Stub-3 path costs and inherit its
          determinism (T-MOVE-04's canonical tie-break, T-MOVE-06), so the
-         reported integers reproduce across runs and compilers.
-Acceptance: T-SCN-01..09 headless. The §4.2 validate_scenario MCP tool wraps the
-         same checks in-editor for the Content agent; its manual fallback is
-         running the headless validator on the exported file (MCP stays off the
-         critical path, §3 guardrails).
+         reported integers reproduce across runs and compilers. T-SCN-11
+         compares two such integers and introduces no new source of
+         nondeterminism.
+Acceptance: T-SCN-01..09 and T-SCN-11 headless — the whole written suite.
+         T-SCN-11 ASSERTS from its first run: Q22 gave it the comparison and
+         Q28 gave it the unit set, so this stub carries no written-and-blocked
+         invariant. T-SCN-10 is reserved and UNWRITTEN on Q26, which is a
+         different state: nothing is asserted, so nothing is waiting.
+         T-SCN-11 ships with its three fixtures, one of which — (b), the
+         shipped map's own pre-fix deployment — must FAIL, so the suite
+         demonstrates refusal and not merely agreement with the repo.
+         The §4.2 validate_scenario MCP tool wraps the same checks in-editor
+         for the Content agent; its manual fallback is running the headless
+         validator on the exported file (MCP stays off the critical path,
+         §3 guardrails).
 ```
 
 ```
@@ -1774,18 +2116,30 @@ Acceptance: T-UI-01..02 headless (the queries are headless functions);
 §4.7 gates (Q1–Q10), the stage-2 additions (Q11–Q13), the rules- and
 scenario-side rulings folded in here (Q14–Q20), the two gaps found while
 gating §2.13.1's opening-capture invariant (Q21–Q22), the milestone
-contradiction the document knowingly carries (Q23), the two raised by the
-§2.13 symmetry correction (Q24–Q25), and the one raised by correcting that
-correction (Q26), and the guided opening's one input-gating constraint (Q27)
+contradiction the document knowingly carried (Q23), the two raised by the
+§2.13 symmetry correction (Q24–Q25), the one raised by correcting that
+correction (Q26), the guided opening's one input-gating constraint (Q27), the
+reading the Q22 ruling exposed the moment its new invariant was measured
+against the shipped map (Q28), and the ledger-flip criterion exposed by
+scoping the week-2 parity gate to its command set (Q29)
 — so that each question
 carries exactly one ID across the whole document. Each blocks the gate named beside it;
 the Director writes the rule, the gate then pins it. The last column is not
 uniform, and the difference matters: **where a reading is stated, it is the
 conservative one, and it is what ships and what the gates assert** — chosen so
 that a later ruling loosens behavior rather than invalidating a passing gate.
+**Q28 was the one row where that convention did not hold**, and how it closed
+is worth keeping rather than deleting: its conservative reading REFUSED A
+SHIPPED MAP, so no reading could be stated there without either blocking
+*Ferrum Crossing* or quietly weakening a rule the Director had just made, and
+it therefore carried no assumption at all while it was open. It was then ruled
+the strict way and **the map was corrected instead of the rule** — one
+deployment hex, no terrain and no rules text (Q28; §2.13.2). The limit of the
+convention is now known and stated once: **where the conservative reading is
+not free, this register states no reading and waits.**
 **Rows marked *unruled* state no reading and block their gate outright** (Q4's
-interruption semantics, Q5's stacking, Q6, Q8, Q9's target- and build-choice
-ties, and Q20); those gates and milestones cannot be settled until the
+interruption semantics, Q5's stacking, Q6, Q8, and Q9's target- and
+build-choice ties); those gates and milestones cannot be settled until the
 Director answers.
 
 | ID | Question | Blocks | Assumption in force until ruled |
@@ -1806,17 +2160,19 @@ Director answers.
 | **Q14** | Capture-in-progress at the cap. Does a partially captured objective count toward "objectives held" (§2.8 criterion 2)? | T-CAP-05; the kb victory table | It counts for nobody until the objective flips — §2.7's flip-on-capture wording grants nothing before the flip. Partial credit would need a fractional-count rule and would invert T-CAP-05. |
 | **Q15** | The 5-unit standard starting force (§2.13.1) — 1 Flag Tank, 2 Infantry, 1 Artillery, 1 Recon — has no antecedent outside §2.13, alongside map dimensions and town counts. | §2.13.1; Stub 7's deployment list | As drafted in §2.13.1: one of each producible system live from turn 1, a 550-Fame producible force. |
 | **Q16** | Recon/Air vs. Water. §2.3 marks Water passable by "sea, air"; §2.4's "Recon/Air" never says whether it *is* air. If Recon crosses Water freely, every bridge chokepoint and *The Causeway*'s lockout premise leaks. | All three §2.13 maps; the terrain schema | Recon is a **land** unit with terrain-cost discounts, and bridges bind it. All three maps are priced on this reading. |
-| **Q17** | Cross-Water Artillery fire. With LOS blocking a stretch goal (§2.2), bank-to-bank fire across a one-hex river is legal at ship, and both river maps price a bridge lock on it. | §2.13.2 and §2.13.6 balance, if LOS ever ships | Legal. If LOS blocking ships, Water must not block — or those two maps need a redesign pass. |
+| **Q17** | Cross-Water Artillery fire. With LOS blocking a stretch goal (§2.2), bank-to-bank fire across a one-hex river is legal at ship, and the two river maps price it **per map, not alike**: *Ferrum Crossing* prices contested **bank control** on it — opposite banks are distance 2, inside Artillery range, so fire crosses before units do (§2.13.2, which states as much explicitly: bridge control there is *tempo, not a topological wall*); *The Causeway* prices its **Mountain perches** on it — range 2–3 covers the bridge hex from +40% cover with no counter (§2.13.6). *Longwater March* has no Water and prices nothing on it (§2.13.5). | §2.13.2 and §2.13.6 balance, if LOS ever ships | Legal. If LOS blocking ships, Water must not block — or those two maps need a redesign pass. |
 | **Q18** | Seat-select scope. Is choosing your seat on the shipped map in scope as "scenario data + one menu affordance"? | §2.13.4's replay ceiling — 6 configurations if yes, 3 if no | In scope, as §2.13.4 assumes. It is the cheapest replay lever in the document. |
 | **Q19** | Factory count as a per-scenario dial. *Longwater March* (§2.13.5) ships **6** factories against §2.7's "typical ~4 factories total" — inside §2.7's "two or more neutral" clause, but above its stated typical. Does §2.7's ~4 describe the shipped map only, leaving count as the match-length dial §2.13.5 uses it as? | §2.13.5; T-SCN-03's economy check, which currently cites "~4 factories total" | Yes — ~4 describes *Ferrum Crossing*; §2.13.5's 6 is a deliberate long-map dial, and T-SCN-03 asserts only the home-plus-two-neutral floor. |
-| **Q20** | Save/replay milestone split. §4.11 shows §4.4's week-5 save/load placement is one week late in one respect: the format and headless replayer are the instrument for the week-2 integration gate (T-INT-02) and the week-4 self-play logs (T-SAVE-07). Split the row — format + replayer early, save-slot UI stays week 5? | §4.4's milestone table; T-INT-02 and T-SAVE-07 sequencing | Unruled. §4.4 stands as written; §4.11 records the conflict without resolving it. This is a scheduling decision, adjacent to **Q23**. |
-| **Q21** | Opening-capture lane measurement. Does T-SCN-06 price the lane on **terrain alone**, or on the board **as deployed** — where, under Q3's blocked-pass-through reading, a seat's own four other starting units can make its own lane unmeasurable? The two readings can disagree by several MP on a crowded deployment. | T-SCN-06's pass/fail and T-SCN-08's reported integers; §2.13.1's three-map lane table if the answer is "as deployed" | Terrain alone, occupancy excluded — the reading that reproduces §2.13.1's measured 5/5, 4/4, 3/3, and the reading that matches how the lane is actually played (the other four units move too). **Scope narrowed by the §2.13 symmetry correction:** both stretch lanes are now clear of their own seat's starting units and price identically under either reading, so an "as deployed" ruling could only move *Ferrum Crossing*'s numbers — this is effectively a one-map question. |
-| **Q22** | Uncontested vs. merely reachable. §2.13.1 promises the guided lane is "uncontested, not merely reachable," but states it as a property of the shipped map rather than a checkable rule. Is *distinct objectives per seat* the whole requirement, or must the validator also assert non-contention — e.g. the opposing seat's cheapest Infantry lane to the same objective is strictly longer? | Whether T-SCN-07's distinctness clause is the floor or a further T-SCN invariant is owed | Distinctness only, as gated in T-SCN-07. Consequence stated plainly: a map can pass every §2.13 gate and still hand both seats a race to the same tile, turning the first lesson into a contest. |
+| **Q20** | ~~Save/replay milestone split.~~ **RULED (this revision).** The row is **split, not moved**: the §4.10 **format + headless replayer** land in **week 2**, and only the **save-slot UI and slot I/O** stay in week 5. Original question: §4.11 showed §4.4's week-5 save/load placement was one week late in one respect — the format and headless replayer are the instrument for the week-2 integration gate (T-INT-02) and the week-4 self-play logs (T-SAVE-07). Split the row? | §4.4's milestone table; T-INT-02 and T-SAVE-07 sequencing | Ruled, as §4.11 itself proposed. §4.4's weeks 2, 4 and 5 and the note under the table now describe one schedule, and the distinction the split turns on is stated there rather than left to be re-derived: **a format is a test instrument** and ships with the gates that consume it (T-INT-02 **first runs** wk 2, T-SAVE-07 wk 4); **slot I/O is a feature** and ships with the rest of the UI. Scheduling-adjacent to **Q23** and ruled on the same principle in the opposite direction — a milestone that outran its dependencies moved later; an instrument its own gates outran moved earlier. **Amended this revision, and the amendment is the useful part of the row.** The ruling was written into §4.4 without re-reading §4.11's dependency table, which required "rows 1–5 built" for row 9 while Q23 had just limited week 2 to rows 1–3 — so the document promised a gate, and its instrument, in a week its own build order could not support them. That is the Q23 contradiction class one layer down, and the third time these two sections have disagreed. It is repaired by **scoping, not by moving**: an integration or replay gate is scoped to the command set of the log it runs on, so T-INT-02 **runs** in week 2 over `{Move, Attack}` — which already reaches the whole compiler-divergence class it exists to catch, since `resolveDamage` holds the only non-integer step in the module — and **closes** in week 3 when rows 4–5 supply the remaining three commands. No week number moved. Whether a partial run may flip a §3 ledger row is registered as **Q29** rather than assumed. |
+| **Q21** | ~~Opening-capture lane measurement.~~ **RULED.** The lane prices on **terrain alone**, occupancy excluded. The question was whether T-SCN-06 should price it on the board **as deployed** — where, under Q3's blocked-pass-through reading, a seat's own four other starting units can make its own lane unmeasurable? The two readings can disagree by several MP on a crowded deployment. | T-SCN-06's pass/fail and T-SCN-08's reported integers; **T-SCN-11's four opposing routes on the shipped map** — the four cells of §2.13.2's eight-route table that run against a guided lane (East (9,3) and (9,1) → South; West (1,3) and (1,5) → North) — which price on this same convention, as do the table's other four cells: the two guided lanes themselves (T-SCN-06's, not T-SCN-11's) and each seat's second Infantry to its own objective; §2.13.1's three-map lane table if the answer is "as deployed" | Ruled as drafted: terrain alone. It reproduces §2.13.1's measured 5/5, 4/4, 3/3 and matches how the lane is actually played, since the other four units move too. Accepted consequence: a map can pass while a seat's own unit sits in the lane on turn 1 — the player walks around it, which on *Ferrum Crossing*'s 1 MP of slack may cost a turn and is absorbed by beat 2 being a standing directive (§2.11.6-B). **Scope, re-checked after the Q28 deployment move rather than assumed.** This row's scope was stated as a property of the drawn deployment, and a deployment has since moved — East's second Infantry (9,5) → (9,1), §2.13.2 — so it was re-measured. It holds, and at a sharper resolution: **no starting unit sits on any of the eight routes *Ferrum Crossing* now prices** — §2.13.2's four-Infantry × two-objective table *is* the whole priced set, and it already holds the two guided lanes (T-SCN-06) alongside T-SCN-11's four opposing routes and the two same-seat routes that fix each seat's cheaper prize. (9,1) is the origin of two of the eight and lies on the interior of none of them, and both stretch lanes were already clear — so an "as deployed" ruling would move **no number on any map as drawn**. This row previously read "ten," adding the two guided lanes to a table that already contained them, and called all eight T-SCN-11's; the corrected split is 2 + 4 + 2. It stays a live question rather than a dead one because of slack — measured per map, not asserted over the set: *Ferrum Crossing* carries 1 MP against T-SCN-06's ceiling and 1 MP against T-SCN-11's inequality; *Longwater March* carries 2 MP and 4 MP; *The Causeway* 3 MP and 2 MP. No figure there is new — each ceiling slack is stated in that map's own section (§2.13.5, §2.13.6) and each margin is a subtraction of the owning/opposing pair this register already prints at Q22. So *Ferrum Crossing* is the **tightest map in the set on both gates at once**, and the one where a deployment edit landing in a priced route is likeliest to flip a gate rather than be absorbed — which is a ranking, not the claim that the other two maps cannot be flipped at all. One further consequence, now that Q22 has widened the surface: terrain-only pricing is what lets T-SCN-11 minimise over a whole seat's Infantry in **one** reverse Dijkstra per objective (§4.7 Stub 7). An "as deployed" ruling would give every unit its own graph and return that cost to one path per unit. |
+| **Q22** | ~~Uncontested vs. merely reachable.~~ **RULED.** The validator asserts non-contention: **the opposing seat's cheapest Infantry route to the same objective must cost strictly more than the owning seat's lane.** T-SCN-07's distinctness clause is a **floor beneath** that requirement, not the whole of it: two seats can name DIFFERENT objectives and still race each other to one of them, which is exactly what a structural check cannot see. Gated as **T-SCN-11** — T-SCN-10 is reserved-but-unwritten for the horizontal mirror and Q26 keeps it that way, so it was not free to take. Original question: §2.13.1 promises the guided lane is "uncontested, not merely reachable," but states it as a property of the shipped map rather than a checkable rule. | T-SCN-07's clause, now a floor; **T-SCN-11**, written, unblocked and asserting since Q28 ruled; §4.11 row 7's priced half, which gains one full-board pass per `guidedOpening` entry | Ruled — and **measured against all three maps before the invariant was written**, which is what the ruling cost and where it paid. Five of the six lanes cleared as drawn, each printed **owning against opposing** as T-SCN-11 reports it: *Longwater March* 4 against 8 in both seats, *The Causeway* 3 against 5 in both seats, *Ferrum Crossing*'s East lane 5 against 6. **The sixth failed on an exact tie**: West's South lane cost 5, and East's second Infantry at (9,5) reached that same objective (5,7) in 5 MP flat — 5 against 5, an exact tie. That is the case the rule exists to catch, it was on the map that ships, and every other invariant in the suite passed it. **The map was corrected rather than the rule loosened** (Q28): that Infantry now deploys at (9,1), all six lanes pass, and *Ferrum Crossing* reports **5 against 6 in both seats**. The tie is retained as T-SCN-11's fixture (b) — a failing fixture that was authored rather than constructed. |
 | **Q23** | ~~Milestone-vs-build-order contradiction.~~ **RULED (this revision).** §4.11's critical path makes the baseline AI (row 6) depend on row 5, which depends on row 4 Capture & Fame — but §4.4 promises a working vertical slice *with* the baseline AI in week 2, and §2.10 states capture + Fame production "land wk 3, not wk 1–2." The two schedules cannot both hold. | §4.4's week 1–2 milestones; §2.10's IN row; §4.11's critical path; and Q20, which is the same decision for save/replay | Ruled: the vertical-slice milestone moves to **week 3**, and week 2 delivers **move + attack only** (§4.4). §1, §2.10, §4.4 and §4.11 now describe one schedule — §1's "core playable" line is the fourth site and was corrected with them. |
-| **Q24** | Symmetry as a declarable value. §2.13.1 previously offered `mirror / rotation / none`, but an odd-r offset rectangle has **no vertical** mirror axis at any dimension, and admits a 180° rotation only when the row count is even. So a vertical `mirror` is a value the validator could never legally accept, and `rot180` is only well-formed against an even-H map. It does, however, have a **horizontal** mirror axis (c ↔ c, r ↔ H−1−r) exactly when the row count is **odd** — the geometry the shipped 11 × 9 map sits on (§2.13.1 fact 1, §2.13.2) — so the field is a choice, not a forced hand. Narrow the field to `rot180 \| none` with an even-row-count precondition, and make `rot180` on an odd row count a hard refusal rather than a failed hex comparison? (**Whether a third value should be admitted for the horizontal mirror is Q26**, which owns that question — this row asks only about the narrowing.) | §2.13.1's validation-invariant list; Stub 7's `symmetry` field and T-SCN-08's fixtures (§4.7, `tech-director`-owned) | Narrowed, as §2.13.1 now reads: `rot180 \| none`, and `rot180` declared on an odd row count refuses the file with a reason (a wrong dimension is an authoring error, not a balance question). Both stretch maps are redrawn on 8 rows and declare `rot180` (§2.13.5, §2.13.6); *Ferrum Crossing* declares `none`. If the Director rules otherwise, the only consequence is that a bad declaration surfaces as N failed hex comparisons instead of one refusal — no layout moves. Whether the enum should also carry a horizontal-mirror value is answered at **Q26**, not here. |
-| **Q25** | What a `rot180` declaration binds. §2.13.1 says declared symmetry is machine-verified but never says over *what*. Terrain only? Terrain + ownership + placements — the reading both stretch maps are actually drawn to (§2.13.5 "every one of those is a ρ-pair"; §2.13.6 "East is the exact ρ-image of West")? And does it bind `guidedOpening`, so the two seats' lanes must themselves be ρ-images? | T-SCN-09's assertion set; and T-SCN-08's fixture (b), whose equal 4 / 4 is a *theorem* if `guidedOpening` is bound and only a *measurement* if it is not | Terrain + ownership (sides exchanged) + placements (sides exchanged), as gated in T-SCN-09. `guidedOpening` is **not** bound: §2.13.1 requires each seat's lane to be its own neutral within 6 MP, never that the two be images of each other, so a `rot180` map may legitimately name non-image lanes and report a split. Costless either way today — both stretch maps satisfy the *stronger* reading as drawn (*Longwater*: ρ(1,2) = (11,5) and ρ(4,1) = (8,6); *Causeway*: ρ(1,2) = (7,5) and ρ(3,2) = (5,5)), so ruling `guidedOpening` in would fail no shipped map, and ruling terrain-only would merely loosen T-SCN-09. |
-| **Q26** | Is a **horizontal** mirror declarable? Q24 narrowed the enum to `rot180 \| none` partly on the ground that `mirror` is a value the validator could never legally accept. That holds for the **vertical** axis at every dimension, but not for the horizontal one: μ(c, r) = (c, H−1−r) is a genuine isometry of an odd-r rectangle whenever the **row count is odd** — H−1 is then even, so r and H−1−r share a parity, the offset is preserved and the column is unchanged. *Ferrum Crossing* is 11 × **9** and carries that axis geometrically (§2.13.1). So Q24's enum survives, but as a **scope** decision, not an impossibility. Add `mirrorH` with an odd-row-count precondition — the exact counterpart of `rot180`'s even-row-count one — or keep the enum at two values and accept that a true horizontal mirror is undeclarable? | Stub 7's `symmetry` field (§4.7); the reserved **T-SCN-10**; nothing else — no gate asserts anything about a value the schema does not admit, and no §2.13 map is drawn to a horizontal mirror | The enum stays `rot180 \| none` and T-SCN-10 stays unwritten: adding a value to a REQUIRED enum moves every scenario's hash, and no shipped map needs it — *Ferrum Crossing* declares `none` because its terrain is asymmetric, and both stretch maps are even-H `rot180`. The conservative reading is the narrow one, so a later ruling only ever *widens* the accepted set and *adds* an assertion; nothing that passes today would start failing. The cost of leaving it narrow, stated plainly: an author who genuinely draws a horizontal mirror on an odd-H map must declare `none`, and `none` asserts nothing — a verifiable property is silently discarded rather than an authoring error caught, which is the opposite of the failure mode Q24 was choosing between. Note the two are never in competition: `rot180` needs even H, a horizontal mirror needs odd H, and their composition would be the vertical mirror that never exists, so at most one non-`none` value is well-formed on any given map. |
-| **Q27** | Is gating End Turn during beat 1a **presentation or rule?** During beat 1a of a guided opening only, End Turn is inert until the marked Infantry (`guidedOpening.infantry`) has moved; hover reads `Move the marked Infantry first.` It is scoped to the first match, dies with `Skip guidance`, and never applies outside the guided window — but it is the only guided-opening constraint that gates a player *input* rather than a selection, which is why it is registered rather than assumed. | Nothing today, and nothing in §4.7: no stub or `T-` ID gates the directive strip, and Stub 7 deliberately keeps the guidance layer out of Stub 8's snapshot. The dependency is internal to §2 — §2.11.6-B's turn-1 row is unconditional in all three branches only if 1a cannot outlive turn 1, so a ruling of "no input gating" would require that row to be re-derived | Ships as specified (conservative). If ruled the other way: a player who ends turn 1 without moving leaves 1a outstanding, and rule 1 hands the strip to 1b (`End turn.`) — an instruction they have just followed — so the fallback is to let 1a expire silently at the turn boundary like 1b, and §2.11.6-B's turn-1 row gains a footnote. |
+| **Q24** | ~~Symmetry as a declarable value.~~ **RULED.** The field stays `rot180 \| none` with an even-row-count precondition, and `rot180` on an odd row count is a hard refusal. Original question: §2.13.1 previously offered `mirror / rotation / none`, but an odd-r offset rectangle has **no vertical** mirror axis at any dimension, and admits a 180° rotation only when the row count is even. So a vertical `mirror` is a value the validator could never legally accept, and `rot180` is only well-formed against an even-H map. It does, however, have a **horizontal** mirror axis (c ↔ c, r ↔ H−1−r) exactly when the row count is **odd** — the geometry the shipped 11 × 9 map sits on (§2.13.1 fact 1, §2.13.2) — so the field is a choice, not a forced hand. Narrow the field to `rot180 \| none` with an even-row-count precondition, and make `rot180` on an odd row count a hard refusal rather than a failed hex comparison? (**Whether a third value should be admitted for the horizontal mirror is Q26**, which owns that question — this row asks only about the narrowing.) | §2.13.1's validation-invariant list; Stub 7's `symmetry` field and T-SCN-08's fixtures (§4.7, `tech-director`-owned) | Narrowed, as §2.13.1 now reads: `rot180 \| none`, and `rot180` declared on an odd row count refuses the file with a reason (a wrong dimension is an authoring error, not a balance question). Both stretch maps are redrawn on 8 rows and declare `rot180` (§2.13.5, §2.13.6); *Ferrum Crossing* declares `none`. If the Director rules otherwise, the only consequence is that a bad declaration surfaces as N failed hex comparisons instead of one refusal — no layout moves. Whether the enum should also carry a horizontal-mirror value is answered at **Q26**, not here. |
+| **Q25** | ~~What a `rot180` declaration binds.~~ **RULED.** Terrain + ownership (sides exchanged) + placements (sides exchanged); `guidedOpening` is **not** bound. Original question: §2.13.1 says declared symmetry is machine-verified but never says over *what*. Terrain only? Terrain + ownership + placements — the reading both stretch maps are actually drawn to (§2.13.5 "every one of those is a ρ-pair"; §2.13.6 "East is the exact ρ-image of West")? And does it bind `guidedOpening`, so the two seats' lanes must themselves be ρ-images? | T-SCN-09's assertion set; and T-SCN-08's fixture (b), whose equal 4 / 4 is a *theorem* if `guidedOpening` is bound and only a *measurement* if it is not | Terrain + ownership (sides exchanged) + placements (sides exchanged), as gated in T-SCN-09. `guidedOpening` is **not** bound: §2.13.1 requires each seat's lane to be its own neutral within 6 MP, never that the two be images of each other, so a `rot180` map may legitimately name non-image lanes and report a split. Costless either way today — both stretch maps satisfy the *stronger* reading as drawn (*Longwater*: ρ(1,2) = (11,5) and ρ(4,1) = (8,6); *Causeway*: ρ(1,2) = (7,5) and ρ(3,2) = (5,5)), so ruling `guidedOpening` in would fail no shipped map, and ruling terrain-only would merely loosen T-SCN-09. |
+| **Q26** | ~~Is a **horizontal** mirror declarable?~~ **RULED — no**, ruled together with Q24 as one decision. The enum stays at two values and **T-SCN-10 stays unwritten**; a horizontal mirror may be added later, purely additively, if a map ever needs one. Original question: Q24 narrowed the enum to `rot180 \| none` partly on the ground that `mirror` is a value the validator could never legally accept. That holds for the **vertical** axis at every dimension, but not for the horizontal one: μ(c, r) = (c, H−1−r) is a genuine isometry of an odd-r rectangle whenever the **row count is odd** — H−1 is then even, so r and H−1−r share a parity, the offset is preserved and the column is unchanged. *Ferrum Crossing* is 11 × **9** and carries that axis geometrically (§2.13.1). So Q24's enum survives, but as a **scope** decision, not an impossibility. Add `mirrorH` with an odd-row-count precondition — the exact counterpart of `rot180`'s even-row-count one — or keep the enum at two values and accept that a true horizontal mirror is undeclarable? | Stub 7's `symmetry` field (§4.7); the reserved **T-SCN-10**; nothing else — no gate asserts anything about a value the schema does not admit, and no §2.13 map is drawn to a horizontal mirror | The enum stays `rot180 \| none` and T-SCN-10 stays unwritten: adding a value to a REQUIRED enum moves every scenario's hash, and no shipped map needs it — *Ferrum Crossing* declares `none` because its terrain is asymmetric, and both stretch maps are even-H `rot180`. The conservative reading is the narrow one, so a later ruling only ever *widens* the accepted set and *adds* an assertion; nothing that passes today would start failing. The cost of leaving it narrow, stated plainly: an author who genuinely draws a horizontal mirror on an odd-H map must declare `none`, and `none` asserts nothing — a verifiable property is silently discarded rather than an authoring error caught, which is the opposite of the failure mode Q24 was choosing between. Note the two are never in competition: `rot180` needs even H, a horizontal mirror needs odd H, and their composition would be the vertical mirror that never exists, so at most one non-`none` value is well-formed on any given map. |
+| **Q27** | ~~Is gating End Turn during beat 1a presentation or rule?~~ **RULED.** It ships as specified: End Turn is inert during beat 1a until the marked Infantry has moved. Teaching by constraint is accepted here because it guarantees beat 1a retires inside turn 1, which is what makes §2.11.6-B's schedule predictable. Original question: During beat 1a of a guided opening only, End Turn is inert until the marked Infantry (`guidedOpening.infantry`) has moved; hover reads `Move the marked Infantry first.` It is scoped to the first match, dies with `Skip guidance`, and never applies outside the guided window — but it is the only guided-opening constraint that gates a player *input* rather than a selection, which is why it is registered rather than assumed. | Nothing today, and nothing in §4.7: no stub or `T-` ID gates the directive strip, and Stub 7 deliberately keeps the guidance layer out of Stub 8's snapshot. The dependency is internal to §2 — §2.11.6-B's turn-1 row is unconditional in all three branches only if 1a cannot outlive turn 1, so a ruling of "no input gating" would require that row to be re-derived | Ruled: ships as specified. The alternative, recorded because it was weighed: a player who ends turn 1 without moving leaves 1a outstanding, and rule 1 hands the strip to 1b (`End turn.`) — an instruction they have just followed — so the fallback is to let 1a expire silently at the turn boundary like 1b, and §2.11.6-B's turn-1 row gains a footnote. |
+| **Q28** | ~~Whose Infantry the T-SCN-11 opposing route is measured from.~~ **RULED (this revision).** Reading **(a)**: the opposing route is minimised over **any Infantry that seat owns**, not over its `guidedOpening.infantry` alone. Original question: Q22 ruled that the opposing seat's cheapest Infantry route to a guided objective must cost strictly more than the owning seat's lane, but not over which units "cheapest" ranges — **(a)** every CanCapture-row unit that seat deploys, since either Infantry can race, or **(b)** that seat's own `guidedOpening.infantry` alone, which keeps the comparison lane-against-lane and matches how T-SCN-06 quantifies over a NAMED hex rather than an existential. | Nothing further. **T-SCN-11 is unblocked and asserting** (§4.7 Stub 7), and §4.11 row 7 carries it in its acceptance set | Ruled the strict way, knowingly and at a stated price. (b) was available and would have passed the shipped map untouched; it was refused because the property Q22 protects is a **race**, and a race does not care which Infantry wins it. T-SCN-06's named-hex quantifier is not a counter-precedent — it names a hex because the guided lane must be the one turn-1a marks, whereas nothing is marked on the opposing side and the only question is who can arrive. **The cost was one deployment move, not a weakened rule.** East's second Infantry moved **(9,5) → (9,1)** (§2.13.2); no terrain, factory or town count, lane cost, home-factory-empty rule or turn estimate moved with it, and the relocation was **forced rather than chosen** — East's south town (7,6) is 2 hexes from South (5,7), so by the triangle inequality any hex covering that town races that factory, and the only free southern hexes clearing 5 MP were the Artillery's and the Flag Tank's. *Ferrum Crossing* now reports **5 against 6 in both seats** — 1 MP each way, the thinnest margin in the set. The pre-fix **5 against 5** is kept as T-SCN-11's fixture (b): a failing case that was actually authored, that passes every other invariant in the suite, and that reading (b) would have passed. |
+| **Q29** | Ledger-flip criterion for a partially-scoped gate. §4.11 rows 9–10 now **run** their gates in week 2 over a `{Move, Attack}` log and re-run them over the complete command set in week 3 (Q20, amended). §3's ledger says a row is verified when it cites "the commit and passing test IDs that back it," and §3's two bars require agent-authored tests that pass plus a human sign-off — but neither says whether *passing* means the acceptance set ran over the system's whole input domain. Without a rule, a green week-2 T-INT-02 could flip a proposed ledger row while the log it replays is missing three of the five §4.9 commands. | §3's ledger rows for §4.9 and §4.10 (both proposed rows, both unwritten today); no gate — every test runs either way, this governs only what may be *claimed* from a run | **Conservative reading in force:** a row flips only when its **full** acceptance set passes over the **complete** §4.9 command set at one commit; a partial pass is reported as a run and never as a closure, and §4.11 rows 9–10 are written in exactly those two parts. Free in the conservative direction — it can only delay a claim, so a later loosening invalidates nothing that passed. The alternative worth weighing, since the information is real and currently discarded: record partial passes in the ledger as a dated *"green over subset X at commit Y"* line, which reports more without claiming more — that is a §3 presentation decision, not a technical one, which is why it is registered rather than assumed. |
 
 ### 4.8 Data contract — DataTable schemas
 
@@ -2046,7 +2402,12 @@ Rows 1–8 are the §4.7 stubs (the eight `*pending*` ledger rows); rows 9–10 
 the §4.9 and §4.10 systems. Combat, its test suite, Repair, and Type-effectiveness are
 green at `5ffa8d6` and are prerequisites, not work items. Note **row 10's
 format spec must exist by the row-9 integration pass**, because T-INT-02's
-input file is a §4.10 save.
+input file is a §4.10 save. Rows 9 and 10 therefore state their dependencies
+in **two parts** — what each gate needs in order to **run**, and what it needs
+in order to **close** — because both are scoped to the command set of the log
+they replay, and week 2's log carries only `{Move, Attack}` (§4.4). Reading
+either row's requirement as a single set is what put a gate in a week this
+table could not supply it.
 
 | # | System (ledger row) | Depends on | Headless? | Acceptance test IDs |
 |---|---|---|---|---|
@@ -2056,23 +2417,34 @@ input file is a §4.10 save.
 | 4 | Capture & Fame economy (Stub 4) | 3 | Yes | T-FAME-01..09 |
 | 5 | Turn loop & win/tiebreak (Stub 5) | 4 + verified Combat/Repair @ 5ffa8d6 | Yes | T-TURN-01..09 |
 | 6 | Opponent AI (Stub 6) | 5 | Yes | T-AI-01..06 + self-play smoke |
-| 7 | Scenario file & validator (Stub 7) | 1, 2 for the structural half (T-SCN-01..03, 05, 07, 09); **3 for the priced half** — T-SCN-04, 06, 08 all cost a path | Yes; MCP tool wraps it in-editor, manual fallback stands | T-SCN-01..09 |
+| 7 | Scenario file & validator (Stub 7) | 1, 2 for the structural half (T-SCN-01..03, 05, 07, 09); **3 for the priced half** — T-SCN-04, 06, 08, 11 all cost a path, and **T-SCN-11 costs a full-board pass rather than a path**: it minimises over every Infantry the opposing seat deploys (Q28, ruled), which is **one reverse Dijkstra per `guidedOpening` objective** and is therefore independent of that seat's unit count — done naively as one path per opposing unit it scales with the deployment instead | Yes; MCP tool wraps it in-editor, manual fallback stands | T-SCN-01..09, 11 (10 reserved-unwritten on Q26) |
 | 8 | UI binding (Stub 8) | 5, 7 (snapshot needs full state) | Contract + queries yes; widgets in-editor | T-UI-01..04 |
-| 9 | Presentation bridge & integration — §4.9 (proposed ledger row) | Rows 1–5 built; vendoring + T-INT-01/04 can start with any subset | Source/compile gates yes; replay parity + statelessness in-editor | T-INT-01..05 |
-| 10 | Save & replay — §4.10 (proposed ledger row) | 4, 5 (command set + turn loop); 7 (scenario format); **format spec itself has no deps — write it first** | Yes, all but slot I/O | T-SAVE-01..07 |
+| 9 | Presentation bridge & integration — §4.9 (proposed ledger row) | **Run vs close.** Vendoring and **T-INT-01/04** depend on no rules row at all — the sync script and the standalone gate run *are* the assert — and close as soon as vendoring lands. **T-INT-02/03/05** need only the rows behind the log they replay: rows 1–3 for week 2's `{Move, Attack}` log, and they re-open when rows 4–5 add `Capture`/`Build`/`EndTurn`. They **close on rows 1–5**, which is what this cell used to state as the whole dependency | Source/compile gates yes; replay parity + statelessness in-editor | T-INT-01..05 |
+| 10 | Save & replay — §4.10 (proposed ledger row) | **Three parts, three dependency sets.** (a) *Format spec + header/version machinery* — **no deps at all; write it first**, and T-SAVE-04 (refusal on any header mismatch) closes on it alone, since it never applies a command. (b) *Headless replayer* — rows 1–3, plus row 7's **structural** half for the `scenarioId`/`scenarioHash` it loads; it runs T-SAVE-01/02/03/05/06 over week 2's `{Move, Attack}` log. (c) *Closure* — rows **4, 5** complete the command set (T-SAVE-01/03/05/06), row **6** completes T-SAVE-02's determinism composition, and T-SAVE-07 needs row 6's self-play besides. Slot I/O is week 5 and no headless gate waits on it | Yes, all but slot I/O | T-SAVE-01..07 |
 
 **Critical path: 1 → 3 → 4 → 5 → 6/8.** Row 2 runs in parallel immediately.
 **Row 7 no longer sits beside the chain; it straddles it.** Its structural half
-(T-SCN-01..03, 05, 07, 09) starts once 1–2 land, but three of its nine
-invariants — T-SCN-04's flag reachability and T-SCN-06/08's opening-capture
-lane — price a Stub-3 path, so row 7 cannot *close* until row 3 does. Row 7 is
+(T-SCN-01..03, 05, 07, 09) starts once 1–2 land, but **four of its ten written
+invariants** — T-SCN-04's flag reachability and T-SCN-06/08/11's opening-capture
+lane — price a Stub-3 path, so row 7 cannot *close* until row 3 does. T-SCN-11
+(Q22 and Q28, both ruled) is the newest of the four and the most expensive: it
+prices the *opposing* seat's cheapest route to the same objective, minimised
+over every Infantry that seat deploys, which is one reverse Dijkstra per
+`guidedOpening` objective — a full-board pass rather than a path, and one whose
+cost does not grow with the deployment. It **asserts**, as of this revision:
+nothing in row 7 is written-and-blocked, and the only unwritten invariant is
+T-SCN-10, reserved on Q26. It ships with a **failing** fixture — the shipped
+map's own pre-fix deployment, which tied 5 against 5 — so this row's suite
+proves it can refuse a real scenario and not merely agree with the repo. Row 7 is
 still not ON the critical path (nothing in the chain waits on it), but
 scheduling it as "parallel from week 1" would leave its ledger row un-flippable
 and the §2.11.6 guided opening ungated for however long movement slips: the
-scenario row flips after movement, not before. 6 and 8 fork after 5. §4.4's milestone
-table currently parks save/load in week 5, and §4.10 shows that is one
-week too late in one respect: the *format and headless replayer* are the
-instrument for the week-2 integration gate (T-INT-02) and the week-4
-self-play logs (T-SAVE-07). Splitting the row — format + replayer early,
-save-slot UI stays week 5 — is filed as **Q20** (§4.7) against §4.4's milestone
-table, not applied here.
+scenario row flips after movement, not before. 6 and 8 fork after 5.
+**Row 10 is split, per Q20 (ruled).** Its *format and headless replayer* are not
+week-5 content but the instrument two earlier gates run on — T-INT-02's input
+file is a save, and the week-4 self-play logs T-SAVE-07 validates are the same
+format — so §4.4 now lands them beside the scenario loading they already sit
+next to, and leaves only the **save-slot UI and slot I/O** at the end. That is
+the split this section proposed and the Director adopted; §4.4's table and the
+note under it are the single statement of the schedule, and this paragraph
+deliberately does not restate the week numbers a second time.
