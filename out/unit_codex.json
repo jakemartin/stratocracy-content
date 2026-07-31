@@ -1,0 +1,42 @@
+[
+  {
+    "unit": "Infantry",
+    "role": "Line holder — the only unit that takes ground.",
+    "cost": 100,
+    "hp": 10,
+    "atk": 4,
+    "def": 2,
+    "captures": true,
+    "blurb": "Cheap boots that move slow. The only unit that can plant a flag on a town or factory, so screen it with armor and let Recon find the lane."
+  },
+  {
+    "unit": "Tank",
+    "role": "Line breaker.",
+    "cost": 300,
+    "hp": 20,
+    "atk": 8,
+    "def": 5,
+    "captures": false,
+    "blurb": "The hammer — soaks hits and punches holes. Your flag rides in a Tank variant, so losing it ends the match. Objectives are the infantry's job, not the Tank's."
+  },
+  {
+    "unit": "Artillery",
+    "role": "Standoff gun.",
+    "cost": 200,
+    "hp": 8,
+    "atk": 10,
+    "def": 1,
+    "captures": false,
+    "blurb": "Glass with reach. Fires two to three hexes out and takes no reply at that range. Caught adjacent it dies fast — keep it behind the line."
+  },
+  {
+    "unit": "Recon",
+    "role": "Fast eyes.",
+    "cost": 150,
+    "hp": 12,
+    "atk": 5,
+    "def": 3,
+    "captures": false,
+    "blurb": "Fast eyes. Outruns everything and ignores the worst terrain cost. Thin armor, light punch — it finds the fight and screens the flank."
+  }
+]

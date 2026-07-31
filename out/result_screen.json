@@ -1,0 +1,42 @@
+[
+  {
+    "outcome": "decisive",
+    "faction": "Directorate",
+    "line": "Enemy flag destroyed. Order is restored. The Directorate endures."
+  },
+  {
+    "outcome": "decisive",
+    "faction": "Vanguard",
+    "line": "Their flag is down. We didn't ask permission — we took the field."
+  },
+  {
+    "outcome": "marginal",
+    "faction": "Directorate",
+    "line": "No flag fell, but the cap ledger favors us. A win by attrition is a win."
+  },
+  {
+    "outcome": "marginal",
+    "faction": "Vanguard",
+    "line": "Nobody's flag fell. We bled them harder by the cap. Mark it a win."
+  },
+  {
+    "outcome": "draw",
+    "faction": "Directorate",
+    "line": "The line held on both sides. Record it a draw. Regroup and re-task."
+  },
+  {
+    "outcome": "draw",
+    "faction": "Vanguard",
+    "line": "Nobody broke. Call it a draw. We settle it next time."
+  },
+  {
+    "outcome": "defeat",
+    "faction": "Directorate",
+    "line": "Our flag has fallen. The Directorate does not dwell on it. Withdraw and re-form."
+  },
+  {
+    "outcome": "defeat",
+    "faction": "Vanguard",
+    "line": "Flag's gone. We scatter, we regroup, we come back."
+  }
+]

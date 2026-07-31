@@ -1,0 +1,16 @@
+# --- Scratch and superseded --------------------------------------------------
+# Pre-merge snapshot of the GDD, kept locally as a safety net. The merged
+# document's history lives in this repo now, so the .bak is not worth tracking.
+*.bak
+
+# --- Python ------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# --- OS ----------------------------------------------------------------------
+Thumbs.db
+desktop.ini
+.DS_Store

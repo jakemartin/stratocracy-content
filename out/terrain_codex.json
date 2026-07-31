@@ -1,0 +1,52 @@
+[
+  {
+    "terrain": "Plains",
+    "move": 1,
+    "defense": 0,
+    "passable": [
+      "land",
+      "air"
+    ],
+    "blurb": "Open ground. One move to cross and nothing to hide behind — every hit lands clean, for you and against you."
+  },
+  {
+    "terrain": "Woods",
+    "move": 2,
+    "defense": 20,
+    "passable": [
+      "land",
+      "air"
+    ],
+    "blurb": "Cover at a price. Two move to enter, but anything standing in it is twenty percent harder to kill."
+  },
+  {
+    "terrain": "Mountains",
+    "move": 3,
+    "defense": 40,
+    "passable": [
+      "land",
+      "air"
+    ],
+    "blurb": "The wall. Three move to climb and forty percent defense at the top — slow ground you pay to hold."
+  },
+  {
+    "terrain": "Water",
+    "move": "-",
+    "defense": 0,
+    "passable": [
+      "air",
+      "sea"
+    ],
+    "blurb": "A moat. Land units cannot cross it; only sea and air move through. Use it to anchor a flank."
+  },
+  {
+    "terrain": "Town",
+    "move": 1,
+    "defense": 10,
+    "passable": [
+      "land",
+      "air"
+    ],
+    "blurb": "Held ground. Light cover, and the one tile infantry can take for a small stream of Fame."
+  }
+]
