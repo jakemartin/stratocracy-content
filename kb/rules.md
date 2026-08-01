@@ -54,9 +54,12 @@ point (§2.7).
 Fame is a **single currency**: production points, combat rewards, and the win-score are
 one pool, not three.
 
-- **Starting Fame: 200** per side. Income accrues at the start of your turn and
-  is spendable that same turn, but **not on turn 1** — home-factory income adds
-  +100/turn from turn 2 onward, so turn-1 buying power is the 200 alone.
+- **Starting Fame: 200** per side at Normal. §2.9's difficulty handicap moves
+  **the player's side only** — the player opens on **350 on Easy, 100 on Hard**,
+  the AI on 200 at every tier — so 200 is a baseline, not a constant. Income
+  accrues at the start of your turn and is spendable that same turn, but **not
+  on turn 1** — home-factory income adds +100/turn from turn 2 onward, so
+  turn-1 buying power is the side's starting Fame alone.
 - Factory held: **+100 Fame/turn**. Town held: **+25 Fame/turn**.
 - Build costs equal the unit Cost column above (Infantry 100 / Recon 150 / Artillery 200 / Tank 300).
 - **Spawn:** a built unit appears on the factory hex if free, otherwise an adjacent free

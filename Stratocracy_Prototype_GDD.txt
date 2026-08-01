@@ -216,7 +216,7 @@ finding → change → why it’s better.
                     with no manual and  1–4) delivered    rather than an
                     no tutorial mode in through a         assumption.
                     scope, nothing      directive strip,  
-                    explained how they  ten one-shot      
+                    explained how they  nine one-shot     
                     would learn them.   strings plus the  
                                         two cap-approach  
                                         banners, a        
@@ -503,9 +503,12 @@ matches.
 - Income: each factory held pays +100 Fame/turn; each captured town pays
   +25/turn. Income accrues at the start of your turn and is spendable in
   that same turn’s economy phase (§2.9) — with no accrual on turn 1, so
-  turn-1 buying power is the 200 starting Fame alone and the first
-  income lands on turn 2 (Q8, §4.7). More objectives held = a faster
-  army, so the neutral factories are the mid-game prize.
+  a side’s turn-1 buying power is its starting Fame alone — 200 for both
+  sides at Normal, and for the player 350 on Easy or 100 on Hard, since
+  §2.9’s handicap moves the player’s opening Fame only and the AI opens
+  on 200 at every tier — and the first income lands on turn 2 (Q8,
+  §4.7). More objectives held = a faster army, so the neutral factories
+  are the mid-game prize.
 - Build & spawn: spend Fame at a factory to produce a unit from the
   buildlist (§2.4 costs: Infantry 100, Recon 150, Artillery 200, Tank
   300). One build per factory per turn, for the player and the AI alike
@@ -513,9 +516,13 @@ matches.
   adjacent free hex; if the factory is boxed in, the build waits. A
   waiting build holds that factory’s slot until it spawns, and its Fame
   is committed when the build is queued, not when the unit appears, and
-  is not refundable — a boxed-in factory is a commitment to read before
-  spending (Q8, §4.7). Fame has no hard cap — deployment is throttled by
-  board space, not a point ceiling.
+  is not refundable (Q8, §4.7). The player cannot currently reach the
+  waiting case: §2.11.5 disables the Build buttons while a factory is
+  boxed in, so for the player queue time and spawn time are the same
+  instant, and the waiting build is an AI-only path today (§2.9 builds
+  without the UI). Whether the player should be able to queue into a
+  boxed-in factory is Q31 (§4.7). Fame has no hard cap — deployment is
+  throttled by board space, not a point ceiling.
 - Combat Fame: destroying an enemy unit pays exactly half its §2.4 cost
   — Infantry +50, Recon +75, Artillery +100, Tank +150 (Q5, §4.7; every
   value an integer). Destroying the enemy flag pays a flat +500 and ends
@@ -532,11 +539,15 @@ matches.
   never transfers to another unit and never survives an interruption
   (Q4, §4.7). A captured objective flips its Fame income to the new
   owner.
-- Starting Fame: each side opens with 200 Fame — enough for two Infantry
-  or one Artillery on turn 1, and the whole of turn-1 buying power,
-  since income first accrues on turn 2 (Q8, §4.7). Home-factory income
-  adds +100/turn from turn 2 onward. Single-player difficulty is a
-  starting-Fame handicap — see §2.9.
+- Starting Fame: each side opens with 200 Fame at Normal — enough for
+  two Infantry or one Artillery on turn 1, and the whole of turn-1
+  buying power, since income first accrues on turn 2 (Q8, §4.7).
+  Home-factory income adds +100/turn from turn 2 onward. Single-player
+  difficulty is a starting-Fame handicap — see §2.9 — and it moves the
+  player’s side only, so the 200 is a baseline, not a constant, for the
+  player: the player opens on 350 on Easy and 100 on Hard, while the AI
+  opens on 200 at every tier. Any statement here about what turn 1 can
+  afford is a Normal-tier statement.
 - Repair: a unit that ends its turn on an owned Town or Factory and is
   not adjacent to any enemy heals +25% of max HP (rounded down, min 1,
   capped at max) at the start of its next turn — free for the prototype.
@@ -2905,7 +2916,11 @@ Shared conventions (Director-owned contract):
       T-FAME-02  income: each held factory pays +100/turn, each held town +25/turn
                  (§2.7); accrues at the START of the owner's turn and is spendable
                  in that same turn's economy phase, with NO accrual on turn 1 —
-                 turn-1 buying power is the 200 starting Fame alone (Q8, ruled)
+                 a side's turn-1 buying power is its STARTING FAME alone — 200 for
+                 both sides at Normal; §2.9's handicap moves the PLAYER's opening
+                 Fame only, to 350 on Easy and 100 on Hard, while the AI opens on
+                 200 at every tier — so the gate asserts each side's configured
+                 value and never a literal 200 (Q8, ruled)
       T-FAME-03  build: deducts the exact §2.4 cost (Infantry 100, Recon 150,
                  Artillery 200, Tank 300); refused if unaffordable; fameTotal is
                  never negative
@@ -3520,31 +3535,58 @@ was measured against the shipped map (Q28), and the ledger-flip
 criterion exposed by scoping the week-2 parity gate to its command set
 (Q29), and the quantifier the T-SCN-11 print convention never stated at
 a print site, found when a hex-scoped figure was read as a set minimum
-(Q30) — so that each question carries exactly one ID across the whole
-document. Each blocks the gate named beside it; the Director writes the
-rule, the gate then pins it. The last column is not uniform, and the
-difference matters: where a reading is stated, it is the conservative
-one, and it is what ships and what the gates assert — chosen so that a
-later ruling loosens behavior rather than invalidating a passing gate.
-Q28 was the one row where that convention did not hold, and how it
-closed is worth keeping rather than deleting: its conservative reading
-REFUSED A SHIPPED MAP, so no reading could be stated there without
-either blocking Ferrum Crossing or quietly weakening a rule the Director
-had just made, and it therefore carried no assumption at all while it
-was open. It was then ruled the strict way and the map was corrected
-instead of the rule — one deployment hex, no terrain and no rules text
-(Q28; §2.13.2). The limit of the convention is now known and stated
-once: where the conservative reading is not free, this register states
-no reading and waits. No row now states no reading. The five that did —
-Q4’s interruption semantics, Q5’s stacking, Q6, Q8’s three
-sub-questions, and Q9’s target- and build-choice ties — were all ruled
-this revision, and the gates they blocked outright (T-FAME-02,
-T-FAME-04, T-FAME-05, T-FAME-07, T-AI-06 and the T-CAP- tally suite) now
-assert. Three rows remain open but readable — Q2, Q11 and Q30 — each
-carrying a stated reading rather than a blank: Q2 leaves T-MOVE-07
+(Q30), and the reachability seam the Q8(c) commitment ruling exposed
+against §2.11.5’s Build-button rule (Q31) — so that each question
+carries exactly one ID across the whole document. This chain is a
+provenance record, not a statement of the register’s extent: the table
+below is authoritative for which rows exist, and any count must be taken
+from it. The distinction is not pedantry — this paragraph and the
+preamble beneath it are the register’s only two extent-bearing sites,
+and registering Q31 staled this one while the preamble was updated,
+which is the same way every pinned range in this document has failed.
+The Blocks column does not name one kind of thing: some open rows name a
+gate that waits on the ruling, others name only a section, a schema
+field or a stub, and a few state in terms that nothing is blocked at
+all. Where a gate is named, the Director writes the rule and the gate
+then pins it. Two senses of blocked meet here and are worth separating.
+A row that states no reading blocks its gate outright — the gate is
+written-and-blocked: it can be written and parameterized on the row, as
+§4.7’s stubs prescribe, but it cannot assert until the ruling lands,
+which is exactly the state T-FAME-02 and T-AI-06 were in before this
+revision — which is why the preamble below says none of the open rows
+blocks a gate outright, rather than that none blocks a gate. A row that
+states a reading can still leave a gate reserved and unwritten until the
+rule exists: Q2 is the current instance, and T-MOVE-07 is blocked on it
+in the sense that it cannot yet be written, not in the sense that it
+fails. The last column is not uniform, and the difference matters: where
+a reading is stated, it is the conservative one, and it is what ships
+and what the gates assert — chosen so that a later ruling loosens
+behavior rather than invalidating a passing gate. Q28 was the one row
+where that convention did not hold, and how it closed is worth keeping
+rather than deleting: its conservative reading REFUSED A SHIPPED MAP, so
+no reading could be stated there without either blocking Ferrum Crossing
+or quietly weakening a rule the Director had just made, and it therefore
+carried no assumption at all while it was open. It was then ruled the
+strict way and the map was corrected instead of the rule — one
+deployment hex, no terrain and no rules text (Q28; §2.13.2). The limit
+of the convention is now known and stated once: where the conservative
+reading is not free, this register states no reading and waits. No row
+now states no reading. The five that did — Q4’s interruption semantics,
+Q5’s stacking, Q6, Q8’s three sub-questions, and Q9’s target- and
+build-choice ties — were all ruled this revision, and the gates they
+blocked outright (T-FAME-02, T-FAME-04, T-FAME-05, T-FAME-07, T-AI-06
+and the T-CAP- tally suite) now assert. Fifteen of the thirty-one rows
+are ruled; the other sixteen remain open but readable — Q1, Q2, Q3,
+Q10–Q19, Q29, Q30 and the newly registered Q31 — each carrying a stated
+reading rather than a blank, which is why none of them blocks a gate
+outright. Three are worth naming: Q2 leaves T-MOVE-07
 reserved-but-unwritten, Q11’s reading is “no undo”, and Q30’s is partial
-and deliberately not hardened. The convention is unchanged: where a row
-states no reading, its gate stays blocked until the Director answers.
+and deliberately not hardened. (An earlier draft of this paragraph named
+only those three and called them the whole remainder — the test behind
+it looked for rows containing the word “unruled” rather than rows not
+marked RULED, and so could not see the other twelve.) The convention is
+unchanged: where a row states no reading, its gate stays blocked until
+the Director answers.
 
   -------------------------------------------------------------------------------------------------------------------------------
   ID                Question                                                       Blocks                 Assumption in force
@@ -3696,50 +3738,101 @@ states no reading, its gate stays blocked until the Director answers.
                                                                                                           runs first — but there
                                                                                                           is no accrual on turn
                                                                                                           1, so turn-1 buying
-                                                                                                          power is the 200
-                                                                                                          starting Fame alone.
-                                                                                                          That reading was chosen
-                                                                                                          because it is the one
-                                                                                                          §2.13.2 was already
-                                                                                                          priced on: it prices
-                                                                                                          East’s turn-1 Infantry
-                                                                                                          as “100 of the 200
-                                                                                                          starting Fame”, not of
-                                                                                                          300, so no map number
-                                                                                                          moves. It does correct
-                                                                                                          two sentences that said
-                                                                                                          the opposite — §2.7’s
-                                                                                                          “both players have
-                                                                                                          income from turn 1” and
-                                                                                                          its “plus home-factory
-                                                                                                          income from turn 1” —
-                                                                                                          which is the whole
-                                                                                                          textual cost of the
-                                                                                                          ruling inside §2.7 — it
-                                                                                                          also rewrites §2.9’s
-                                                                                                          economy phase,
-                                                                                                          T-FAME-02/04, and the
+                                                                                                          power is the side’s
+                                                                                                          starting Fame alone —
+                                                                                                          200 for both sides at
+                                                                                                          Normal, and for the
+                                                                                                          player 350 / 100 once
+                                                                                                          §2.9’s Easy / Hard
+                                                                                                          handicap applies — that
+                                                                                                          handicap moves the
+                                                                                                          player’s side only, the
+                                                                                                          AI opening on 200 at
+                                                                                                          every tier — so the 200
+                                                                                                          is a baseline and not a
+                                                                                                          constant. That reading
+                                                                                                          was chosen because it
+                                                                                                          is the one §2.13.2 was
+                                                                                                          already priced on: it
+                                                                                                          prices East’s turn-1
+                                                                                                          Infantry as “100 of the
+                                                                                                          200 starting Fame”, not
+                                                                                                          of 300, so no map
+                                                                                                          number moves. It does
+                                                                                                          correct two sentences
+                                                                                                          that said the opposite
+                                                                                                          — §2.7’s “both players
+                                                                                                          have income from turn
+                                                                                                          1” and its “plus
+                                                                                                          home-factory income
+                                                                                                          from turn 1” — and
+                                                                                                          rewrites the Income
+                                                                                                          bullet beside them.
+                                                                                                          Counting the whole of
+                                                                                                          Q8 rather than its
+                                                                                                          timing clause alone,
+                                                                                                          the row touches four
+                                                                                                          §2.7 sites — the
+                                                                                                          factories, Income,
+                                                                                                          build-and-spawn and
+                                                                                                          starting-Fame bullets —
+                                                                                                          and beyond §2.7 it
+                                                                                                          rewrites §2.9’s economy
+                                                                                                          phase, T-FAME-02 and
+                                                                                                          T-FAME-04, and the
                                                                                                           starting-Fame and build
                                                                                                           lines in kb/rules.md.
-                                                                                                          (b) Limit: one build
-                                                                                                          per factory per turn,
-                                                                                                          player and AI alike,
-                                                                                                          matching what §2.9
-                                                                                                          already describes for
-                                                                                                          the AI; a waiting build
-                                                                                                          holds that factory’s
-                                                                                                          slot until it spawns.
-                                                                                                          (c) Commitment: Fame is
-                                                                                                          committed at queue time
-                                                                                                          and is not refundable,
-                                                                                                          so fameTotal moves once
-                                                                                                          and never reverses, no
-                                                                                                          cancel affordance is
-                                                                                                          owed by §2.11, and a
-                                                                                                          boxed-in factory
-                                                                                                          becomes a commitment
-                                                                                                          the player must read
-                                                                                                          before spending.
+                                                                                                          (c) also exposed a seam
+                                                                                                          it did not create:
+                                                                                                          §2.11.5 disables the
+                                                                                                          Build buttons whenever
+                                                                                                          a factory is boxed in,
+                                                                                                          so the player can never
+                                                                                                          reach the waiting-build
+                                                                                                          state this clause
+                                                                                                          prices — for the
+                                                                                                          player, queue time and
+                                                                                                          spawn time are the same
+                                                                                                          instant, and the
+                                                                                                          non-refundable
+                                                                                                          commitment binds only
+                                                                                                          on ordinary builds. The
+                                                                                                          waiting build is
+                                                                                                          therefore an AI-only
+                                                                                                          path today (§2.9 builds
+                                                                                                          without the UI). Naming
+                                                                                                          that seam retracts the
+                                                                                                          clause it disproves:
+                                                                                                          §2.7’s build-and-spawn
+                                                                                                          bullet and this cell
+                                                                                                          both previously called
+                                                                                                          a boxed-in factory “a
+                                                                                                          commitment to read
+                                                                                                          before spending”, which
+                                                                                                          the player cannot
+                                                                                                          reach, and both now say
+                                                                                                          so instead. Whether the
+                                                                                                          Build buttons should be
+                                                                                                          enabled while boxed in
+                                                                                                          — and the commitment
+                                                                                                          shown before the click
+                                                                                                          — is registered as Q31,
+                                                                                                          not assumed. (b) Limit:
+                                                                                                          one build per factory
+                                                                                                          per turn, player and AI
+                                                                                                          alike, matching what
+                                                                                                          §2.9 already describes
+                                                                                                          for the AI; a waiting
+                                                                                                          build holds that
+                                                                                                          factory’s slot until it
+                                                                                                          spawns. (c) Commitment:
+                                                                                                          Fame is committed at
+                                                                                                          queue time and is not
+                                                                                                          refundable, so
+                                                                                                          fameTotal moves once
+                                                                                                          and never reverses and
+                                                                                                          no cancel affordance is
+                                                                                                          owed by §2.11.
                                                                                                           T-FAME-02 and T-FAME-04
                                                                                                           unblocked; Stub 4 is no
                                                                                                           longer gated on an
@@ -4402,6 +4495,27 @@ states no reading, its gate stays blocked until the Director answers.
                                                                                                           reported integer or
                                                                                                           refusal condition
                                                                                                           depends on any of it.
+
+  Q31               Queuing a build at a boxed-in factory. §2.7 says a build that  §2.11.5’s Build-button §2.11.5 ships as
+                    cannot spawn waits, and Q8(c) prices that wait as a            rule; §2.7’s           written: Build is
+                    non-refundable commitment — but §2.11.5 disables the Build     waiting-build clause;  disabled while boxed
+                    buttons while a factory is boxed in, so the player can never   Q8(c)’s commitment,    in, so the waiting
+                    create the state the clause prices. Should the buttons be      which today binds only build is an AI-only
+                    enabled, with the commitment shown before the click, or is the on ordinary player     path (§2.9 builds
+                    waiting build correctly an AI-only path?                       builds                 without the UI) and for
+                                                                                                          the player queue time
+                                                                                                          and spawn time are the
+                                                                                                          same instant. No gate
+                                                                                                          asserts a player-queued
+                                                                                                          waiting build.
+                                                                                                          Registered rather than
+                                                                                                          assumed because Q8(c)
+                                                                                                          ruled on a state the UI
+                                                                                                          makes unreachable — the
+                                                                                                          ruling stands, its
+                                                                                                          player-facing half is
+                                                                                                          simply not exercised
+                                                                                                          yet.
   -------------------------------------------------------------------------------------------------------------------------------
 
 4.8 Data contract — DataTable schemas
