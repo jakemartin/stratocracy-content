@@ -1877,31 +1877,33 @@ Invariants:
             (Q28), not over that seat's `guidedOpening.infantry` alone:
                 min over the opposing seat's Infantry of cost(hex, objective)
                   >  the owning lane's cost
-            PRINT CONVENTION, stated here at the definition and used at
-            every site below: THE RELATION IS NAMED AT THE SITE, and
-            integer order identifies nothing. Two relations in this stub
-            print an "against":
-              - OWNING against OPPOSING (this invariant). Both terms are
-                measured route costs; the pair is written BARE — "5
-                against 6" — and always owning first.
-              - MEASURED against BUDGET (T-SCN-06's ceiling, reported by
-                T-SCN-08 fixture (c)). The right-hand term is written as
-                the CEILING it is — "7 against the 6 MP ceiling" — never
-                as a bare integer. A bare pair is therefore always the
-                first relation.
-            ORDER CARRIES NO INFORMATION, neither about which relation is
-            in play nor about pass or fail, and that is a correction
-            rather than a restatement: BOTH relations print the larger
-            integer first on their FAILING form. T-SCN-06 fails when the
-            measurement exceeds its ceiling; T-SCN-11 fails whenever the
-            opposing route is no dearer than the owning lane, which prints
-            "7 against 5" when the enemy is closer and "5 against 5" on a
-            tie. Magnitude order separates neither the two relations from
-            each other nor a pass from a refusal — only the naming does,
-            so every site names its relation and no site relies on which
-            integer is bigger. Two integers joined by "and" instead
-            (T-SCN-08's fixtures, "3 and 3") are the two SEATS' own
-            lanes — a different pair, asserting no inequality.
+            PRINT CONVENTION: THE RELATION IS NAMED AT THE SITE, and
+            integer order carries no information — neither which relation
+            is in play nor pass versus fail, since both relations print the
+            larger integer first on their failing form. Every site says
+            what it is comparing; no site relies on which integer is bigger.
+            WHAT A BARE PAIR QUANTIFIES OVER, stated because it was only
+            derivable and was read the other way by a careful reader: the
+            right-hand term of a bare "X against Y" is this invariant's
+            opposing term, so it is the MINIMUM over every CanCapture-row
+            unit the opposing seat deploys (Q28) — a set figure, never a
+            cost measured from one named hex. A cost measured from some
+            other named hex is a THIRD quantity; print it with its hex and
+            say what it is — "14 from (1,3) alone, not the set minimum" —
+            so it cannot be mistaken for the set figure. The danger is
+            concrete, not stylistic: the minimising unit can CHANGE under a
+            counterfactual, so a figure taken from the shipped minimiser
+            stops being the minimum. Asymmetry (ii)'s bullet is exactly
+            that case — excluding the Bridges moves West's minimiser from
+            (1,3) to (1,5), and 14 stopped being the minimum without
+            anything on the map moving.
+            WHETHER THIS SHOULD HARDEN INTO A CLOSED LIST OF PERMITTED
+            FORMS IS Q30, unruled and deliberately left so. An earlier
+            revision attempted that codification and withdrew it: each
+            closure outlawed prose elsewhere in the document that was
+            correct, which is a poor trade for a convention that binds
+            wording only. No invariant, fixture, reported integer or
+            refusal condition depends on any of this.
             This is the gate for §2.13.1's "uncontested, not merely
             reachable" — a promise that until this revision was a property of
             the drawn map rather than a checkable rule, and one the map
@@ -1949,15 +1951,49 @@ Invariants:
                     - Ferrum Crossing (§2.13.2) EXERCISES it, but on ONE
                       of fixture (a)'s TWO opposing routes, not both.
                       West's cheapest route to North (6,2) — 6 MP from
-                      (1,3) — runs over the north Bridge (5,1).
-                      Bridge-free, the cheapest route from that hex to
-                      that objective costs 14 MP:
+                      (1,3) — runs over the north Bridge (5,1). TWO
+                      Bridge-free figures follow and they are DIFFERENT
+                      QUANTITIES, so each is labelled where it stands.
+                      FROM (1,3) ALONE, not a set minimum: 14 MP,
                       (2,3)(3,4)(3,5)(4,5)(5,6)(6,6)m(6,5)(6,4)w(6,3)w
                       (6,2) — around the river's southern end, then up
-                      through the Woods ring. More than double. The
-                      OTHER opposing route in that fixture is already
-                      Bridge-free and does not move: East's cheapest
-                      route to South (5,7), 6 MP from (9,3), is
+                      through the Woods ring. More than double that
+                      hex's own 6.
+                      MINIMISED OVER WEST'S INFANTRY — this invariant's
+                      opposing term (Q28), and the only figure a BARE
+                      pair may carry: 13 MP, from the OTHER West
+                      Infantry (1,5),
+                      (2,6)(3,6)(3,7)(4,7)(5,7)F(6,7)(7,6)T(6,5)
+                      (6,4)w(6,3)w(6,2). Its first five hexes are West's
+                      own guided South lane (§2.13.2): 5 MP to (5,7),
+                      then 8 MP up the east bank. Bridge-free, West's
+                      road to the NORTHERN objective runs through West's
+                      own SOUTHERN one.
+                      EXCLUDING THE BRIDGES MOVES THE MINIMISER, which
+                      is the whole reason the two figures differ. WITH
+                      the Bridges, West's set minimum to North is 6,
+                      achieved by (1,3); (1,5) alone costs 7, not the
+                      set minimum (§2.13.2). WITHOUT them, the set
+                      minimum is 13, achieved by (1,5); (1,3) alone
+                      costs 14, not the set minimum. THE ACHIEVING UNIT
+                      IS NOT THE SAME UNIT under the two readings — that
+                      is the flip, and it is why this bullet's two
+                      figures are two DIFFERENT quantities rather than
+                      one quantity corrected. No "against" is printed in
+                      this comparison, deliberately: these are four
+                      costs of ONE seat's own units, while an "against"
+                      in this stub is the TWO-SEAT inequality a fixture
+                      recomputes (PRINT CONVENTION; Q30).
+                      The 1 MP is the APPROACH, not the Mountain —
+                      (1,5) reaches (5,7) in 5 and (1,3) in 6, while the
+                      tail from (5,7) costs 8 for both, and (1,3)'s 14
+                      is achievable Mountain-free as well. So a figure
+                      measured from the SHIPPED minimiser is NOT the
+                      counterfactual minimum, and that is the trap this
+                      bullet exists to name.
+                      The OTHER opposing route in that fixture is
+                      already Bridge-free and does not move: East's
+                      cheapest route to South (5,7), 6 MP from (9,3), is
                       (9,4)F(8,5)(8,6)(7,7)(6,7)(5,7), which reaches
                       column 5 only at the objective itself, on row 7,
                       below the river's southern end at (5,5) — the
@@ -1977,18 +2013,22 @@ Invariants:
                     WHY THIS IS STATED AS A REASON AND NOT A PERMISSION:
                     a Bridge-free reading does not FAIL Ferrum Crossing
                     in EITHER seat, so no gate in this suite catches it.
-                    North still passes, at 5 against 14 — strictly more
-                    than the owning lane, on a number that describes a
-                    walk around the entire river. South still passes at
-                    5 against 6, exactly as drawn, because its opposing
-                    route never crossed a Bridge. What the counterfactual
-                    changes is ONE margin of the two: North's opposing
-                    figure goes from 6 to 14 against an unchanged owning
-                    5, widening that margin from 1 MP to 9 MP — a
-                    single-digit widening, and an unremarked one, because
-                    this invariant asserts a strict inequality and NO
-                    CEILING (asymmetry (i)). South's margin stays at 1 MP
-                    and never depended on the allowance at all.
+                    North still passes, at 5 against 13 — a BARE pair,
+                    so its right-hand term is the SET minimum over West's
+                    Infantry, the (1,5) route above, and NOT the 14
+                    measured from (1,3) alone. Strictly more than the
+                    owning lane on either figure, and either way a number
+                    that describes a walk around the entire river. South
+                    still passes at 5 against 6, exactly as drawn,
+                    because its opposing route never crossed a Bridge.
+                    What the counterfactual changes is ONE margin of the
+                    two: North's opposing figure goes from 6 to 13
+                    against an unchanged owning 5, widening that margin
+                    from 1 MP to 8 MP — a single-digit widening, and an
+                    unremarked one, because this invariant asserts a
+                    strict inequality and NO CEILING (asymmetry (i)).
+                    South's margin stays at 1 MP and never depended on
+                    the allowance at all.
                     THE SPLIT IS THE REASON. The allowance is what keeps
                     the NORTHERN opposing route honest, and neither half
                     of the split is gate-catchable, because no invariant
@@ -2121,7 +2161,9 @@ contradiction the document knowingly carried (Q23), the two raised by the
 correction (Q26), the guided opening's one input-gating constraint (Q27), the
 reading the Q22 ruling exposed the moment its new invariant was measured
 against the shipped map (Q28), and the ledger-flip criterion exposed by
-scoping the week-2 parity gate to its command set (Q29)
+scoping the week-2 parity gate to its command set (Q29), and the quantifier the
+T-SCN-11 print convention never stated at a print site, found when a hex-scoped
+figure was read as a set minimum (Q30)
 — so that each question
 carries exactly one ID across the whole document. Each blocks the gate named beside it;
 the Director writes the rule, the gate then pins it. The last column is not
@@ -2173,6 +2215,7 @@ Director answers.
 | **Q27** | ~~Is gating End Turn during beat 1a presentation or rule?~~ **RULED.** It ships as specified: End Turn is inert during beat 1a until the marked Infantry has moved. Teaching by constraint is accepted here because it guarantees beat 1a retires inside turn 1, which is what makes §2.11.6-B's schedule predictable. Original question: During beat 1a of a guided opening only, End Turn is inert until the marked Infantry (`guidedOpening.infantry`) has moved; hover reads `Move the marked Infantry first.` It is scoped to the first match, dies with `Skip guidance`, and never applies outside the guided window — but it is the only guided-opening constraint that gates a player *input* rather than a selection, which is why it is registered rather than assumed. | Nothing today, and nothing in §4.7: no stub or `T-` ID gates the directive strip, and Stub 7 deliberately keeps the guidance layer out of Stub 8's snapshot. The dependency is internal to §2 — §2.11.6-B's turn-1 row is unconditional in all three branches only if 1a cannot outlive turn 1, so a ruling of "no input gating" would require that row to be re-derived | Ruled: ships as specified. The alternative, recorded because it was weighed: a player who ends turn 1 without moving leaves 1a outstanding, and rule 1 hands the strip to 1b (`End turn.`) — an instruction they have just followed — so the fallback is to let 1a expire silently at the turn boundary like 1b, and §2.11.6-B's turn-1 row gains a footnote. |
 | **Q28** | ~~Whose Infantry the T-SCN-11 opposing route is measured from.~~ **RULED (this revision).** Reading **(a)**: the opposing route is minimised over **any Infantry that seat owns**, not over its `guidedOpening.infantry` alone. Original question: Q22 ruled that the opposing seat's cheapest Infantry route to a guided objective must cost strictly more than the owning seat's lane, but not over which units "cheapest" ranges — **(a)** every CanCapture-row unit that seat deploys, since either Infantry can race, or **(b)** that seat's own `guidedOpening.infantry` alone, which keeps the comparison lane-against-lane and matches how T-SCN-06 quantifies over a NAMED hex rather than an existential. | Nothing further. **T-SCN-11 is unblocked and asserting** (§4.7 Stub 7), and §4.11 row 7 carries it in its acceptance set | Ruled the strict way, knowingly and at a stated price. (b) was available and would have passed the shipped map untouched; it was refused because the property Q22 protects is a **race**, and a race does not care which Infantry wins it. T-SCN-06's named-hex quantifier is not a counter-precedent — it names a hex because the guided lane must be the one turn-1a marks, whereas nothing is marked on the opposing side and the only question is who can arrive. **The cost was one deployment move, not a weakened rule.** East's second Infantry moved **(9,5) → (9,1)** (§2.13.2); no terrain, factory or town count, lane cost, home-factory-empty rule or turn estimate moved with it, and the relocation was **forced rather than chosen** — East's south town (7,6) is 2 hexes from South (5,7), so by the triangle inequality any hex covering that town races that factory, and the only free southern hexes clearing 5 MP were the Artillery's and the Flag Tank's. *Ferrum Crossing* now reports **5 against 6 in both seats** — 1 MP each way, the thinnest margin in the set. The pre-fix **5 against 5** is kept as T-SCN-11's fixture (b): a failing case that was actually authored, that passes every other invariant in the suite, and that reading (b) would have passed. |
 | **Q29** | Ledger-flip criterion for a partially-scoped gate. §4.11 rows 9–10 now **run** their gates in week 2 over a `{Move, Attack}` log and re-run them over the complete command set in week 3 (Q20, amended). §3's ledger says a row is verified when it cites "the commit and passing test IDs that back it," and §3's two bars require agent-authored tests that pass plus a human sign-off — but neither says whether *passing* means the acceptance set ran over the system's whole input domain. Without a rule, a green week-2 T-INT-02 could flip a proposed ledger row while the log it replays is missing three of the five §4.9 commands. | §3's ledger rows for §4.9 and §4.10 (both proposed rows, both unwritten today); no gate — every test runs either way, this governs only what may be *claimed* from a run | **Conservative reading in force:** a row flips only when its **full** acceptance set passes over the **complete** §4.9 command set at one commit; a partial pass is reported as a run and never as a closure, and §4.11 rows 9–10 are written in exactly those two parts. Free in the conservative direction — it can only delay a claim, so a later loosening invalidates nothing that passed. The alternative worth weighing, since the information is real and currently discarded: record partial passes in the ledger as a dated *"green over subset X at commit Y"* line, which reports more without claiming more — that is a §3 presentation decision, not a technical one, which is why it is registered rather than assumed. |
+| **Q30** | What a T-SCN-11 "against" print quantifies over, and what form a hex-scoped route cost takes. A withdrawn revision of the print convention (§4.7 Stub 7) named **two** relations for an "against" and gave two printed forms — a bare pair for owning-against-opposing, a named ceiling for measured-against-budget — but there are **three** quantities in play, and when this row was filed the third had neither a printed form nor an exclusion. The bare pair's right-hand term is this invariant's opposing term and is therefore the **minimum over every CanCapture-row unit the opposing seat deploys** (Q28); that is derivable from the formula, was never stated at a print site, and was read the other way by a reader looking specifically for it. A cost measured **from one named hex** is neither of the two printed relations, so it has nowhere to go but the bare form, which means something else. That is mechanically how asymmetry (ii)'s Bridge-free counterfactual came to print "5 against 14": 14 is West's Bridge-free cost from **(1,3) alone**, while the set minimum is **13**, from **(1,5)** — `(2,6)(3,6)(3,7)(4,7)(5,7)F(6,7)(7,6)T(6,5)(6,4)w(6,3)w(6,2)`, West's own guided South lane plus 8 MP up the east bank. The two differ because **excluding the Bridges moves the minimising unit**: with them permitted West's set minimum is 6, achieved by (1,3), and (1,5) alone costs 7; without them the set minimum is 13, achieved by (1,5), and (1,3) alone costs 14. Should the convention gain a **third printed form** for a hex-scoped cost ("14 from (1,3) alone, not the set minimum"), or should a hex-scoped cost be **forbidden** inside an "against" print entirely? | **Nothing computable.** T-SCN-11's inputs, formula, unit set, reported integers, refusal conditions and all three fixtures are identical either way, and no map, lane cost or deployment moves. It governs only what §4.7's **prose** may claim from a measured integer — which is where the error was, and is the one place this suite has no gate. | **Partial reading in force, deliberately not hardened.** Two things are settled and written into the convention: a bare pair is **set-quantified** (the right-hand term is the minimum over every CanCapture unit the opposing seat deploys, per Q28), and a cost measured from some other named hex is printed with its hex and what it is — "14 from (1,3) alone, not the set minimum". Naming a hex beside a bare pair stays legal when that hex **is** the minimiser, which is what fixture (a) does. The counterfactual figures are corrected to this reading: **5 against 13**, margin **8 MP**, with **14 retained** as the explicitly (1,3)-scoped figure it always was. **What is left open is whether this should harden into a closed list of permitted forms.** An earlier revision wrote that closure and it was withdrawn: each version outlawed prose elsewhere in the document that was correct — a within-seat ranking in §2.13.2, an objective-count comparison in §2.13.5 — and twice broke its own rule inside the passage stating it. That is a poor trade for a convention binding wording only, so the question is left to a human rather than half-answered. Nothing computable turns on it: no invariant, fixture, reported integer or refusal condition depends on any of it. |
 
 ### 4.8 Data contract — DataTable schemas
 
