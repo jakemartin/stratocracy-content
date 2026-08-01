@@ -54,18 +54,24 @@ point (§2.7).
 Fame is a **single currency**: production points, combat rewards, and the win-score are
 one pool, not three.
 
-- **Starting Fame: 200** per side, plus home-factory income from turn 1.
+- **Starting Fame: 200** per side. Income accrues at the start of your turn and
+  is spendable that same turn, but **not on turn 1** — home-factory income adds
+  +100/turn from turn 2 onward, so turn-1 buying power is the 200 alone.
 - Factory held: **+100 Fame/turn**. Town held: **+25 Fame/turn**.
 - Build costs equal the unit Cost column above (Infantry 100 / Recon 150 / Artillery 200 / Tank 300).
 - **Spawn:** a built unit appears on the factory hex if free, otherwise an adjacent free
-  hex; if the factory is boxed in, the build waits.
-- Destroying an enemy unit pays **~half its cost** (a Tank kill = +150) **[unpinned:
-  exact per-unit award]**; an **undamaged strike** (attacker takes no counter) pays a
-  small bonus **[unpinned]**; destroying the enemy **flag pays +500 and ends the match**.
+  hex; if the factory is boxed in, the build waits. **One build per factory per
+  turn.** A waiting build holds that factory's slot until it spawns, and its
+  Fame is committed when the build is queued, not when the unit appears, and is
+  not refundable.
+- Destroying an enemy unit pays **exactly half its cost — Infantry 50 / Recon 75 /
+  Artillery 100 / Tank 150**; there is **no undamaged-strike bonus** (cut, not priced);
+  destroying the enemy **flag pays a flat +500 and ends the match** — the flag award
+  replaces the ordinary kill award rather than stacking, so a flag Tank pays 500, not 650.
 - **Capture:** move an Infantry onto a town/factory and hold to capture over **N turns
-  (start N=1-2)**; a captured objective flips its income. **[unpinned: exact N — the
-  shipped scenario assumes N=1, but this is an assumption in force, not a rule; also
-  unpinned is what happens to progress if the Infantry leaves or dies mid-capture]**
+  (N = 1 on the shipped scenario; N is per-scenario data)**; a captured objective flips
+  its income. Capture progress is held by the tile and **resets to zero when the
+  capturing Infantry leaves the hex or dies**; it never transfers to another unit.
 - **Repair:** a unit ending its turn on an **owned Town or Factory** and **not adjacent to
   any enemy** heals **+25% of max HP** (rounded down, min 1, capped at max) at the start of
   its next turn — free. The not-adjacent clause is the anti-fortress lock: a unit must
@@ -100,7 +106,8 @@ global constant.
    **combat Fame earned → objectives held (X of N) → surviving HP.**
 3. All three keys equal → **draw**.
 
-**Combat Fame** counts only kills and undamaged-strike bonuses. It **excludes passive
+**Combat Fame** counts only kills — the undamaged-strike bonus was cut unpriced
+(Q6). It **excludes passive
 factory and town income** — counting income would restore the turtle exploit. The +500
 flag bonus can never appear in a capped tally (a flag kill ends the match).
 

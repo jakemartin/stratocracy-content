@@ -2,12 +2,20 @@
   {
     "outcome": "decisive",
     "faction": "Directorate",
-    "line": "Enemy flag destroyed. Order is restored. The Directorate endures."
+    "line": "Enemy flag destroyed. Order is restored. The Directorate endures.",
+    "_critic": "FAILED",
+    "_violations": [
+      "rule: decisive line references none of its triggers ['domination', 'factories', 'backstop']"
+    ]
   },
   {
     "outcome": "decisive",
     "faction": "Vanguard",
-    "line": "Their flag is down. We didn't ask permission — we took the field."
+    "line": "Their flag is down. We didn't ask permission — we took the field.",
+    "_critic": "FAILED",
+    "_violations": [
+      "rule: decisive line references none of its triggers ['domination', 'factories', 'backstop']"
+    ]
   },
   {
     "outcome": "marginal",

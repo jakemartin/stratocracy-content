@@ -2,7 +2,7 @@
 
 ```
 Stratocracy Dynamic Content Pipeline — RAG generate + deterministic critic
-Knowledge base: kb/rules.md (4 units, 5 terrains, 4 outcomes) + kb/setting.md
+Knowledge base: kb/rules.md (4 units, 7 terrains, 4 outcomes) + kb/setting.md
 
 --- unit: infantry ---
   QUERY:    unit codex entry for 'infantry' — need its stats and the field-manual voice
@@ -43,17 +43,17 @@ Knowledge base: kb/rules.md (4 units, 5 terrains, 4 outcomes) + kb/setting.md
 
 --- terrain: woods ---
   QUERY:    terrain codex entry for 'woods' — need its stats and the field-manual voice
-  RETRIEVED [kb/rules.md]: | Woods | 2 | 20 | land,air | no |
+  RETRIEVED [kb/rules.md]: | Woods | 2 | +20 | land,air | no |
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
   CRITIC:   PASS (draft 0)
   OUTPUT:   {"terrain": "Woods", "move": 2, "defense": 20, "passable": ["land", "air"], "blurb": "Cover at a price. Two move to enter, but anything standing in it is twenty percent harder to kill."}
 
 --- terrain: mountains ---
   QUERY:    terrain codex entry for 'mountains' — need its stats and the field-manual voice
-  RETRIEVED [kb/rules.md]: | Mountains | 3 | 40 | land,air | no |
+  RETRIEVED [kb/rules.md]: | Mountains | 3 | +40 | land (slow),air | no |
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
-  CRITIC:   PASS (draft 0)
-  OUTPUT:   {"terrain": "Mountains", "move": 3, "defense": 40, "passable": ["land", "air"], "blurb": "The wall. Three move to climb and forty percent defense at the top — slow ground you pay to hold."}
+  CRITIC:   BLOCK (draft 0) — rule: Mountains passable ['air', 'land'] != ['air', 'land (slow)']
+  CRITIC:   STILL FAILING after all drafts — flagged, not shipped clean
 
 --- terrain: water ---
   QUERY:    terrain codex entry for 'water' — need its stats and the field-manual voice
@@ -64,7 +64,7 @@ Knowledge base: kb/rules.md (4 units, 5 terrains, 4 outcomes) + kb/setting.md
 
 --- terrain: town ---
   QUERY:    terrain codex entry for 'town' — need its stats and the field-manual voice
-  RETRIEVED [kb/rules.md]: | Town | 1 | 10 | land,air | yes |
+  RETRIEVED [kb/rules.md]: | Town | 1 | +10 | land,air | yes |
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
   CRITIC:   PASS (draft 0)
   OUTPUT:   {"terrain": "Town", "move": 1, "defense": 10, "passable": ["land", "air"], "blurb": "Held ground. Light cover, and the one tile infantry can take for a small stream of Fame."}
@@ -74,16 +74,16 @@ Knowledge base: kb/rules.md (4 units, 5 terrains, 4 outcomes) + kb/setting.md
   RETRIEVED [kb/rules.md]: | decisive | enemy flag unit destroyed | flag |
   RETRIEVED [kb/setting.md :: Faction A]: ## Faction A — The Directorate
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
-  CRITIC:   PASS (draft 0)
-  OUTPUT:   {"outcome": "decisive", "faction": "Directorate", "line": "Enemy flag destroyed. Order is restored. The Directorate endures."}
+  CRITIC:   BLOCK (draft 0) — rule: decisive line references none of its triggers ['domination', 'factories', 'backstop']
+  CRITIC:   STILL FAILING after all drafts — flagged, not shipped clean
 
 --- result: decisive/Vanguard ---
   QUERY:    result-screen line for a 'decisive' outcome in the Vanguard voice — need the outcome trigger, the faction voice, and the tone bible
   RETRIEVED [kb/rules.md]: | decisive | enemy flag unit destroyed | flag |
   RETRIEVED [kb/setting.md :: Faction B]: ## Faction B — The Vanguard
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
-  CRITIC:   PASS (draft 0)
-  OUTPUT:   {"outcome": "decisive", "faction": "Vanguard", "line": "Their flag is down. We didn't ask permission — we took the field."}
+  CRITIC:   BLOCK (draft 0) — rule: decisive line references none of its triggers ['domination', 'factories', 'backstop']
+  CRITIC:   STILL FAILING after all drafts — flagged, not shipped clean
 
 --- result: marginal/Directorate ---
   QUERY:    result-screen line for a 'marginal' outcome in the Directorate voice — need the outcome trigger, the faction voice, and the tone bible
@@ -103,7 +103,7 @@ Knowledge base: kb/rules.md (4 units, 5 terrains, 4 outcomes) + kb/setting.md
 
 --- result: draw/Directorate ---
   QUERY:    result-screen line for a 'draw' outcome in the Directorate voice — need the outcome trigger, the faction voice, and the tone bible
-  RETRIEVED [kb/rules.md]: | draw | cap resolved to a tie, including mutual passivity | draw, tie, stalemate |
+  RETRIEVED [kb/rules.md]: | draw | cap resolved to a tie, or mutual passivity (both sides zero combat Fame) | draw, tie, stalemate |
   RETRIEVED [kb/setting.md :: Faction A]: ## Faction A — The Directorate
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
   CRITIC:   PASS (draft 0)
@@ -111,7 +111,7 @@ Knowledge base: kb/rules.md (4 units, 5 terrains, 4 outcomes) + kb/setting.md
 
 --- result: draw/Vanguard ---
   QUERY:    result-screen line for a 'draw' outcome in the Vanguard voice — need the outcome trigger, the faction voice, and the tone bible
-  RETRIEVED [kb/rules.md]: | draw | cap resolved to a tie, including mutual passivity | draw, tie, stalemate |
+  RETRIEVED [kb/rules.md]: | draw | cap resolved to a tie, or mutual passivity (both sides zero combat Fame) | draw, tie, stalemate |
   RETRIEVED [kb/setting.md :: Faction B]: ## Faction B — The Vanguard
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
   CRITIC:   PASS (draft 0)
@@ -119,7 +119,7 @@ Knowledge base: kb/rules.md (4 units, 5 terrains, 4 outcomes) + kb/setting.md
 
 --- result: defeat/Directorate ---
   QUERY:    result-screen line for a 'defeat' outcome in the Directorate voice — need the outcome trigger, the faction voice, and the tone bible
-  RETRIEVED [kb/rules.md]: | defeat | your own flag unit destroyed | flag |
+  RETRIEVED [kb/rules.md]: | defeat | your own flag unit destroyed, or the enemy dominates all factories | flag, domination |
   RETRIEVED [kb/setting.md :: Faction A]: ## Faction A — The Directorate
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
   CRITIC:   PASS (draft 0)
@@ -127,13 +127,13 @@ Knowledge base: kb/rules.md (4 units, 5 terrains, 4 outcomes) + kb/setting.md
 
 --- result: defeat/Vanguard ---
   QUERY:    result-screen line for a 'defeat' outcome in the Vanguard voice — need the outcome trigger, the faction voice, and the tone bible
-  RETRIEVED [kb/rules.md]: | defeat | your own flag unit destroyed | flag |
+  RETRIEVED [kb/rules.md]: | defeat | your own flag unit destroyed, or the enemy dominates all factories | flag, domination |
   RETRIEVED [kb/setting.md :: Faction B]: ## Faction B — The Vanguard
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
   CRITIC:   PASS (draft 0)
   OUTPUT:   {"outcome": "defeat", "faction": "Vanguard", "line": "Flag's gone. We scatter, we regroup, we come back."}
 
 Done. 4 units, 5 terrains, 8 result lines emitted.
-Critic caught and corrected 1 consistency break(s) during the run.
+Critic caught and corrected 4 consistency break(s) during the run.
 Outputs in out/: unit_codex.json, terrain_codex.json, result_screen.json
 ```

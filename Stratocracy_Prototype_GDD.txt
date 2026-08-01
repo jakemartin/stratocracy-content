@@ -494,31 +494,49 @@ targets, scaled down from Conflict’s for four units and ~20-turn
 matches.
 
 - Factories & starting layout: the map ships with multiple factories — a
-  home factory per side (owned at start, so both players have income
-  from turn 1) plus two or more neutral factories in contested ground; a
-  typical small skirmish map has ~4 factories total. The spread is what
-  makes expansion worth fighting for and “objectives held” (§2.8) a real
-  0–N measure instead of a 1–0 coin-flip.
+  home factory per side (owned at start, so both players draw income
+  from turn 2, the first accrual — Q8, §4.7) plus two or more neutral
+  factories in contested ground; a typical small skirmish map has ~4
+  factories total. The spread is what makes expansion worth fighting for
+  and “objectives held” (§2.8) a real 0–N measure instead of a 1–0
+  coin-flip.
 - Income: each factory held pays +100 Fame/turn; each captured town pays
-  +25/turn. More objectives held = a faster army, so the neutral
-  factories are the mid-game prize.
+  +25/turn. Income accrues at the start of your turn and is spendable in
+  that same turn’s economy phase (§2.9) — with no accrual on turn 1, so
+  turn-1 buying power is the 200 starting Fame alone and the first
+  income lands on turn 2 (Q8, §4.7). More objectives held = a faster
+  army, so the neutral factories are the mid-game prize.
 - Build & spawn: spend Fame at a factory to produce a unit from the
   buildlist (§2.4 costs: Infantry 100, Recon 150, Artillery 200, Tank
-  300). The unit spawns on the factory hex if it’s free, otherwise an
-  adjacent free hex; if the factory is boxed in, the build waits. Fame
-  has no hard cap — deployment is throttled by board space, not a point
-  ceiling.
-- Combat Fame: destroying an enemy unit pays ~half its Fame cost (e.g. a
-  Tank kill = +150 — see Q5, §4.7, to make this exact); an undamaged
-  strike (attacker takes no counter) pays a small bonus (see Q6, §4.7);
-  destroying the enemy flag pays +500 and ends the match. These feed the
-  same Fame pool and the cap tiebreak (§2.8).
+  300). One build per factory per turn, for the player and the AI alike
+  (§2.9). The unit spawns on the factory hex if it’s free, otherwise an
+  adjacent free hex; if the factory is boxed in, the build waits. A
+  waiting build holds that factory’s slot until it spawns, and its Fame
+  is committed when the build is queued, not when the unit appears, and
+  is not refundable — a boxed-in factory is a commitment to read before
+  spending (Q8, §4.7). Fame has no hard cap — deployment is throttled by
+  board space, not a point ceiling.
+- Combat Fame: destroying an enemy unit pays exactly half its §2.4 cost
+  — Infantry +50, Recon +75, Artillery +100, Tank +150 (Q5, §4.7; every
+  value an integer). Destroying the enemy flag pays a flat +500 and ends
+  the match — the flag award replaces the victim’s ordinary kill award
+  rather than stacking with it, so a flag Tank pays 500, not 650 (Q5).
+  There is no undamaged-strike bonus: it was cut rather than priced,
+  because kills already pay half-cost and the positional triangle
+  already rewards a clean standoff strike with tempo (Q6, §4.7). These
+  feed the same Fame pool and the cap tiebreak (§2.8).
 - Capture: move an Infantry (the only capturer) onto a town/factory and
-  hold to capture over N turns (start N=1–2); a captured objective flips
-  its Fame income to the new owner.
-- Starting Fame: each side opens with 200 Fame (enough for two Infantry
-  or one Artillery on turn 1) plus home-factory income from turn 1.
-  Single-player difficulty is a starting-Fame handicap — see §2.9.
+  hold to capture over N turns (N = 1 on the shipped scenario; N is
+  per-scenario data). Capture progress is held by the tile and resets to
+  zero the moment the capturing Infantry leaves the hex or dies — it
+  never transfers to another unit and never survives an interruption
+  (Q4, §4.7). A captured objective flips its Fame income to the new
+  owner.
+- Starting Fame: each side opens with 200 Fame — enough for two Infantry
+  or one Artillery on turn 1, and the whole of turn-1 buying power,
+  since income first accrues on turn 2 (Q8, §4.7). Home-factory income
+  adds +100/turn from turn 2 onward. Single-player difficulty is a
+  starting-Fame handicap — see §2.9.
 - Repair: a unit that ends its turn on an owned Town or Factory and is
   not adjacent to any enemy heals +25% of max HP (rounded down, min 1,
   capped at max) at the start of its next turn — free for the prototype.
@@ -554,11 +572,13 @@ standings scoreboard (§2.11): the tiebreak adds no new state, only an
 ordering over existing state.
 
 Tally definition. A side’s combat Fame is the Fame it earned from unit
-kills and undamaged-strike bonuses (§2.7). It excludes passive factory
-and town income — counting income would let a staller re-earn the turtle
-exploit (§1.5 #1) by sitting on objectives. The flag bonus (+500) can
-never appear in a capped tally: destroying the flag ends the match
-immediately, so no match that reaches the cap contains one.
+kills (§2.7) — the undamaged-strike bonus this key once also counted was
+cut unpriced (Q6, §4.7), so kills are its only source. It excludes
+passive factory and town income — counting income would let a staller
+re-earn the turtle exploit (§1.5 #1) by sitting on objectives. The flag
+bonus (+500) can never appear in a capped tally: destroying the flag
+ends the match immediately, so no match that reaches the cap contains
+one.
 
 Resolution procedure, in order:
 
@@ -655,18 +675,22 @@ clock there.
 
 - Baseline (ships): simple objective-seeker. Two phases each turn, so
   the AI actually uses the economy (§2.7), not just the map:
-  - Economy phase. At each factory it holds: if it can afford a unit,
-    build one from a default buildlist (mostly Infantry, an occasional
-    Tank), spawning per §2.7. It spends Fame and replaces losses instead
-    of hoarding.
+  - Economy phase. Runs first, on the income that has just accrued for
+    this turn (§2.7 — none on turn 1). At each factory it holds: if it
+    can afford a unit, build one — the single build that factory gets
+    this turn (§2.7) — from a default buildlist (mostly Infantry, an
+    occasional Tank), spawning per §2.7. Ties between affordable units
+    break by the fixed priority Infantry > Recon > Artillery > Tank (Q9,
+    §4.7). It spends Fame and replaces losses instead of hoarding.
   - Unit phase, per unit: (1) an idle Infantry adjacent to or near an
     uncaptured, undefended factory/town moves onto it to capture — the
     AI contests objectives, keeping capture, production, and the
     “objectives held” tiebreak live on both sides; (2) if an enemy is
     within reach after moving, attack — prefer the enemy flag, else the
-    best expected-damage target; (3) ranged units (Artillery) fire from
-    maximum standoff so they don’t eat a counter; (4) otherwise advance
-    along the cheapest path toward the enemy flag.
+    best expected-damage target, ties broken by the target’s canonical
+    hex order (Q9, §4.7); (3) ranged units (Artillery) fire from maximum
+    standoff so they don’t eat a counter; (4) otherwise advance along
+    the cheapest path toward the enemy flag.
   - One cheap guard keeps it from looking broken: skip a strictly-losing
     attack (the unit would die and trade down).
 
@@ -1017,14 +1041,13 @@ the layout is the rule, read passively all match:
 - Turn counter against the cap, always. (/ 20 is Ferrum Crossing’s cap,
   §2.13.2; the cap is per-scenario data, so the widget reads turnCap
   from the scenario rather than hardcoding a number.)
-- Destroyed = combat Fame earned (kills + undamaged-strike and flag
-  bonuses, §2.7) — passive income is excluded, exactly as the tiebreak
-  excludes it. Hover tooltip:
-  Fame from kills and strike bonuses. Factory income does not count at the cap.
-  This row deliberately does not equal the spendable Fame pool
-  (top-right widget), and the tooltip on each names the difference — the
-  one place the single-currency design (§2.7) needs a disambiguating
-  sentence.
+- Destroyed = combat Fame earned (kills and the flag bonus, §2.7; there
+  is no undamaged-strike bonus — Q6, §4.7) — passive income is excluded,
+  exactly as the tiebreak excludes it. Hover tooltip:
+  Fame from kills. Factory income does not count at the cap. This row
+  deliberately does not equal the spendable Fame pool (top-right
+  widget), and the tooltip on each names the difference — the one place
+  the single-currency design (§2.7) needs a disambiguating sentence.
 - Objectives as X of N over all factories + capturable towns (§2.8
   criterion 2), N supplied by the scenario (§2.13) — N = 8 on Ferrum
   Crossing (4 factories + 4 towns), as the mock shows.
@@ -1392,8 +1415,7 @@ first Water hover with a unit selected →
 Impassable to land. Cross at the Bridge.; first Bridge hover →
 The only crossing. −10% defense — do not stall on it.; first combat Fame
 → +150 Fame. Kills count at the cap. Income does not. (amount = actual
-award); first undamaged strike → +[N] Fame — undamaged strike.; first
-repair blocked by adjacency →
+award); first repair blocked by adjacency →
 No repair — enemy adjacent. Break contact to repair.; first repair tick
 → +[N] HP — repaired at Factory.; plus the two cap-approach banners
 (§2.11.4).
@@ -1401,81 +1423,81 @@ No repair — enemy adjacent. Break contact to repair.; first repair tick
 D. Concept ledger — every concept, its failure point, its teach moment,
 its confirmation:
 
-  -------------------------------------------------------------------------------------
+  ---------------------------------------------------------------------------------------------
   Concept           Where a            Taught at                  Confirmed landed when
                     first-timer gets                              
                     lost                                          
-  ----------------- ------------------ -------------------------- ---------------------
-  Hexes & movement  Clicks the map     Turn 1a: single selectable Move completes;
-                    with nothing       unit + reach highlight     directive retires
+  ----------------- ------------------ -------------------------- -----------------------------
+  Hexes & movement  Clicks the map     Turn 1a: single selectable Move completes; directive
+                    with nothing       unit + reach highlight     retires
                     selected                                      
 
-  IGOUGO turns      Expects            Turn 1b: pulsing End Turn, Player ends turn 2
-                    simultaneous       then watching the AI’s     unprompted
+  IGOUGO turns      Expects            Turn 1b: pulsing End Turn, Player ends turn 2 unprompted
+                    simultaneous       then watching the AI’s     
                     movement           turn                       
 
-  Terrain move cost Lopsided highlight The asymmetric highlight + Player routes around
-                    (shallow into      info-panel hover line      a Mountain, or hovers
-                    Woods/Mountains)                              2+ terrains in one
-                    reads as a bug                                selection
+  Terrain move cost Lopsided highlight The asymmetric highlight + Player routes around a
+                    (shallow into      info-panel hover line      Mountain, or hovers 2+
+                    Woods/Mountains)                              terrains in one selection
+                    reads as a bug                                
 
-  Terrain defense   Same attack,       Forecast names the         Resolution matches
-                    different damage → defender’s bonus inline,   forecast, every time
+  Terrain defense   Same attack,       Forecast names the         Resolution matches forecast,
+                    different damage → defender’s bonus inline,   every time
                     suspects hidden    every time (§2.11.3)       
                     dice                                          
 
-  The Bridge        Reads Water as     Briefing callout + Water   First previewed or
-                    decoration; “half  never lights in any reach  executed path crosses
-                    the map is         set + hover one-shots      the Bridge
+  The Bridge        Reads Water as     Briefing callout + Water   First previewed or executed
+                    decoration; “half  never lights in any reach  path crosses the Bridge
+                    the map is         set + hover one-shots      
                     unreachable”                                  
 
-  Forecast /        Veterans hedge for First-attack one-shot:     Player commits;
-  determinism       RNG; novices fear  It is exact.               outcome equals card;
-                    committing                                    usage becomes
-                                                                  habitual
+  Forecast /        Veterans hedge for First-attack one-shot:     Player commits; outcome
+  determinism       RNG; novices fear  It is exact.               equals card; usage becomes
+                    committing                                    habitual
 
-  Positional RPS    No counter chart   The counter-reason line    One uncountered
-  triangle          exists — the       (§2.11.3), the three edge  Artillery strike
-                    triangle is        one-shots, the Artillery   lands — the
-                    emergent from      dead-zone ring             undamaged-strike
-                    range and move,                               toast is the receipt
-                    invisible until                               
-                    experienced                                   
+  Positional RPS    No counter chart   The counter-reason line    One uncountered Artillery
+  triangle          exists — the       (§2.11.3), the three edge  strike lands — the range-2–3
+                    triangle is        one-shots, the Artillery   one-shot
+                    emergent from      dead-zone ring             (No counter at this range.)
+                    range and move,                               is the receipt, the
+                    invisible until                               undamaged-strike toast having
+                    experienced                                   been cut with the bonus (Q6,
+                                                                  §4.7)
 
-  Capture           Parks a Tank on    Turn 2 directive;          Pip → tile recolors →
-                    the factory and    non-Infantry on a          next turn’s
-                    waits              capturable tile shows      +100 Fame — Factory
-                                       disabled                   toast
+  Capture           Parks a Tank on    Turn 2 directive;          Pip → tile recolors → next
+                    the factory and    non-Infantry on a          turn’s +100 Fame — Factory
+                    waits              capturable tile shows      toast
+                                       disabled                   
                                        Capture — Infantry only.   
 
-  Fame income &     Fame is abstract;  Beat 3, which holds the    A bought unit spawns
-  build             player hoards,     strip on turn 2 or turn 3  and stands on the
-                    never connects     in every branch where the  board carrying its
-                    factories → army   player has not already     unacted pip — the
-                                       built — and where they     event, not the
-                                       have, the lesson landed    directive, so the row
-                                       without it (B); income     also confirms for a
-                                       toasts; BUILD pulse when   player who skipped
-                                       affordable; greyed rows    guidance
+  Fame income &     Fame is abstract;  Beat 3, which holds the    A bought unit spawns and
+  build             player hoards,     strip on turn 2 or turn 3  stands on the board carrying
+                    never connects     in every branch where the  its unacted pip — the event,
+                    factories → army   player has not already     not the directive, so the row
+                                       built — and where they     also confirms for a player
+                                       have, the lesson landed    who skipped guidance
+                                       without it (B); income     
+                                       toasts; BUILD pulse when   
+                                       affordable; greyed rows    
                                        with shortfall (§2.11.5)   
 
-  Flag = the game   Loses one specific Briefing callout;          Any lethal-to-flag
-                    Tank in a “fair    persistent H; red-edged    forecast has been
-                    trade”; match ends info panel; flag warning   shown before any
-                    out of nowhere     band (§2.11.3)             match can end
+  Flag = the game   Loses one specific Briefing callout;          Any lethal-to-flag forecast
+                    Tank in a “fair    persistent H; red-edged    has been shown before any
+                    trade”; match ends info panel; flag warning   match can end
+                    out of nowhere     band (§2.11.3)             
 
-  Turn cap &        Assumes “most      Scoreboard rows in         Chevron flips noticed
-  tiebreak          stuff wins”;       tiebreak order (§2.11.4);  in play; end screen
-                    income exclusion   first-combat-Fame          matches the board
-                    and passivity-draw one-shot; cap−5 banners    watched all match
+  Turn cap &        Assumes “most      Scoreboard rows in         Chevron flips noticed in
+  tiebreak          stuff wins”;       tiebreak order (§2.11.4);  play; end screen matches the
+                    income exclusion   first-combat-Fame          board watched all match
+                    and passivity-draw one-shot; cap−5 banners    
                     are the least                                 
                     guessable rules                               
 
-  Repair            Heal silently      Eligibility pip; the       +[N] HP — repaired
-                    fails next to an   enemy adjacent one-shot    toast at turn start
+  Repair            Heal silently      Eligibility pip; the       +[N] HP — repaired toast at
+                    fails next to an   enemy adjacent one-shot    turn start
                     enemy; reads as a  fires at the blocked case  
                     bug                first if it occurs         
-  -------------------------------------------------------------------------------------
+  ---------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
@@ -2881,18 +2903,29 @@ Shared conventions (Director-owned contract):
                  counter (the §2.8 tiebreak criterion-1 sort key); passive income
                  never touches fameCombat
       T-FAME-02  income: each held factory pays +100/turn, each held town +25/turn
-                 (§2.7); accrual timing per the Q8 ruling
+                 (§2.7); accrues at the START of the owner's turn and is spendable
+                 in that same turn's economy phase, with NO accrual on turn 1 —
+                 turn-1 buying power is the 200 starting Fame alone (Q8, ruled)
       T-FAME-03  build: deducts the exact §2.4 cost (Infantry 100, Recon 150,
                  Artillery 200, Tank 300); refused if unaffordable; fameTotal is
                  never negative
       T-FAME-04  spawn: on the factory hex if free, else an adjacent free hex, else
-                 the build waits (§2.7); waiting-build semantics per Q8
+                 the build waits (§2.7). One build per factory per turn; a waiting
+                 build HOLDS that factory's slot until it spawns; Fame is committed
+                 at queue time, never at spawn time, and is not refundable (Q8,
+                 ruled)
       T-FAME-05  capture: Infantry only (§2.7, §2.4); completes after N turns of
-                 holding (N per Q4); interruption/reset semantics per Q4
+                 holding (N = 1 on the shipped scenario, per-scenario data);
+                 progress is tile-held and RESETS TO ZERO when the capturing
+                 Infantry leaves the hex or dies, and never transfers to another
+                 unit (Q4, ruled)
       T-FAME-06  a captured objective's income flips to the new owner (§2.7)
-      T-FAME-07  kill awards: ~half the victim's Fame cost, small undamaged-strike
-                 bonus, flag kill +500 and the match ends (§2.7) — exact values per
-                 Q5/Q6; the gate pins whatever the Director rules
+      T-FAME-07  kill awards: exactly half the victim's §2.4 cost — Infantry 50,
+                 Recon 75, Artillery 100, Tank 150 (Q5, ruled). A flag kill pays a
+                 flat 500 and ends the match; the flag award REPLACES the ordinary
+                 kill award rather than stacking, so a flag Tank pays 500, not 650
+                 (Q5). No undamaged-strike bonus exists — cut, not priced (Q6,
+                 ruled) — so the gate asserts its ABSENCE from every award
       T-FAME-08  no Fame cap: fameTotal is unbounded; deployment is throttled by
                  board space only (§2.7)
       T-FAME-09  determinism: same state + command → identical Fame deltas and state
@@ -2949,8 +2982,11 @@ Shared conventions (Director-owned contract):
       T-AI-05  strictly-losing-attack guard: the AI never makes an attack in which
                its unit dies and trades down (§2.9)
       T-AI-06  determinism: same state → same move; every scoring tie is broken by a
-               stated deterministic rule (canonical hex order for position ties;
-               remaining tie dimensions per the Q9 ruling)
+               stated deterministic rule (Q9, ruled): position AND target ties break
+               by canonical hex order — for a target, the hex it occupies — and
+               build ties break by the fixed type priority Infantry > Recon >
+               Artillery > Tank — ascending §2.4 COST (100/150/200/300), which is
+               NOT the order §2.4's table prints (Infantry, Tank, Artillery, Recon)
     Determinism: pure function of state; difficulty changes only starting Fame
              (§2.9), never the routine.
     Acceptance: T-AI-01..06, plus a self-play smoke run: N headless AI-vs-AI games
@@ -3499,10 +3535,16 @@ was open. It was then ruled the strict way and the map was corrected
 instead of the rule — one deployment hex, no terrain and no rules text
 (Q28; §2.13.2). The limit of the convention is now known and stated
 once: where the conservative reading is not free, this register states
-no reading and waits. Rows marked unruled state no reading and block
-their gate outright (Q4’s interruption semantics, Q5’s stacking, Q6, Q8,
-and Q9’s target- and build-choice ties); those gates and milestones
-cannot be settled until the Director answers.
+no reading and waits. No row now states no reading. The five that did —
+Q4’s interruption semantics, Q5’s stacking, Q6, Q8’s three
+sub-questions, and Q9’s target- and build-choice ties — were all ruled
+this revision, and the gates they blocked outright (T-FAME-02,
+T-FAME-04, T-FAME-05, T-FAME-07, T-AI-06 and the T-CAP- tally suite) now
+assert. Three rows remain open but readable — Q2, Q11 and Q30 — each
+carrying a stated reading rather than a blank: Q2 leaves T-MOVE-07
+reserved-but-unwritten, Q11’s reading is “no undo”, and Q30’s is partial
+and deliberately not hardened. The convention is unchanged: where a row
+states no reading, its gate stays blocked until the Director answers.
 
   -------------------------------------------------------------------------------------------------------------------------------
   ID                Question                                                       Blocks                 Assumption in force
@@ -3527,29 +3569,116 @@ cannot be settled until the Director answers.
                                                                                                           occupied hex, friendly
                                                                                                           or not.
 
-  Q4                Capture N and interruption. Pin N (§2.7 says “start N=1–2”),   T-FAME-05’s exactness; N = 1 on the shipped
-                    and rule the edge cases: does progress reset if the Infantry   the §2.9 AI capture    scenario (§2.13.3’s
-                    leaves or dies mid-capture?                                    step                   recommendation, inside
-                                                                                                          §2.7’s stated range).
-                                                                                                          Interruption semantics
-                                                                                                          are unruled, so
-                                                                                                          T-FAME-05 stays
-                                                                                                          blocked.
+  Q4                ~~Capture N and interruption.~~ RULED (this revision). Pin N   T-FAME-05’s exactness; Ruled. N = 1 on the
+                    (§2.7 says “start N=1–2”), and rule the edge cases: does       the §2.9 AI capture    shipped scenario
+                    progress reset if the Infantry leaves or dies mid-capture?     step                   (§2.13.3’s
+                                                                                                          recommendation, inside
+                                                                                                          §2.7’s stated range),
+                                                                                                          and N is per-scenario
+                                                                                                          data. Interruption:
+                                                                                                          capture progress is
+                                                                                                          held by the tile and
+                                                                                                          resets to zero the
+                                                                                                          moment the capturing
+                                                                                                          Infantry leaves the hex
+                                                                                                          or dies — it never
+                                                                                                          transfers to another
+                                                                                                          unit. This is the
+                                                                                                          conservative reading,
+                                                                                                          and it is what keeps
+                                                                                                          the window between
+                                                                                                          arrival and flip a real
+                                                                                                          risk: at N = 1 the
+                                                                                                          Infantry stands on the
+                                                                                                          tile at the end of one
+                                                                                                          turn and the tile flips
+                                                                                                          at the start of the
+                                                                                                          next, so the opponent
+                                                                                                          gets exactly one turn
+                                                                                                          to answer, and killing
+                                                                                                          or displacing the
+                                                                                                          capturer now costs the
+                                                                                                          attacker the whole
+                                                                                                          count rather than a
+                                                                                                          fraction of it.
+                                                                                                          T-FAME-05 unblocked and
+                                                                                                          asserting.
 
-  Q5                Kill-award exact values. “~half its Fame cost” (§2.7) is not   T-FAME-07              The §2.7 change request
-                    assertable. Does the flag’s +500 stack with the Tank’s                                proposes exactly half
-                    ordinary kill award?                                                                  of each §2.4 cost — 50
-                                                                                                          / 75 / 100 / 150, all
-                                                                                                          integers. Stacking is
-                                                                                                          unruled.
+  Q5                ~~Kill-award exact values.~~ RULED (this revision). “~half its T-FAME-07              Ruled, and the change
+                    Fame cost” (§2.7) is not assertable. Does the flag’s +500                             request is accepted as
+                    stack with the Tank’s ordinary kill award?                                            proposed: exactly half
+                                                                                                          of each §2.4 cost —
+                                                                                                          Infantry 50, Recon 75,
+                                                                                                          Artillery 100, Tank
+                                                                                                          150, all integers, so
+                                                                                                          no rounding rule is
+                                                                                                          needed anywhere. The
+                                                                                                          flag’s +500 does not
+                                                                                                          stack: it replaces the
+                                                                                                          victim’s ordinary kill
+                                                                                                          award rather than
+                                                                                                          adding to it, so a flag
+                                                                                                          Tank pays 500, not 650.
+                                                                                                          The choice is nearly
+                                                                                                          free at the cap — §2.8
+                                                                                                          already states the flag
+                                                                                                          bonus can never appear
+                                                                                                          in a capped tally,
+                                                                                                          since a flag kill ends
+                                                                                                          the match immediately —
+                                                                                                          so it binds the live
+                                                                                                          scoreboard (§2.11) and
+                                                                                                          the balance logs rather
+                                                                                                          than any victory
+                                                                                                          condition. T-FAME-07
+                                                                                                          unblocked.
 
-  Q6                Undamaged-strike bonus. “A small bonus” (§2.7) has no number,  T-FAME-07; the T-CAP-  Unruled — unpriced, so
-                    yet it feeds the tiebreak’s primary key. Options: (a) price    tally suite; the kb    no gate asserts it. The
-                    it; (b) keep it in the Fame pool but exclude it from the cap   economy block          rules author recommends
-                    tally until priced; (c) cut it — kills already pay half-cost,                         (c), with (b) as the
-                    and the positional triangle already rewards a clean standoff                          fallback; either
-                    strike with tempo.                                                                    unblocks the T-CAP-
-                                                                                                          suite immediately.
+  Q6                ~~Undamaged-strike bonus.~~ RULED (this revision) — cut. “A    T-FAME-07; the T-CAP-  Ruled (c) — cut, as the
+                    small bonus” (§2.7) has no number, yet it feeds the tiebreak’s tally suite; the kb    rules author
+                    primary key. Options: (a) price it; (b) keep it in the Fame    economy block          recommended. Kills
+                    pool but exclude it from the cap tally until priced; (c) cut                          already pay half-cost
+                    it — kills already pay half-cost, and the positional triangle                         and the positional
+                    already rewards a clean standoff strike with tempo.                                   triangle already
+                                                                                                          rewards a clean
+                                                                                                          standoff strike with
+                                                                                                          tempo, so the bonus was
+                                                                                                          paying twice for one
+                                                                                                          thing; cutting it
+                                                                                                          removes an unpriced
+                                                                                                          term from the §2.8
+                                                                                                          tiebreak’s primary sort
+                                                                                                          key rather than leaving
+                                                                                                          a number nobody had
+                                                                                                          chosen inside it.
+                                                                                                          Cheaper than (b), which
+                                                                                                          would have required the
+                                                                                                          document to carry two
+                                                                                                          different Fame totals —
+                                                                                                          one for the pool, one
+                                                                                                          for the cap tally — in
+                                                                                                          both the kb economy
+                                                                                                          block and the T-CAP-
+                                                                                                          suite. Beyond §2.7’s
+                                                                                                          own bullet, which did
+                                                                                                          cite Q6, the cut
+                                                                                                          reaches six sites that
+                                                                                                          never cited it — four
+                                                                                                          here (§2.8’s tally
+                                                                                                          definition, §2.11’s
+                                                                                                          standings row and its
+                                                                                                          tooltip, the §2.11.6
+                                                                                                          one-shot toast, and the
+                                                                                                          concept ledger’s RPS
+                                                                                                          row, whose receipt was
+                                                                                                          that toast and is now
+                                                                                                          the range-2–3 one-shot
+                                                                                                          instead) and two in
+                                                                                                          kb/rules.md. Grepping
+                                                                                                          the identifier alone
+                                                                                                          would have found none
+                                                                                                          of them. T-FAME-07 and
+                                                                                                          the T-CAP- tally suite
+                                                                                                          unblocked.
 
   Q7                ~~Turn cap value.~~ RULED (this revision). The cap is          —                      Ruled. §2.8, §2.11.4
                     per-scenario data, stored in Stub 7’s turnCap; Ferrum Crossing                        and §2.13.2 now agree,
@@ -3557,23 +3686,125 @@ cannot be settled until the Director answers.
                                                                                                           7 read a value rather
                                                                                                           than an example.
 
-  Q8                Income timing and build limits. When within the turn does      T-FAME-02 and          Unruled — all three
-                    factory/town income pay, and can it fund a build the same      T-FAME-04              sub-questions.
-                    turn? Is there a builds-per-factory-per-turn limit (§2.9’s AI                         T-FAME-02 and T-FAME-04
-                    implies one; the player’s rule is unstated)? For a waiting                            stay blocked until
-                    build (§2.7 “the build waits”), is Fame committed at queue                            ruled, and they gate
-                    time or spawn time, and can it be canceled?                                           Stub 4, which §4.11
-                                                                                                          builds before the turn
-                                                                                                          loop.
+  Q8                ~~Income timing and build limits.~~ RULED (this revision) —    T-FAME-02 and          Ruled, all three. (a)
+                    all three. When within the turn does factory/town income pay,  T-FAME-04              Timing: income accrues
+                    and can it fund a build the same turn? Is there a                                     at the start of the
+                    builds-per-factory-per-turn limit (§2.9’s AI implies one; the                         owner’s turn and is
+                    player’s rule is unstated)? For a waiting build (§2.7 “the                            spendable in that same
+                    build waits”), is Fame committed at queue time or spawn time,                         turn’s economy phase —
+                    and can it be canceled?                                                               the phase §2.9 already
+                                                                                                          runs first — but there
+                                                                                                          is no accrual on turn
+                                                                                                          1, so turn-1 buying
+                                                                                                          power is the 200
+                                                                                                          starting Fame alone.
+                                                                                                          That reading was chosen
+                                                                                                          because it is the one
+                                                                                                          §2.13.2 was already
+                                                                                                          priced on: it prices
+                                                                                                          East’s turn-1 Infantry
+                                                                                                          as “100 of the 200
+                                                                                                          starting Fame”, not of
+                                                                                                          300, so no map number
+                                                                                                          moves. It does correct
+                                                                                                          two sentences that said
+                                                                                                          the opposite — §2.7’s
+                                                                                                          “both players have
+                                                                                                          income from turn 1” and
+                                                                                                          its “plus home-factory
+                                                                                                          income from turn 1” —
+                                                                                                          which is the whole
+                                                                                                          textual cost of the
+                                                                                                          ruling inside §2.7 — it
+                                                                                                          also rewrites §2.9’s
+                                                                                                          economy phase,
+                                                                                                          T-FAME-02/04, and the
+                                                                                                          starting-Fame and build
+                                                                                                          lines in kb/rules.md.
+                                                                                                          (b) Limit: one build
+                                                                                                          per factory per turn,
+                                                                                                          player and AI alike,
+                                                                                                          matching what §2.9
+                                                                                                          already describes for
+                                                                                                          the AI; a waiting build
+                                                                                                          holds that factory’s
+                                                                                                          slot until it spawns.
+                                                                                                          (c) Commitment: Fame is
+                                                                                                          committed at queue time
+                                                                                                          and is not refundable,
+                                                                                                          so fameTotal moves once
+                                                                                                          and never reverses, no
+                                                                                                          cancel affordance is
+                                                                                                          owed by §2.11, and a
+                                                                                                          boxed-in factory
+                                                                                                          becomes a commitment
+                                                                                                          the player must read
+                                                                                                          before spending.
+                                                                                                          T-FAME-02 and T-FAME-04
+                                                                                                          unblocked; Stub 4 is no
+                                                                                                          longer gated on an
+                                                                                                          unruled row.
 
-  Q9                AI tie-breaks. §2.9’s “best expected-damage target” and        T-AI-06; AI            Position ties break by
-                    pathing choices can tie.                                       determinism as a       canonical hex order (as
-                                                                                   stated rule rather     gated). Target-choice
-                                                                                   than an implementation and build-choice tie
-                                                                                   accident               order are unruled and
-                                                                                                          need naming so
-                                                                                                          determinism is a rule,
-                                                                                                          not an accident.
+  Q9                ~~AI tie-breaks.~~ RULED (this revision). §2.9’s “best         T-AI-06; AI            Ruled, and split by
+                    expected-damage target” and pathing choices can tie.           determinism as a       axis rather than forced
+                                                                                   stated rule rather     onto one rule. Position
+                                                                                   than an implementation and target ties break
+                                                                                   accident               by canonical hex order
+                                                                                                          — for a target, the hex
+                                                                                                          it occupies — so the
+                                                                                                          convention already
+                                                                                                          gated for positions
+                                                                                                          extends to targets with
+                                                                                                          no new state and
+                                                                                                          nothing new to
+                                                                                                          remember. Build ties
+                                                                                                          break by the fixed type
+                                                                                                          priority Infantry >
+                                                                                                          Recon > Artillery >
+                                                                                                          Tank — ascending §2.4
+                                                                                                          cost, 100 / 150 / 200 /
+                                                                                                          300. The key is the
+                                                                                                          cost column,
+                                                                                                          deliberately not the
+                                                                                                          order §2.4’s table
+                                                                                                          happens to print, which
+                                                                                                          is Infantry, Tank,
+                                                                                                          Artillery, Recon; an
+                                                                                                          earlier draft of this
+                                                                                                          row asserted the two
+                                                                                                          were the same and they
+                                                                                                          are not. A production
+                                                                                                          choice has no board
+                                                                                                          position to sort on, so
+                                                                                                          hex order would have
+                                                                                                          been an arbitrary key
+                                                                                                          there, whereas cost is
+                                                                                                          the one total order the
+                                                                                                          buildlist already
+                                                                                                          carries. Cheapest-first
+                                                                                                          agrees with §2.9’s
+                                                                                                          stated buildlist bias
+                                                                                                          on its first term,
+                                                                                                          Infantry, but not on
+                                                                                                          its second: §2.9
+                                                                                                          favours an occasional
+                                                                                                          Tank and this priority
+                                                                                                          ranks Tank last. The
+                                                                                                          two are not in conflict
+                                                                                                          because they answer
+                                                                                                          different questions —
+                                                                                                          the bias governs what
+                                                                                                          the AI prefers when it
+                                                                                                          is choosing freely, the
+                                                                                                          priority only what it
+                                                                                                          does when two options
+                                                                                                          have already scored
+                                                                                                          equal. Determinism is
+                                                                                                          now a stated rule on
+                                                                                                          every axis rather than
+                                                                                                          an implementation
+                                                                                                          accident. T-AI-06
+                                                                                                          unblocked.
 
   Q10               Flag designation. Confirm exactly one flag per side,           T-SCN-01’s exactness;  §2.4’s “Tank variant”
                     designated by the scenario (isFlag, Stub 7), with              the flag’s §4.8        reads as not

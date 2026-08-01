@@ -186,29 +186,47 @@ are **one pool, not three** (PX-6). *All numbers are starter/tuning targets,
 scaled down from Conflict's for four units and ~20-turn matches.*
 
 - **Factories & starting layout:** the map ships with **multiple factories** —
-  a **home factory per side** (owned at start, so both players have income
-  from turn 1) plus **two or more neutral factories** in contested ground; a
-  typical small skirmish map has **~4 factories total**. The spread is what
+  a **home factory per side** (owned at start, so both players draw income
+  from **turn 2**, the first accrual — Q8, §4.7) plus **two or more neutral
+  factories** in contested ground; a typical small skirmish map has **~4
+  factories total**. The spread is what
   makes expansion worth fighting for and "objectives held" (§2.8) a real 0–N
   measure instead of a 1–0 coin-flip.
 - **Income:** each **factory** held pays **+100 Fame/turn**; each captured
-  **town** pays **+25/turn**. More objectives held = a faster army, so the
-  neutral factories are the mid-game prize.
+  **town** pays **+25/turn**. Income accrues **at the start of your turn and is
+  spendable in that same turn's economy phase** (§2.9) — with **no accrual on
+  turn 1**, so turn-1 buying power is the 200 starting Fame alone and the first
+  income lands on turn 2 (Q8, §4.7). More objectives held = a faster army, so
+  the neutral factories are the mid-game prize.
 - **Build & spawn:** spend Fame at a factory to produce a unit from the
   buildlist (§2.4 costs: Infantry 100, Recon 150, Artillery 200, Tank 300).
+  **One build per factory per turn**, for the player and the AI alike (§2.9).
   The unit **spawns on the factory hex if it's free, otherwise an adjacent
-  free hex; if the factory is boxed in, the build waits.** Fame has no hard
-  cap — deployment is throttled by board space, not a point ceiling.
-- **Combat Fame:** destroying an enemy unit pays **~half its Fame cost**
-  (e.g. a Tank kill = +150 — see Q5, §4.7, to make this exact); an
-  **undamaged strike** (attacker takes no counter) pays a small bonus (see
-  Q6, §4.7); destroying the enemy **flag pays +500 and ends the
-  match**. These feed the same Fame pool and the cap tiebreak (§2.8).
+  free hex; if the factory is boxed in, the build waits.** A waiting build
+  **holds that factory's slot until it spawns**, and its Fame is **committed
+  when the build is queued, not when the unit appears, and is not
+  refundable** — a boxed-in factory is a commitment to read before spending
+  (Q8, §4.7). Fame has no hard cap — deployment is throttled by board space,
+  not a point ceiling.
+- **Combat Fame:** destroying an enemy unit pays **exactly half its §2.4
+  cost — Infantry +50, Recon +75, Artillery +100, Tank +150** (Q5, §4.7;
+  every value an integer). Destroying the enemy **flag pays a flat +500 and
+  ends the match** — the flag award **replaces** the victim's ordinary kill
+  award rather than stacking with it, so a flag Tank pays 500, not 650 (Q5).
+  There is **no undamaged-strike bonus**: it was cut rather than priced,
+  because kills already pay half-cost and the positional triangle already
+  rewards a clean standoff strike with tempo (Q6, §4.7). These feed the same
+  Fame pool and the cap tiebreak (§2.8).
 - **Capture:** move an Infantry (the only capturer) onto a town/factory and
-  hold to capture over N turns (start N=1–2); a captured objective flips its
-  Fame income to the new owner.
-- **Starting Fame:** each side opens with **200 Fame** (enough for two
-  Infantry or one Artillery on turn 1) plus home-factory income from turn 1.
+  hold to capture over N turns (**N = 1** on the shipped scenario; N is
+  per-scenario data). Capture progress is **held by the tile and resets to
+  zero the moment the capturing Infantry leaves the hex or dies** — it never
+  transfers to another unit and never survives an interruption (Q4, §4.7). A
+  captured objective flips its Fame income to the new owner.
+- **Starting Fame:** each side opens with **200 Fame** — enough for two
+  Infantry or one Artillery on turn 1, and the whole of turn-1 buying power,
+  since income first accrues on turn 2 (Q8, §4.7). Home-factory income adds
+  +100/turn from turn 2 onward.
   Single-player difficulty is a starting-Fame handicap — see §2.9.
 - **Repair:** a unit that ends its turn on an **owned Town or Factory and is
   not adjacent to any enemy** heals **+25% of max HP** (rounded down, min 1,
@@ -242,7 +260,9 @@ the economy (§2.7) and already shows on the standings scoreboard (§2.11): the
 tiebreak adds no new state, only an ordering over existing state.
 
 *Tally definition.* A side's **combat Fame** is the Fame it earned from unit
-kills and undamaged-strike bonuses (§2.7). It **excludes** passive factory and
+kills (§2.7) — the undamaged-strike bonus this key once also counted was cut
+unpriced (Q6, §4.7), so kills are its only source. It **excludes** passive
+factory and
 town income — counting income would let a staller re-earn the turtle exploit
 (§1.5 #1) by sitting on objectives. The flag bonus (+500) can never appear in
 a capped tally: destroying the flag ends the match immediately, so no match
@@ -335,15 +355,20 @@ hotseat**, a stretch feature (§2.10) — if it ships, add a move clock there.
 ### 2.9 Opponent AI (runtime gameplay system)
 - **Baseline (ships): simple objective-seeker.** Two phases each turn, so the
   AI actually *uses* the economy (§2.7), not just the map:
-  - **Economy phase.** At each factory it holds: if it can afford a unit,
-    build one from a default buildlist (mostly Infantry, an occasional Tank),
-    spawning per §2.7. It spends Fame and replaces losses instead of hoarding.
+  - **Economy phase.** Runs first, on the income that has just accrued for
+    this turn (§2.7 — none on turn 1). At each factory it holds: if it can
+    afford a unit, build one — the single build that factory gets this turn
+    (§2.7) — from a default buildlist (mostly Infantry, an occasional Tank),
+    spawning per §2.7. Ties between affordable units break by the fixed
+    priority **Infantry > Recon > Artillery > Tank** (Q9, §4.7). It spends
+    Fame and replaces losses instead of hoarding.
   - **Unit phase, per unit:** (1) an idle **Infantry** adjacent to or near an
     uncaptured, **undefended** factory/town moves onto it to capture — the AI
     contests objectives, keeping capture, production, and the "objectives
     held" tiebreak live on *both* sides; (2) if an enemy is within reach after
     moving, attack — prefer the enemy flag, else the best expected-damage
-    target; (3) ranged units (Artillery) fire from maximum standoff so they
+    target, ties broken by the target's canonical hex order (Q9, §4.7); (3)
+    ranged units (Artillery) fire from maximum standoff so they
     don't eat a counter; (4) otherwise advance along the cheapest path toward
     the enemy flag.
   - One cheap guard keeps it from looking broken: **skip a strictly-losing
@@ -532,7 +557,7 @@ The scoreboard exists because of revision §1.5-#1: the tiebreak must never be a
 ```
 
 - **Turn counter** against the cap, always. (`/ 20` is *Ferrum Crossing*'s cap, §2.13.2; the cap is per-scenario data, so the widget reads `turnCap` from the scenario rather than hardcoding a number.)
-- **Destroyed** = combat Fame earned (kills + undamaged-strike and flag bonuses, §2.7) — **passive income is excluded**, exactly as the tiebreak excludes it. Hover tooltip: `Fame from kills and strike bonuses. Factory income does not count at the cap.` This row deliberately does *not* equal the spendable Fame pool (top-right widget), and the tooltip on each names the difference — the one place the single-currency design (§2.7) needs a disambiguating sentence.
+- **Destroyed** = combat Fame earned (kills and the flag bonus, §2.7; there is no undamaged-strike bonus — Q6, §4.7) — **passive income is excluded**, exactly as the tiebreak excludes it. Hover tooltip: `Fame from kills. Factory income does not count at the cap.` This row deliberately does *not* equal the spendable Fame pool (top-right widget), and the tooltip on each names the difference — the one place the single-currency design (§2.7) needs a disambiguating sentence.
 - **Objectives** as *X of N* over all factories + capturable towns (§2.8 criterion 2), N supplied by the scenario (§2.13) — **N = 8** on *Ferrum Crossing* (4 factories + 4 towns), as the mock shows.
 - **Unit HP** = surviving strength (criterion 3), listed last because it *is* last.
 - A **chevron (◀)** marks the current attrition-tiebreak leader, evaluated in criteria order, and flips visibly when the lead changes. It is drawn beside the leading side's value — in the mock above the enemy leads at criterion 1, 600 combat Fame to 450 (§2.8: higher wins), so the chevron sits on the enemy column. If both Destroyed values are zero, the chevron is replaced by `— no engagements —` spanning the row: the mutual-passivity draw (§2.8) made visible before it bites.
@@ -634,7 +659,7 @@ What the invariant does *not* buy is a safe turn-2 deadline, and that is why bea
 
 **"Capturing" by turn 2, never "captured."** The invariant promises the Infantry is *standing on* the factory at the end of turn 2, not that the tile is yours: under Q4's N = 1 reading the tile flips at the start of turn 3 (§2.7). So the directive reads `Move the Infantry onto the ringed Factory` — never "capture it" — and it retires on the **capture pip**, the arrival receipt, not on the ownership flip. The flip gets its own confirmation one turn later via the `+100 Fame — Factory` toast, which is where the concept ledger's Capture row already ends. This wording is also correct if N is ever ruled 2: the pip is the arrival event either way.
 
-**C. Event-driven one-shots** (once each, at first relevance): first attack hover → `Check the forecast. It is exact — what you see is what resolves.`; first Artillery strike at range 2–3 → `No counter at this range. Artillery strikes beyond reply.`; first Recon-vs-Artillery forecast → `Recon closes fast. Artillery cannot answer at range 1.`; first Tank-vs-Recon forecast at range 1 → `Armor wins the adjacent fight.`; first Water hover with a unit selected → `Impassable to land. Cross at the Bridge.`; first Bridge hover → `The only crossing. −10% defense — do not stall on it.`; first combat Fame → `+150 Fame. Kills count at the cap. Income does not.` *(amount = actual award)*; first undamaged strike → `+[N] Fame — undamaged strike.`; first repair blocked by adjacency → `No repair — enemy adjacent. Break contact to repair.`; first repair tick → `+[N] HP — repaired at Factory.`; plus the two cap-approach banners (§2.11.4).
+**C. Event-driven one-shots** (once each, at first relevance): first attack hover → `Check the forecast. It is exact — what you see is what resolves.`; first Artillery strike at range 2–3 → `No counter at this range. Artillery strikes beyond reply.`; first Recon-vs-Artillery forecast → `Recon closes fast. Artillery cannot answer at range 1.`; first Tank-vs-Recon forecast at range 1 → `Armor wins the adjacent fight.`; first Water hover with a unit selected → `Impassable to land. Cross at the Bridge.`; first Bridge hover → `The only crossing. −10% defense — do not stall on it.`; first combat Fame → `+150 Fame. Kills count at the cap. Income does not.` *(amount = actual award)*; first repair blocked by adjacency → `No repair — enemy adjacent. Break contact to repair.`; first repair tick → `+[N] HP — repaired at Factory.`; plus the two cap-approach banners (§2.11.4).
 
 **D. Concept ledger** — every concept, its failure point, its teach moment, its confirmation:
 
@@ -646,7 +671,7 @@ What the invariant does *not* buy is a safe turn-2 deadline, and that is why bea
 | Terrain defense | Same attack, different damage → suspects hidden dice | Forecast names the defender's bonus inline, every time (§2.11.3) | Resolution matches forecast, every time |
 | **The Bridge** | Reads Water as decoration; "half the map is unreachable" | Briefing callout + Water never lights in any reach set + hover one-shots | First previewed or executed path crosses the Bridge |
 | Forecast / determinism | Veterans hedge for RNG; novices fear committing | First-attack one-shot: `It is exact.` | Player commits; outcome equals card; usage becomes habitual |
-| **Positional RPS triangle** | No counter chart exists — the triangle is emergent from range and move, invisible until experienced | The counter-reason line (§2.11.3), the three edge one-shots, the Artillery dead-zone ring | One uncountered Artillery strike lands — the undamaged-strike toast is the receipt |
+| **Positional RPS triangle** | No counter chart exists — the triangle is emergent from range and move, invisible until experienced | The counter-reason line (§2.11.3), the three edge one-shots, the Artillery dead-zone ring | One uncountered Artillery strike lands — the range-2–3 one-shot (`No counter at this range.`) is the receipt, the undamaged-strike toast having been cut with the bonus (Q6, §4.7) |
 | Capture | Parks a Tank on the factory and waits | Turn 2 directive; non-Infantry on a capturable tile shows disabled `Capture — Infantry only.` | Pip → tile recolors → next turn's `+100 Fame — Factory` toast |
 | Fame income & build | Fame is abstract; player hoards, never connects factories → army | Beat 3, which holds the strip on turn 2 or turn 3 in every branch where the player has not already built — and where they have, the lesson landed without it (B); income toasts; `BUILD` pulse when affordable; greyed rows with shortfall (§2.11.5) | A bought unit spawns and stands on the board carrying its unacted pip — the **event**, not the directive, so the row also confirms for a player who skipped guidance |
 | Flag = the game | Loses one specific Tank in a "fair trade"; match ends out of nowhere | Briefing callout; persistent `H`; red-edged info panel; flag warning band (§2.11.3) | Any lethal-to-flag forecast has been shown before any match can end |
@@ -1552,18 +1577,29 @@ Invariants:
              counter (the §2.8 tiebreak criterion-1 sort key); passive income
              never touches fameCombat
   T-FAME-02  income: each held factory pays +100/turn, each held town +25/turn
-             (§2.7); accrual timing per the Q8 ruling
+             (§2.7); accrues at the START of the owner's turn and is spendable
+             in that same turn's economy phase, with NO accrual on turn 1 —
+             turn-1 buying power is the 200 starting Fame alone (Q8, ruled)
   T-FAME-03  build: deducts the exact §2.4 cost (Infantry 100, Recon 150,
              Artillery 200, Tank 300); refused if unaffordable; fameTotal is
              never negative
   T-FAME-04  spawn: on the factory hex if free, else an adjacent free hex, else
-             the build waits (§2.7); waiting-build semantics per Q8
+             the build waits (§2.7). One build per factory per turn; a waiting
+             build HOLDS that factory's slot until it spawns; Fame is committed
+             at queue time, never at spawn time, and is not refundable (Q8,
+             ruled)
   T-FAME-05  capture: Infantry only (§2.7, §2.4); completes after N turns of
-             holding (N per Q4); interruption/reset semantics per Q4
+             holding (N = 1 on the shipped scenario, per-scenario data);
+             progress is tile-held and RESETS TO ZERO when the capturing
+             Infantry leaves the hex or dies, and never transfers to another
+             unit (Q4, ruled)
   T-FAME-06  a captured objective's income flips to the new owner (§2.7)
-  T-FAME-07  kill awards: ~half the victim's Fame cost, small undamaged-strike
-             bonus, flag kill +500 and the match ends (§2.7) — exact values per
-             Q5/Q6; the gate pins whatever the Director rules
+  T-FAME-07  kill awards: exactly half the victim's §2.4 cost — Infantry 50,
+             Recon 75, Artillery 100, Tank 150 (Q5, ruled). A flag kill pays a
+             flat 500 and ends the match; the flag award REPLACES the ordinary
+             kill award rather than stacking, so a flag Tank pays 500, not 650
+             (Q5). No undamaged-strike bonus exists — cut, not priced (Q6,
+             ruled) — so the gate asserts its ABSENCE from every award
   T-FAME-08  no Fame cap: fameTotal is unbounded; deployment is throttled by
              board space only (§2.7)
   T-FAME-09  determinism: same state + command → identical Fame deltas and state
@@ -1624,8 +1660,11 @@ Invariants:
   T-AI-05  strictly-losing-attack guard: the AI never makes an attack in which
            its unit dies and trades down (§2.9)
   T-AI-06  determinism: same state → same move; every scoring tie is broken by a
-           stated deterministic rule (canonical hex order for position ties;
-           remaining tie dimensions per the Q9 ruling)
+           stated deterministic rule (Q9, ruled): position AND target ties break
+           by canonical hex order — for a target, the hex it occupies — and
+           build ties break by the fixed type priority Infantry > Recon >
+           Artillery > Tank — ascending §2.4 COST (100/150/200/300), which is
+           NOT the order §2.4's table prints (Infantry, Tank, Artillery, Recon)
 Determinism: pure function of state; difficulty changes only starting Fame
          (§2.9), never the routine.
 Acceptance: T-AI-01..06, plus a self-play smoke run: N headless AI-vs-AI games
@@ -2179,22 +2218,27 @@ the strict way and **the map was corrected instead of the rule** — one
 deployment hex, no terrain and no rules text (Q28; §2.13.2). The limit of the
 convention is now known and stated once: **where the conservative reading is
 not free, this register states no reading and waits.**
-**Rows marked *unruled* state no reading and block their gate outright** (Q4's
-interruption semantics, Q5's stacking, Q6, Q8, and Q9's target- and
-build-choice ties); those gates and milestones cannot be settled until the
-Director answers.
+**No row now states *no reading*.** The five that did — Q4's interruption
+semantics, Q5's stacking, Q6, Q8's three sub-questions, and Q9's target- and
+build-choice ties — were all ruled this revision, and the gates they blocked
+outright (T-FAME-02, T-FAME-04, T-FAME-05, T-FAME-07, T-AI-06 and the T-CAP-
+tally suite) now assert. Three rows remain open but **readable** — Q2, Q11 and
+Q30 — each carrying a stated reading rather than a blank: Q2 leaves T-MOVE-07
+reserved-but-unwritten, Q11's reading is "no undo", and Q30's is partial and
+deliberately not hardened. The convention is unchanged: **where a row states no
+reading, its gate stays blocked until the Director answers.**
 
 | ID | Question | Blocks | Assumption in force until ruled |
 |---|---|---|---|
 | **Q1** | Map dimensions. §2.2 and §2.10 never state the prototype map's size or shape. | T-HEX-05 bounds; Stub 7's `map` field | Bounds are per-scenario data, not a global constant; *Ferrum Crossing* ships 11×9 (§2.13.2). |
 | **Q2** | Movement classes. §2.3's caption says move cost is "per movement class" and §2.4 gives Recon "ignores some terrain cost," but no class set or per-class cost table exists. | §4.8's `MoveClass` column; the reserved T-MOVE-07 | §2.3's single cost column applies to every land unit; no Recon discount is implemented, and no gate is written until the rule exists. |
 | **Q3** | Pass-through. §2.5 pins one-unit-per-hex for *ending* a move; it is silent on pathing *through* a friendly-occupied hex. | T-MOVE-03 | Blocked — a unit may not path through any occupied hex, friendly or not. |
-| **Q4** | Capture N and interruption. Pin N (§2.7 says "start N=1–2"), and rule the edge cases: does progress reset if the Infantry leaves or dies mid-capture? | T-FAME-05's exactness; the §2.9 AI capture step | N = 1 on the shipped scenario (§2.13.3's recommendation, inside §2.7's stated range). Interruption semantics are **unruled**, so T-FAME-05 stays blocked. |
-| **Q5** | Kill-award exact values. "~half its Fame cost" (§2.7) is not assertable. Does the flag's +500 stack with the Tank's ordinary kill award? | T-FAME-07 | The §2.7 change request proposes exactly half of each §2.4 cost — 50 / 75 / 100 / 150, all integers. Stacking is **unruled**. |
-| **Q6** | Undamaged-strike bonus. "A small bonus" (§2.7) has no number, yet it feeds the tiebreak's primary key. Options: (a) price it; (b) keep it in the Fame pool but exclude it from the cap tally until priced; (c) cut it — kills already pay half-cost, and the positional triangle already rewards a clean standoff strike with tempo. | T-FAME-07; the T-CAP- tally suite; the kb economy block | **Unruled** — unpriced, so no gate asserts it. The rules author recommends (c), with (b) as the fallback; either unblocks the T-CAP- suite immediately. |
+| **Q4** | ~~Capture N and interruption.~~ **RULED (this revision).** Pin N (§2.7 says "start N=1–2"), and rule the edge cases: does progress reset if the Infantry leaves or dies mid-capture? | T-FAME-05's exactness; the §2.9 AI capture step | Ruled. N = 1 on the shipped scenario (§2.13.3's recommendation, inside §2.7's stated range), and N is per-scenario data. **Interruption: capture progress is held by the tile and resets to zero the moment the capturing Infantry leaves the hex or dies** — it never transfers to another unit. This is the conservative reading, and it is what keeps the window between arrival and flip a real risk: at N = 1 the Infantry stands on the tile at the end of one turn and the tile flips at the start of the next, so the opponent gets exactly one turn to answer, and killing or displacing the capturer now costs the attacker the whole count rather than a fraction of it. T-FAME-05 unblocked and asserting. |
+| **Q5** | ~~Kill-award exact values.~~ **RULED (this revision).** "~half its Fame cost" (§2.7) is not assertable. Does the flag's +500 stack with the Tank's ordinary kill award? | T-FAME-07 | Ruled, and the change request is accepted as proposed: exactly half of each §2.4 cost — **Infantry 50, Recon 75, Artillery 100, Tank 150**, all integers, so no rounding rule is needed anywhere. **The flag's +500 does not stack**: it replaces the victim's ordinary kill award rather than adding to it, so a flag Tank pays **500, not 650**. The choice is nearly free at the cap — §2.8 already states the flag bonus can never appear in a capped tally, since a flag kill ends the match immediately — so it binds the live scoreboard (§2.11) and the balance logs rather than any victory condition. T-FAME-07 unblocked. |
+| **Q6** | ~~Undamaged-strike bonus.~~ **RULED (this revision) — cut.** "A small bonus" (§2.7) has no number, yet it feeds the tiebreak's primary key. Options: (a) price it; (b) keep it in the Fame pool but exclude it from the cap tally until priced; (c) cut it — kills already pay half-cost, and the positional triangle already rewards a clean standoff strike with tempo. | T-FAME-07; the T-CAP- tally suite; the kb economy block | Ruled **(c) — cut**, as the rules author recommended. Kills already pay half-cost and the positional triangle already rewards a clean standoff strike with tempo, so the bonus was paying twice for one thing; cutting it removes an unpriced term from the §2.8 tiebreak's **primary** sort key rather than leaving a number nobody had chosen inside it. Cheaper than (b), which would have required the document to carry two different Fame totals — one for the pool, one for the cap tally — in both the kb economy block and the T-CAP- suite. Beyond §2.7's own bullet, which did cite Q6, the cut reaches **six sites that never cited it** — four here (§2.8's tally definition, §2.11's standings row and its tooltip, the §2.11.6 one-shot toast, and the concept ledger's RPS row, whose *receipt* was that toast and is now the range-2–3 one-shot instead) and two in `kb/rules.md`. Grepping the identifier alone would have found none of them. T-FAME-07 and the T-CAP- tally suite unblocked. |
 | **Q7** | ~~Turn cap value.~~ **RULED (this revision).** The cap is **per-scenario data**, stored in Stub 7's `turnCap`; *Ferrum Crossing* ships **20** turns. | — | Ruled. §2.8, §2.11.4 and §2.13.2 now agree, and T-TURN-04 and Stub 7 read a value rather than an example. |
-| **Q8** | Income timing and build limits. When within the turn does factory/town income pay, and can it fund a build the same turn? Is there a builds-per-factory-per-turn limit (§2.9's AI implies one; the player's rule is unstated)? For a waiting build (§2.7 "the build waits"), is Fame committed at queue time or spawn time, and can it be canceled? | T-FAME-02 and T-FAME-04 | **Unruled** — all three sub-questions. T-FAME-02 and T-FAME-04 stay blocked until ruled, and they gate Stub 4, which §4.11 builds *before* the turn loop. |
-| **Q9** | AI tie-breaks. §2.9's "best expected-damage target" and pathing choices can tie. | T-AI-06; AI determinism as a stated rule rather than an implementation accident | Position ties break by canonical hex order (as gated). Target-choice and build-choice tie order are **unruled** and need naming so determinism is a rule, not an accident. |
+| **Q8** | ~~Income timing and build limits.~~ **RULED (this revision) — all three.** When within the turn does factory/town income pay, and can it fund a build the same turn? Is there a builds-per-factory-per-turn limit (§2.9's AI implies one; the player's rule is unstated)? For a waiting build (§2.7 "the build waits"), is Fame committed at queue time or spawn time, and can it be canceled? | T-FAME-02 and T-FAME-04 | Ruled, all three. **(a) Timing:** income accrues at the **start** of the owner's turn and is spendable in that same turn's economy phase — the phase §2.9 already runs first — but there is **no accrual on turn 1**, so turn-1 buying power is the 200 starting Fame alone. That reading was chosen because it is the one §2.13.2 was already priced on: it prices East's turn-1 Infantry as "100 of the 200 starting Fame", not of 300, so no map number moves. It does correct two sentences that said the opposite — §2.7's "both players have income from turn 1" and its "plus home-factory income from turn 1" — which is the whole textual cost of the ruling *inside §2.7* — it also rewrites §2.9's economy phase, T-FAME-02/04, and the starting-Fame and build lines in `kb/rules.md`. **(b) Limit:** one build per factory per turn, player and AI alike, matching what §2.9 already describes for the AI; a waiting build **holds that factory's slot** until it spawns. **(c) Commitment:** Fame is committed at **queue** time and is **not refundable**, so fameTotal moves once and never reverses, no cancel affordance is owed by §2.11, and a boxed-in factory becomes a commitment the player must read before spending. T-FAME-02 and T-FAME-04 unblocked; Stub 4 is no longer gated on an unruled row. |
+| **Q9** | ~~AI tie-breaks.~~ **RULED (this revision).** §2.9's "best expected-damage target" and pathing choices can tie. | T-AI-06; AI determinism as a stated rule rather than an implementation accident | Ruled, and split by axis rather than forced onto one rule. **Position and target ties break by canonical hex order** — for a target, the hex it occupies — so the convention already gated for positions extends to targets with no new state and nothing new to remember. **Build ties break by the fixed type priority Infantry > Recon > Artillery > Tank** — **ascending §2.4 cost**, 100 / 150 / 200 / 300. The key is the cost column, deliberately **not** the order §2.4's table happens to print, which is Infantry, Tank, Artillery, Recon; an earlier draft of this row asserted the two were the same and they are not. A production choice has no board position to sort on, so hex order would have been an arbitrary key there, whereas cost is the one total order the buildlist already carries. Cheapest-first agrees with §2.9's stated buildlist bias on its **first** term, Infantry, but not on its second: §2.9 favours an occasional Tank and this priority ranks Tank last. The two are not in conflict because they answer different questions — the bias governs what the AI *prefers* when it is choosing freely, the priority only what it does when two options have already scored **equal**. Determinism is now a stated rule on every axis rather than an implementation accident. T-AI-06 unblocked. |
 | **Q10** | Flag designation. Confirm exactly one flag per side, designated by the scenario (`isFlag`, Stub 7), with otherwise-standard Tank stats. | T-SCN-01's exactness; the flag's §4.8 representation | §2.4's "Tank variant" reads as *not producible, and nothing else*. |
 | **Q11** | Undo. The command log makes single-step undo of an uncommitted move nearly free, but the GDD never grants it, and §2.6's forecast-then-commit flow arguably forbids it. | Nothing today — no gate assumes undo exists, and §2.11.1's `Z` binding is explicitly conditional | No undo: a completed move stands. |
 | **Q12** | Zero-RNG confirmation. §2.6 and §4.1 say any RNG "is seeded"; nothing in §2 actually uses RNG. | §4.10's `seed` field; T-SAVE-01/02 if RNG is ever added | The prototype ships with **none**, so `seed` is a reserved field written as 0. |

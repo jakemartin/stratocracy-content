@@ -27,7 +27,11 @@
       "land",
       "air"
     ],
-    "blurb": "The wall. Three move to climb and forty percent defense at the top — slow ground you pay to hold."
+    "blurb": "The wall. Three move to climb and forty percent defense at the top — slow ground you pay to hold.",
+    "_critic": "FAILED",
+    "_violations": [
+      "rule: Mountains passable ['air', 'land'] != ['air', 'land (slow)']"
+    ]
   },
   {
     "terrain": "Water",
