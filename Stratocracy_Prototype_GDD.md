@@ -1440,6 +1440,19 @@ T-COMBAT-07: Artillery counter-immunity
 
 No human eyeballed the diff to catch that; the spec's invariant did, mechanically, at the merge gate. That is the difference between "an agent wrote some C++" and a constrained, self-verifying pipeline.
 
+**A second recorded case, at `c224825`.** Movement did the same thing, and the block was wider:
+
+```
+T-MOVE-01/02/03: reachable-set exactness
+  Pass 1  reachable set computed as hexDistance <= move — terrain never
+          consulted. A plausible reading of "reachable"; not the §2.3 rule.
+          Merge blocked on T-MOVE-01, T-MOVE-02 and T-MOVE-03 at once.
+  Pass 2  Dijkstra over terrain cost, ties broken by canonical hex order →
+          T-MOVE-01..06 green (6/6) → merged.
+```
+
+The load-bearing detail is what T-MOVE-01 compares against: an **independent** shortest-path pass written inside the test, not the module's own search. An invariant that re-runs the implementation agrees with it by construction and asserts nothing; this one could not, which is why a pass that was wrong *consistently* still failed it. Same shape as T-COMBAT-07, one layer deeper — there the spec's invariant caught a generalisation, here the test's own oracle caught a simplification.
+
 **This crew is the buildable deliverable.** The three headless roles above — **Systems Engineer, Test Engineer, Balance Analyst** — are exactly the 3+ coordinating agents instantiated for the standalone agent-crew build: their *game-ready output* is compiling C++ systems, a passing test suite, and self-play balance data for *this* game, handed between them in a fixed order (spec → tests → implementation → balance). The role table's I/O columns are the contract that crew is written against, so the document and the crew stay in lockstep.
 
 **Guardrails (non-negotiable).**
@@ -1450,24 +1463,24 @@ No human eyeballed the diff to catch that; the spec's invariant did, mechanicall
 
 **Provenance ledger — how agent contribution is reported.** The deliverable is the game (§1); agent authorship is reported honestly, not as a single hero percentage but as a **per-system ledger** — one row per system, marked by author and verification status, **each Verified row citing the commit and passing test IDs that back it** so the claim is auditable rather than asserted.
 
-*Status: live tracker — first rows populated 2026-07-26 from the Assignment-3 agent crew; **Repair** and **Type-effectiveness** added and gate-verified 2026-07-29; the rest land as each system is built (wk 1–3, §4.4). This draft stands at 2026-08-01, three days past the last code commit: §4.4's week-1 deliverable is §4.11 rows 1–3 — grid and hex math, the §4.8 tables, movement and pathfinding — and all three still read `*pending*` in the table below, with no hex-grid, movement or DataTable source in the crew repo, which holds the Combat module alone. Because §4.11's critical path runs 1 → 3 → 4 → 5 → 6/8, nothing §4.4 schedules for weeks 2–3 clears without those three rows — only row 2 itself, row 10(a)'s format spec, T-INT-01/04 and the parallel UMG skeletons proceed meanwhile — so weeks 2–3 move with week 1 one for one rather than absorbing it, which is why §4.5 now carries that as a named risk with a cut line attached rather than as a discovery.* Legend: **Author** ∈ {agent, agent+human, human}; **Agent-verified** ∈ {✓, —}; **Evidence** cites the git commit + passing test IDs so any row is independently checkable.
+*Status: live tracker — first rows populated 2026-07-26 from the Assignment-3 agent crew; **Repair** and **Type-effectiveness** added and gate-verified 2026-07-29; the rest land as each system is built (wk 1–3, §4.4). This draft stands at 2026-08-02, at commit [`c224825`](https://github.com/jakemartin/stratocracy-crew/commit/c224825) — the head of `main` in the crew repo, whose parent is `2fcbf32`. §4.4's week-1 deliverable is §4.11 rows 1–3 — grid and hex math, the §4.8 tables, movement and pathfinding — and **week 1 closed two of the three**: rows 1 and 3 passed their full acceptance sets at that commit (T-HEX-01..07, 7/7; T-MOVE-01..06, 6/6) and flip in the table below. **Row 2 does not flip.** Its headless half is green — T-DATA-01..04 and 06, 5/5 — but T-DATA-05, the in-editor Unreal Automation parity pass, has not run, and Q29 requires the full acceptance set at one commit, so the row records a partial pass and stays unverified; the editor pass is not yet due, so that is the ordinary schedule and not §4.7's cut line firing. What week 1 did **not** close is everything after it: rows 4–8 hold no code, and since §4.11's critical path runs 1 → 3 → 4 → 5 → 6/8, its first two links are now evidence rather than schedule and **row 4 (Capture & Fame) is blocked on nothing but itself**. §4.5's *Specification outruns the build* risk is therefore reduced and re-scoped rather than retired, and that row now states the arithmetic.* Legend: **Author** ∈ {agent, agent+human, human}; **Agent-verified** ∈ {✓, —}; **Evidence** cites the git commit + passing test IDs so any row is independently checkable.
 
 | System | Author | Agent-verified? | Evidence (commit · tests) |
 |---|---|---|---|
-| **Combat resolution** | agent | ✓ | `Combat.cpp` + `test_combat.cpp` @ [`5ffa8d6`](https://github.com/jakemartin/stratocracy-crew/commit/5ffa8d6) · T-COMBAT-01..10 (10/10) |
-| **Test suite** | agent | ✓ | `test_combat.cpp` @ [`5ffa8d6`](https://github.com/jakemartin/stratocracy-crew/commit/5ffa8d6) · 17/17 invariants, re-runnable via `python run.py` |
-| Hex grid & math | *pending* | — | *pending build* |
-| Movement & pathfinding | *pending* | — | *pending build* |
+| **Combat resolution** | agent | ✓ | `cpp_reference/Combat.good.cpp` + `cpp_reference/test_combat.cpp` @ [`5ffa8d6`](https://github.com/jakemartin/stratocracy-crew/commit/5ffa8d6) · T-COMBAT-01..10 (10/10) |
+| **Test suite** | agent | ✓ | `cpp_reference/test_combat.cpp` @ [`5ffa8d6`](https://github.com/jakemartin/stratocracy-crew/commit/5ffa8d6) · 17/17 invariants; `cpp_reference/test_hex.cpp`, `cpp_reference/test_data.cpp`, `cpp_reference/test_move.cpp` @ [`c224825`](https://github.com/jakemartin/stratocracy-crew/commit/c224825) · 18/18 of the IDs that ran. All re-runnable via `python run.py` |
+| **Hex grid & math** | agent | ✓ | `cpp_reference/Hex.good.cpp` + `cpp_reference/test_hex.cpp` @ [`c224825`](https://github.com/jakemartin/stratocracy-crew/commit/c224825) · T-HEX-01..07 (7/7) |
+| **Movement & pathfinding** | agent | ✓ | `cpp_reference/Move.good.cpp` + `cpp_reference/test_move.cpp` @ [`c224825`](https://github.com/jakemartin/stratocracy-crew/commit/c224825) · T-MOVE-01..06 (6/6); T-MOVE-07 reserved-unwritten on Q2 |
 | Capture & Fame economy | *pending* | — | *pending build* |
 | Turn loop & win / tiebreak | *pending* | — | *pending build* |
 | Opponent AI | *pending* | — | *pending build* |
-| Data tables (units/terrain) | *pending* | — | *pending build* |
-| **Repair (owned-tile heal, §2.7)** | agent | ✓ | `Combat.cpp::repairAmount` @ [`5ffa8d6`](https://github.com/jakemartin/stratocracy-crew/commit/5ffa8d6) · T-REPAIR-01..07 (7/7) |
-| **Type-effectiveness (§3 spec)** | agent | ✓ | `Combat.cpp::effectiveness` @ [`5ffa8d6`](https://github.com/jakemartin/stratocracy-crew/commit/5ffa8d6) · T-COMBAT-09..10 (neutral, 2/2) |
+| Data tables (units/terrain) | agent | — | **Partial pass — not a flip.** `cpp_reference/Data.good.cpp` + `cpp_reference/test_data.cpp` over `data/units.csv`, `data/terrain.csv`, `data/effectiveness.csv` @ [`c224825`](https://github.com/jakemartin/stratocracy-crew/commit/c224825) · T-DATA-01..04, 06 (5/5) headless. **T-DATA-05 (in-editor) has not run**, so the acceptance set is incomplete at this commit and Q29 keeps the row unverified |
+| **Repair (owned-tile heal, §2.7)** | agent | ✓ | `cpp_reference/Combat.good.cpp::repairAmount` @ [`5ffa8d6`](https://github.com/jakemartin/stratocracy-crew/commit/5ffa8d6) · T-REPAIR-01..07 (7/7) |
+| **Type-effectiveness (§3 spec)** | agent | ✓ | `cpp_reference/Combat.good.cpp::effectiveness` @ [`5ffa8d6`](https://github.com/jakemartin/stratocracy-crew/commit/5ffa8d6) · T-COMBAT-09..10 (neutral, 2/2) |
 | Content / scenario | *pending* | — | *pending build* |
 | UI | *pending* | — | *pending build* |
 
-Four rows are now populated — the headless Combat module built for the Assignment-3 agent crew ([github.com/jakemartin/stratocracy-crew](https://github.com/jakemartin/stratocracy-crew), commit [`5ffa8d6`](https://github.com/jakemartin/stratocracy-crew/commit/5ffa8d6)): **Combat resolution** and its **Test suite**, plus **Repair** and **Type-effectiveness**, all agent-authored from `spec/combat_spec.md` (+ `combat_spec_addendum.md`) and verified by the real compile+test gate — a live CrewAI run authored the module and the Test Engineer certified **17/17** on a live `g++`/`clang++` compile+run. *(Commit `5ffa8d6` is published: it is an ancestor of `main` at [`2fcbf32`](https://github.com/jakemartin/stratocracy-crew/commit/2fcbf32) on the public remote, so every link above resolves and the ledger's "independently checkable" claim is testable by clicking it.)* The remaining rows fill in the same format — commit + passing test IDs — as each system clears the gate.
+**Six rows now carry a ✓, and a seventh carries evidence without one.** Four came from the headless Combat module built for the Assignment-3 agent crew ([github.com/jakemartin/stratocracy-crew](https://github.com/jakemartin/stratocracy-crew), commit [`5ffa8d6`](https://github.com/jakemartin/stratocracy-crew/commit/5ffa8d6)): **Combat resolution** and its **Test suite**, plus **Repair** and **Type-effectiveness**, all agent-authored from `spec/combat_spec.md` (+ `spec/combat_spec_addendum.md`) and verified by the real compile+test gate — a live CrewAI run authored the module and the Test Engineer certified **17/17** on a live `g++`/`clang++` compile+run. **Hex grid & math** and **Movement & pathfinding** joined them at [`c224825`](https://github.com/jakemartin/stratocracy-crew/commit/c224825), and their evidence sentence is deliberately not the one above: a **Claude Code session** authored the three week-1 modules against the Director-written stubs `spec/hex_spec.md`, `spec/data_spec.md` and `spec/move_spec.md` — **not a live CrewAI run**, since `crew/tasks.py` is still written against the Combat spec alone — and the Test Engineer certified them through the same `python run.py` compile+run pipeline, **18/18 on the IDs that ran, under clang++ and MSVC both**. The author is an agent either way; the two sentences differ because the harness differed, and reporting a harness that did not run is the exact failure this ledger exists to prevent. Two IDs are recorded as **uncovered** rather than omitted: **T-DATA-05**, the in-editor Unreal Automation half, and **T-MOVE-07**, reserved and unwritten on Q2. The first is why **Data tables** is the seventh row and does *not* flip — T-DATA-01..04 and 06 are green at the same commit, but Q29 requires the full acceptance set at one commit, so that row records a partial pass and stays unverified. *(Commit `c224825` is the head of `main`; its parent is [`2fcbf32`](https://github.com/jakemartin/stratocracy-crew/commit/2fcbf32), so `5ffa8d6` remains an ancestor and every commit link above resolves. The **file** paths resolve too, which they previously did not: four evidence cells carried **five** bare citations between them — `Combat.cpp` three times and `test_combat.cpp` twice — and neither bare name has ever existed in this repository at any commit. Those five citations resolve to two tracked files, `cpp_reference/Combat.good.cpp` and `cpp_reference/test_combat.cpp`, which the cells now name in full; every path this table cites was probed at the commit its own row names. The `build/` directory is not tracked at all. That correction is what the "independently checkable" claim required, not a cosmetic one.)* The remaining rows fill in the same format — commit + passing test IDs — as each system clears the gate.
 
 Rules that keep the ledger honest:
 - **Scope = the game's own source only.** The UE engine, the MCP/AllToolsets plugins, and the bought reference template (§4.3, not shipped) are excluded — they aren't the artifact we built, so they're not in the denominator.
@@ -1521,7 +1534,7 @@ Author the **core in C++ with the agent** (the on-thesis path — hex math, path
 | MCP plugin experimental/flaky | Off the critical path; Perforce checkpoints; manual fallback |
 | Pacing (the original's flaw) | Small maps, decisive damage, turn cap + tiebreak |
 | Agent code quality | Test-first; human review gates; headless module keeps loops fast |
-| **Specification outruns the build** — **69** written acceptance IDs at this revision (§4.7–§4.11) against **4** verified ledger rows (§3), all four inside Combat; §4.4 week 1 is due §4.11 rows 1–3 and all three read `*pending*` at 2026-08-01 | The **† cut line** (§4.7 head; members marked in §4.11's build-order table, which is authoritative for which side an ID is on) separates the IDs the MVP line above needs from the correctness infrastructure that stands down if the calendar takes it — so a slip drops named suites rather than silently thinning every suite. And the discipline Q20 and Q23 already applied holds for the rest of the table — *each piece lands in the week the thing that consumes it runs* (§4.4), and a gate that runs green over a subset does not flip its ledger row (Q29) — so a slip in rows 1–3 moves everything downstream of them rather than being absorbed by calling a row done on a partial pass |
+| **Specification outruns the build** — **69** written acceptance IDs at this revision (§4.7–§4.11) against **6** verified ledger rows (§3). **Reduced and re-scoped at 2026-08-02, not retired:** no new ID was written this week, and **18** of the 69 are green at `c224825` — rows 1 and 3 closed their full acceptance sets and row 2's headless half passed — so the first two links of the critical path are evidence rather than schedule. **51 IDs remain unclosed**: T-DATA-05, which leaves row 2 unflipped, plus the 50 in rows 4–10, which hold no code | The **† cut line** (§4.7 head; members marked in §4.11's build-order table, which is authoritative for which side an ID is on) separates the IDs the MVP line above needs from the correctness infrastructure that stands down if the calendar takes it — so a slip drops named suites rather than silently thinning every suite. And the discipline Q20 and Q23 already applied holds for the rest of the table — *each piece lands in the week the thing that consumes it runs* (§4.4), and a gate that runs green over a subset does not flip its ledger row (Q29) — so a slip in rows 4–8 moves everything downstream of them rather than being absorbed by calling a row done on a partial pass. Row 2 is now that clause's worked example rather than its hypothetical: its headless suite is green and its ledger row is not |
 
 ### 4.6 Token budget
 
@@ -1561,7 +1574,7 @@ $55.20 ≈ **+$55** and the subtotal $144.90 + $55.20 = $200.10 ≈ **$200**.
 
 **Headline.** Development authoring dominates. Dev-time alone is **≈ 72M tokens · ≈ $178**; the stretch runtime commander adds **≈ 18M tokens** and **$19 (Haiku 4.5)** to **$37 (Sonnet 5)**. The whole jam therefore lands at **≈ 90M tokens** and **≈ $178 without the commander, ≈ $197–$215 with it**. Cost scales linearly with task volume, and the overrun case is stated rather than buried in a wide band. At **1.5× task volume** — 315 tasks rather than 210, of which 15% escalate to Opus (47.25, i.e. **47** to the nearest whole task) — the dev-time line is 315 × $0.69 + 47 × $1.035 = $217.35 + $48.645 = **$265.995**, i.e. **≈ $266**. The overrun is in *agent task volume*; it does not scale the 200-match playtest plan, so part B carries across unchanged and the all-in overrun is **$266 + $19 ≈ $285** with the Haiku 4.5 commander and **$266 + $37 ≈ $303** with Sonnet 5. **$303 is the ceiling.** Each of those is a derivation rather than a round number — as is every figure in the two tables above. (An earlier draft printed **$267** here. That was 1.5 × the *rounded* $178 subtotal, not a re-derivation from the per-task lines, and it sat $1.005 above what its own stated inputs produced ($267 − $265.995; the often-quoted $1.24 came from the retired $1.03 delta) — the second arithmetic fault this table has surfaced by being fully re-derivable, and the reason the escalation delta is now quoted unrounded at $1.035 throughout.)
 
-### 4.7 Pending-system gate plan — the eight `*pending*` ledger rows
+### 4.7 Pending-system gate plan — the eight ledger rows that read `*pending*` at 2026-08-01
 
 Each stub below follows the proven Combat-spec shape (§3): Inputs, Formula or
 state transition, Invariants (one per assertable rule), Determinism, Acceptance
@@ -2443,7 +2456,8 @@ Exactly seven rows (§2.3).
 → UStruct `FEffectivenessRow`. A 4×4 matrix, row = attacker type, columns =
 defender types, values ∈ {0.5, 1.0, 1.5} (§3 spec), **shipping all-1.0**
 (§2.4 — the triangle stays positional). The verified implementation
-(`Combat.cpp::effectiveness` @ `5ffa8d6`) hardcodes the neutral stub; this
+(`cpp_reference/Combat.good.cpp::effectiveness` @ `5ffa8d6`) hardcodes the
+neutral stub; this
 schema is the lever's *data* form, so that if self-play ever asks for a non-1.0
 cell, populating it is a CSV edit gated by the existing directional-gate plan
 (addendum Part A), not a code change. T-COMBAT-09 (neutral stub, 16/16 pairs)
@@ -2473,8 +2487,8 @@ The rules module's value is that it has **zero engine dependencies** (§3, §4.1
 integration must add Unreal *around* it without ever adding Unreal *to* it.
 
 **1. Module layout — one source, two compilers.** The certified headless
-sources (`Combat.h`/`Combat.cpp` today; each §4.7 stub as it lands) live
-canonically in the crew repo, where the `g++`/`clang++` + `python run.py` gate
+sources live canonically in the crew repo, and each §4.7 stub joins them as it
+lands — where the `g++`/`clang++` + `python run.py` gate
 runs (§3 ledger). The UE project vendors them verbatim into a UBT runtime
 module, `Source/StratRules/`, via a sync script that records the source commit
 hash. `StratRules` contains **no engine headers, no UObject, no third-party
@@ -2615,9 +2629,15 @@ Acceptance: T-SAVE-01..07 headless (05 also exercised in-editor via the load UI
 
 ### 4.11 Build order
 
-Rows 1–8 are the §4.7 stubs (the eight `*pending*` ledger rows); rows 9–10 are
-the §4.9 and §4.10 systems. Combat, its test suite, Repair, and Type-effectiveness are
-green at `5ffa8d6` and are prerequisites, not work items. Note **row 10's
+Rows 1–8 are the §4.7 stubs — the eight ledger rows that read `*pending*` when
+this table was written, of which **rows 1 and 3 have since flipped** (§3); rows
+9–10 are the §4.9 and §4.10 systems. Combat, its test suite, Repair, and
+Type-effectiveness are green at `5ffa8d6` and are prerequisites, not work items.
+**Rows 1 and 3 are green at `c224825`**, so rows 4–8 depend on landed code
+rather than on scheduled code. **Row 2 is not green:** T-DATA-01..04 and 06 pass
+at that commit and T-DATA-05 has not run, which is exactly the flip cost its †
+bullet below already priced — reached by the ordinary schedule, since the editor
+pass is not yet due, and not by the cut line firing. Note **row 10's
 format spec must exist by the row-9 integration pass**, because T-INT-02's
 input file is a §4.10 save. Rows 9 and 10 therefore state their dependencies
 in **two parts** — what each gate needs in order to **run**, and what it needs
