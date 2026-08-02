@@ -2677,8 +2677,8 @@ asserted.
 Status: live tracker — first rows populated 2026-07-26 from the
 Assignment-3 agent crew; Repair and Type-effectiveness added and
 gate-verified 2026-07-29; the rest land as each system is built (wk 1–3,
-§4.4). This draft stands at 2026-08-02, at commit 647d4df — the head of
-main in the crew repo, whose parent is 9f87ecd. §4.4’s week-1
+§4.4). This draft stands at 2026-08-02, at commit ad77b13 — the head of
+main in the crew repo, whose parent is caa8267. §4.4’s week-1
 deliverable is §4.11 rows 1–3 — grid and hex math, the §4.8 tables,
 movement and pathfinding — and week 1 closed two of the three: rows 1
 and 3 passed their full acceptance sets at that commit (T-HEX-01..07,
@@ -2689,14 +2689,14 @@ Q29 requires the full acceptance set at one commit, so the row records a
 partial pass and stays unverified; the editor pass is not yet due, so
 that is the ordinary schedule and not §4.7’s cut line firing. What week
 1 did not close is everything after it: rows 4–8 held no code then, and
-row 4 has since landed — recorded at the end of this paragraph — so at
-647d4df only rows 5–8 hold none; since §4.11’s critical path runs 1 → 3
-→ 4 → 5 → 6/8, its first three links are evidence rather than schedule
-and row 5 (Turn loop & win/tiebreak) is blocked on nothing but itself.
-§4.5’s Specification outruns the build* risk is therefore reduced and
-re-scoped rather than retired, and that row now states the arithmetic.
-What landed after week 1 is a debug driver, at 9f87ecd:
-cpp_reference/driver_main.cpp builds a command REPL,
+rows 4 and 5 have since landed — both recorded at the end of this
+paragraph — so at ad77b13 only rows 6–8 hold none; since §4.11’s
+critical path runs 1 → 3 → 4 → 5 → 6/8, its first four links are
+evidence rather than schedule and row 6 (Opponent AI) is blocked on
+nothing but itself. §4.5’s Specification outruns the build* risk is
+therefore reduced and re-scoped rather than retired, and that row now
+states the arithmetic. What landed after week 1 is a debug driver, at
+9f87ecd: cpp_reference/driver_main.cpp builds a command REPL,
 build/stratocracy_debug, over the built modules. The binary is not
 citable — build/ is untracked, as the paragraph below the table already
 records — so what is cited is its five tracked sources, each probed
@@ -2770,10 +2770,67 @@ cpp_reference/Economy.h, so the driver still holds no rules of its own;
 turn <n> is a debug setter, not a turn structure, and GATE-DRV-01..07 is
 still 7/7 and still not T-*. What there is no way to do at 647d4df is
 still play a match: there is no turn structure, no AI and no scenario
-file, and a setter for the turn number is not the first of those.*
-Legend: Author ∈ {agent, agent+human, human}; Agent-verified ∈ {✓, —};
-Evidence cites the git commit + passing test IDs so any row is
-independently checkable.
+file, and a setter for the turn number is not the first of those. Row 5
+then landed, at ad77b13: Turn loop & win/tiebreak, gated T-TURN-01..09,
+9/9 under clang++ and MSVC both — g++ is not installed on this machine —
+while its pass-1 implementation cpp_reference/Turn.buggy.cpp is blocked
+at 6/9, on T-TURN-05, T-TURN-06 and T-TURN-07, under both compilers.
+Five tracked sources are cited, each probed present at that commit:
+spec/turn_spec.md, cpp_reference/Turn.h, cpp_reference/Turn.good.cpp,
+cpp_reference/Turn.buggy.cpp, cpp_reference/test_turn.cpp. The last of
+those is a seventh harness, so nine tracked sources define main() at
+ad77b13 — the eight named above plus cpp_reference/test_turn.cpp — seven
+test harnesses, one combat duel simulator, and one debug REPL. No ID is
+left uncovered: row 5 has no in-editor half and no reserved-unwritten
+ID, so its full acceptance set closes at one commit, Q29 is satisfied,
+and the row flips in the table below. No new acceptance ID was written,
+so §4.5’s 69 stands and its green count moves 27 → 36. §4.4 schedules
+rows 4–5 for week 3, so this row too is ahead of the milestone table,
+not behind it. Rows 3 and 4 declined the turn — row 4 takes the turn
+number as an argument — so row 5 is the first module to own alternation,
+per-unit act flags, the start-of-turn moment and the §2.8 result; it
+owns no board, since the §2.8 facts arrive as a caller-supplied
+BoardSnapshot, the same discipline row 4 uses. T-TURN-04, 05, 06 and 07
+encode §2.8’s procedure exactly — one guard, one three-key comparison,
+one grade — and Q7 is executed rather than only written: the cap is
+per-scenario data and the module refuses a cap below 1 rather than
+substituting a default, so no literal 20 exists in it. T-TURN-08 asserts
+only that the loop calls the already-verified repairAmount at the right
+moment with the right board facts, every expectation in it being a
+direct cpp_reference/Combat.h call; the heal values stay green at
+5ffa8d6 under T-REPAIR-01..07 and are not re-asserted. Two readings are
+recorded in spec/turn_spec.md as documented choices, not rules: a turn
+is one full I-GO-U-GO round shared by both sides, read off two sites
+that keep the turn number and the side to move as separate fields — §4.7
+Stub 8’s UI snapshot
+match {turn, turnCap, sideToMove, resultTier or null}, and §4.10’s
+canonical state hash, which serializes GameState in a fixed field order
+beginning turn counter, side to move — and consistent with §2.7’s both
+players draw income from turn 2; and the cap resolves at the end of
+round turnCap, since §2.11.4 displays the counter as N / turnCap, so
+turn turnCap is a playable turn. Neither is a new rule and neither is
+filed as a change request. The driver reaches the module:
+match <firstSide> <turnCap>, endturn, standings, result and
+flag <side> <id> are new commands, joined by act-flag and alternation
+enforcement on move/attack and active-side gating on
+income/build/capture, and each is a call into cpp_reference/Turn.h, so
+the driver still holds no rules of its own. flag is a debug designation
+standing in for Stub 7’s isFlag — row 7 is unbuilt and Q10 is open on
+exactness — the human names the flag unit and the driver never picks
+one, and it is what makes the flag kill award reachable, paid as the
+flat 500 through cpp_reference/Economy.h::killAward. turn <n> remains a
+debug setter and is now refused while a match runs; with no match
+running the board is the same free sandbox it was at 647d4df, which is
+why GATE-DRV-01..07 are unchanged and still pass. The driver suite is
+now GATE-DRV-01..09, 9/9 under clang++ and MSVC both, and those IDs are
+still not T-*: the driver is not a §4.7 stub, has no row in the ledger
+below, and flips nothing. A Claude Code session authored row 5 from the
+Director-written stub spec/turn_spec.md, not a live CrewAI run. What
+ad77b13 still does not have is an AI or a scenario file (rows 6–8): the
+driver’s boards are built-in fixtures plus place/remove, and no file
+format is defined or read.* Legend: Author ∈ {agent, agent+human,
+human}; Agent-verified ∈ {✓, —}; Evidence cites the git commit + passing
+test IDs so any row is independently checkable.
 
   -------------------------------------------------------------------------------------------------------
   System               Author            Agent-verified?   Evidence (commit · tests)
@@ -2802,8 +2859,9 @@ independently checkable.
   economy                                                  cpp_reference/test_economy.cpp @ 647d4df ·
                                                            T-FAME-01..09 (9/9)
 
-  Turn loop & win /    pending           —                 pending build
-  tiebreak                                                 
+  Turn loop & win /    agent             ✓                 cpp_reference/Turn.good.cpp +
+  tiebreak                                                 cpp_reference/test_turn.cpp @ ad77b13 ·
+                                                           T-TURN-01..09 (9/9)
 
   Opponent AI          pending           —                 pending build
 
@@ -2828,7 +2886,7 @@ independently checkable.
   UI                   pending           —                 pending build
   -------------------------------------------------------------------------------------------------------
 
-Seven rows carry a ✓ in the table above, and an eighth carries evidence
+Eight rows carry a ✓ in the table above, and a ninth carries evidence
 without one. Four came from the headless Combat module built for the
 Assignment-3 agent crew (github.com/jakemartin/stratocracy-crew, commit
 5ffa8d6): Combat resolution and its Test suite, plus Repair and
@@ -2856,25 +2914,35 @@ CrewAI run — crew/tasks.py is byte-unchanged from 5ffa8d6 to 647d4df, so
 the file the live crew runs from still describes the Combat spec alone.
 That check establishes that the file has not moved across those commits;
 it is not evidence about what any run did, and the harness is reported
-here because it is known and not because a diff proved it. Two IDs are
-still recorded as uncovered rather than omitted: T-DATA-05, the
-in-editor Unreal Automation half, and T-MOVE-07, reserved and unwritten
-on Q2. The first is why Data tables is the eighth row and does not flip
-— T-DATA-01..04 and 06 are green at the same commit, but Q29 requires
-the full acceptance set at one commit, so that row records a partial
-pass and stays unverified. (Commit 647d4df is the head of main; its
-parent is 9f87ecd, so 5ffa8d6, c224825 and 9f87ecd all remain ancestors
-and every commit link above resolves. The file paths resolve too, which
-they previously did not: four evidence cells carried five bare citations
-between them — Combat.cpp three times and test_combat.cpp twice — and
-neither bare name has ever existed in this repository at any commit.
-Those five citations resolve to two tracked files,
-cpp_reference/Combat.good.cpp and cpp_reference/test_combat.cpp, which
-the cells now name in full; every path this table cites was probed at
-the commit its own row names. The build/ directory is not tracked at
-all. That correction is what the “independently checkable” claim
-required, not a cosmetic one.) The remaining rows fill in the same
-format — commit + passing test IDs — as each system clears the gate.
+here because it is known and not because a diff proved it. Turn loop &
+win / tiebreak joined at ad77b13 — T-TURN-01..09, 9/9 under clang++ and
+MSVC both — and it leaves no ID uncovered either: no in-editor half and
+no reserved ID, so its full acceptance set closes at one commit and Q29
+is satisfied rather than blocking. It belongs to that same second
+sentence and does not start a third: a Claude Code session authored it
+from the Director-written stub spec/turn_spec.md, again not a live
+CrewAI run — crew/tasks.py is byte-unchanged from 5ffa8d6 to ad77b13, so
+the file the live crew runs from still describes the Combat spec alone,
+and that check likewise establishes only that the file has not moved
+across those commits. Two IDs are still recorded as uncovered rather
+than omitted: T-DATA-05, the in-editor Unreal Automation half, and
+T-MOVE-07, reserved and unwritten on Q2. The first is why Data tables is
+the ninth row and does not flip — T-DATA-01..04 and 06 are green at the
+same commit, but Q29 requires the full acceptance set at one commit, so
+that row records a partial pass and stays unverified. (Commit ad77b13 is
+the head of main; its parent is caa8267, so 5ffa8d6, c224825, 9f87ecd,
+647d4df and caa8267 all remain ancestors and every commit link above
+resolves. The file paths resolve too, which they previously did not:
+four evidence cells carried five bare citations between them —
+Combat.cpp three times and test_combat.cpp twice — and neither bare name
+has ever existed in this repository at any commit. Those five citations
+resolve to two tracked files, cpp_reference/Combat.good.cpp and
+cpp_reference/test_combat.cpp, which the cells now name in full; every
+path this table cites was probed at the commit its own row names. The
+build/ directory is not tracked at all. That correction is what the
+“independently checkable” claim required, not a cosmetic one.) The
+remaining rows fill in the same format — commit + passing test IDs — as
+each system clears the gate.
 
 Rules that keep the ledger honest: - Scope = the game’s own source only.
 The UE engine, the MCP/AllToolsets plugins, and the bought reference
@@ -3104,24 +3172,24 @@ system, no §3 ledger row flips on a partial pass (Q29).
 
   Specification outruns the build —   The † cut line (§4.7 head; members
   69 written acceptance IDs at this   marked in §4.11’s build-order
-  revision (§4.7–§4.11) against 7     table, which is authoritative for
+  revision (§4.7–§4.11) against 8     table, which is authoritative for
   verified ledger rows (§3). Reduced  which side an ID is on) separates
   and re-scoped at 2026-08-02, not    the IDs the MVP line above needs
   retired: no new ID has been written from the correctness infrastructure
-  since c224825, and 27 of the 69 are that stands down if the calendar
+  since c224825, and 36 of the 69 are that stands down if the calendar
   green — 18 at c224825, where rows 1 takes it — so a slip drops named
   and 3 closed their full acceptance  suites rather than silently
   sets and row 2’s headless half      thinning every suite. And the
-  passed, and 9 at 647d4df, where     discipline Q20 and Q23 already
-  T-FAME-01..09 closed row 4 — so the applied holds for the rest of the
-  first three links of the critical   table — each piece lands in the
-  path are evidence rather than       week the thing that consumes it
-  schedule. 42 IDs remain unclosed:   runs (§4.4), and a gate that runs
-  T-DATA-05, which leaves row 2       green over a subset does not flip
-  unflipped, plus the 41 in rows      its ledger row (Q29) — so a slip in
-  5–10, which hold no code            rows 5–8 moves everything
-                                      downstream of them rather than
-                                      being absorbed by calling a row
+  passed, 9 at 647d4df, where         discipline Q20 and Q23 already
+  T-FAME-01..09 closed row 4, and 9   applied holds for the rest of the
+  at ad77b13, where T-TURN-01..09     table — each piece lands in the
+  closed row 5 — so the first four    week the thing that consumes it
+  links of the critical path are      runs (§4.4), and a gate that runs
+  evidence rather than schedule. 33   green over a subset does not flip
+  IDs remain unclosed: T-DATA-05,     its ledger row (Q29) — so a slip in
+  which leaves row 2 unflipped, plus  rows 6–8 moves everything
+  the 32 in rows 6–10, which hold no  downstream of them rather than
+  code                                being absorbed by calling a row
                                       done on a partial pass. Row 2 is
                                       now that clause’s worked example
                                       rather than its hypothetical: its
@@ -5275,27 +5343,27 @@ that wrote it.
 4.11 Build order
 
 Rows 1–8 are the §4.7 stubs — the eight ledger rows that read *pending*
-when this table was written, of which rows 1, 3 and 4 have since flipped
-(§3). §4.7’s heading names the same eight as at 2026-08-01 and is dated
-for that reason: it records a state and is not a live count, so it does
-not move when a row flips and is not out of step with this sentence.
-Rows 9–10 are the §4.9 and §4.10 systems. Combat, its test suite,
-Repair, and Type-effectiveness are green at 5ffa8d6 and are
-prerequisites, not work items. Rows 1 and 3 are green at c224825, and
-row 4 at 647d4df, so rows 5–8 depend on landed code rather than on
-scheduled code, and row 5 is the critical path’s next link, both of its
-dependencies having landed — row 4 at 647d4df and Combat/Repair at
-5ffa8d6. Row 2 is not green: T-DATA-01..04 and 06 pass at that commit
-and T-DATA-05 has not run, which is exactly the flip cost its † bullet
-below already priced — reached by the ordinary schedule, since the
-editor pass is not yet due, and not by the cut line firing. Note row
-10’s format spec must exist by the row-9 integration pass, because
-T-INT-02’s input file is a §4.10 save. Rows 9 and 10 therefore state
-their dependencies in two parts — what each gate needs in order to run,
-and what it needs in order to close — because both are scoped to the
-command set of the log they replay, and week 2’s log carries only
-{Move, Attack} (§4.4). Reading either row’s requirement as a single set
-is what put a gate in a week this table could not supply it.
+when this table was written, of which rows 1, 3, 4 and 5 have since
+flipped (§3). §4.7’s heading names the same eight as at 2026-08-01 and
+is dated for that reason: it records a state and is not a live count, so
+it does not move when a row flips and is not out of step with this
+sentence. Rows 9–10 are the §4.9 and §4.10 systems. Combat, its test
+suite, Repair, and Type-effectiveness are green at 5ffa8d6 and are
+prerequisites, not work items. Rows 1 and 3 are green at c224825, row 4
+at 647d4df and row 5 at ad77b13, so rows 6–8 depend on landed code
+rather than on scheduled code, and row 6 is the critical path’s next
+link, its dependency cell in the table below reading 5, which has
+landed. Row 2 is not green: T-DATA-01..04 and 06 pass at that commit and
+T-DATA-05 has not run, which is exactly the flip cost its † bullet below
+already priced — reached by the ordinary schedule, since the editor pass
+is not yet due, and not by the cut line firing. Note row 10’s format
+spec must exist by the row-9 integration pass, because T-INT-02’s input
+file is a §4.10 save. Rows 9 and 10 therefore state their dependencies
+in two parts — what each gate needs in order to run, and what it needs
+in order to close — because both are scoped to the command set of the
+log they replay, and week 2’s log carries only {Move, Attack} (§4.4).
+Reading either row’s requirement as a single set is what put a gate in a
+week this table could not supply it.
 
   ----------------------------------------------------------------------------------------------------
   #              System (ledger row)   Depends on                Headless?        Acceptance test IDs
