@@ -71,6 +71,34 @@ code. Changes are listed as **finding → change → why it's better**.
 | 4 | **Eight `*pending*` ledger rows had no route to a gate** *(§3 provenance ledger)*. Combat cleared a real test gate; the other eight systems had no spec, no test IDs, and therefore no way to flip the same way. | Added **§4.7**'s eight gateable spec stubs (Inputs / Formula / Invariants / Determinism / Acceptance, the shape that certified Combat), **§4.8**–**§4.10** for data, integration and save-replay, and **§4.11**'s build order with an explicit critical path. | Every pending row now has a named acceptance suite and a dependency position, so the ledger flips on evidence rather than on assertion — and where a rule was missing, it is filed as a numbered open question in §4.7's register instead of being invented. |
 | 5 | **§2 had drifted after the Conflict fold** *(continuity audit)*. Bridge and Factory had been folded into §2.3's terrain set, but §1 and §2.10 still said "five terrains," and §2.8's tiebreak had grown an apparatus nobody had re-justified. | Consolidated **§2.1–§2.10**, reconciled the terrain count across §1/§2.3/§2.10, and subjected the whole Fame/tiebreak apparatus to a **delete-test** — every piece removed in turn to see what breaks (§2.8's closing block). | The tiebreak now survives on evidence rather than inertia: the one piece that failed its delete-test (the floated per-turn Fame decay) was cut, and what remains is a guard, a sort, and an enum over state the game already tracks. |
 
+## 1.7 Revision Notes — Production Draft → the ruling cycle
+
+§1.6's four-author crew did not only add sections. Wherever a gate needed a
+rule the document did not state, the crew was forbidden to invent one and filed
+it instead as a numbered open question in **§4.7's register**, with the
+conservative reading it would ship under while the question stayed open. This
+revision is the pass in which those questions were **ruled** — one row at a
+time, each ruling written into the register beside the question it answers,
+together with every site the answer reached. §4.7's register is the
+authoritative record of which rows exist and what each was ruled; the five
+entries below are the ones that changed the *game* or its evidence, rather than
+a gate's wording.
+
+What they have in common is the growth worth reporting: **a ruling is not
+finished when the row is answered — it is finished when every site that
+depended on the answer has been found and corrected.** Four of the five cost
+more edits outside the row than inside it, and in two cases the ruling was
+carried out, re-checked, and then amended. Changes are listed as **finding →
+change → why it's better**.
+
+| # | Finding (source) | Change | Why it's better |
+|---|---|---|---|
+| 1 | **Income the document did not have** *(§4.7 register, Q8)*. §2.7 twice asserted that both sides have income from turn 1 — "both players have income from turn 1" and "plus home-factory income from turn 1" — while the shipped scenario priced its own opening the other way: §2.13.2 buys East's turn-1 Infantry with "100 of the 200 starting Fame," not of 300. Two sentences and a map disagreed about the first turn, and two gates (T-FAME-02, T-FAME-04) were written-and-blocked on the disagreement. | Ruled: income accrues at the **start** of the owner's turn and is spendable in that same turn's economy phase, but there is **no accrual on turn 1** — turn-1 buying power is the side's starting Fame alone. The correction rewrote **four §2.7 bullets** (factories, Income, build-and-spawn, starting Fame), §2.9's economy phase, T-FAME-02 and T-FAME-04, and the starting-Fame and build lines in `kb/rules.md`. | The reading chosen was the one the map was **already priced on**, so **no map number moves** — the edit lands on prose that had drifted, not on balance. Both blocked gates now assert, and the shipped scenario's opening turn means what §2.13.2 says it means. |
+| 2 | **Two sections, two schedules** *(Q23, Q20)*. §4.4 promised a working vertical slice *with* the baseline AI in week 2, while §4.11's critical path (`1 → 3 → 4 → 5 → 6/8`) and §2.10 both put capture and Fame production in week 3. Separately, §4.10's format sat in week 5 although the week-2 integration gate's input file **is** a save. | Ruled on one principle in opposite directions: the vertical slice moved **later** (week 3; week 2 delivers move + attack only), and the §4.10 **format + headless replayer** moved **earlier** (week 2), leaving only the save-slot UI and slot I/O in week 5. The principle is now stated once, in §4.4: **a format is a test instrument; slot I/O is a feature.** The Q20 ruling was then **amended** — it had been written into §4.4 without re-reading §4.11's dependency table — and repaired by **scoping each gate to the command set of the log it replays**, without moving a week number. | §1, §2.10, §4.4 and §4.11 now describe one schedule, and the rule that settles the next scheduling argument is written down instead of re-derived each time. The amendment is the more useful half: the third disagreement between those two sections was closed by naming a gate's scope rather than by moving work again — and what a partially-scoped gate may claim was registered (Q29) rather than assumed. |
+| 3 | **A new invariant refused the shipped map** *(Q22, Q28)*. Gating §2.13.1's promise that the guided lane is "uncontested, not merely reachable" produced **T-SCN-11**, and measuring it across all three maps *before* writing it found five of six lanes clear and one exact tie: West's lane to the South factory cost 5 MP, and East's second Infantry at (9,5) reached that same factory in 5 MP flat. | **The map was corrected rather than the rule loosened.** East's second Infantry deploys at **(9,1)**; no terrain, factory or town count, lane cost, home-factory rule or turn estimate moved with it, and *Ferrum Crossing* now reports **5 against 6 in both seats**. The pre-fix deployment is retained as T-SCN-11's fixture (b). | The suite now owns "a failing case that was actually authored, that passes every other invariant in the suite" — a negative fixture the project produced rather than one a test author constructed, which is the difference between a test that can refuse a real scenario and one that agrees with the repo. It also marked the single row where the register's conservative-reading convention could not hold, and the register now states that limit once. |
+| 4 | **An unpriced term inside the primary sort key** *(Q6)*. §2.7's "small bonus" for an undamaged strike had no number, yet combat Fame is the **primary** sort key of §2.8's cap tiebreak — a number nobody had chosen was helping decide capped matches. | Ruled **cut**, not priced: kills already pay half cost and the positional triangle already rewards a clean standoff strike with tempo, so the bonus was paying twice for one thing. The cut reached **six sites that never cited Q6** — §2.8's tally definition, §2.11's standings row and its tooltip, the §2.11.6 one-shot toast, the concept ledger's RPS row (whose receipt is now the range-2–3 one-shot), and two lines in `kb/rules.md`. | Cutting removes the unpriced term from the tiebreak instead of leaving an unchosen number inside it, and it is cheaper than the alternative, which would have made the document carry two Fame totals — one for the pool, one for the cap tally — in both the kb economy block and the T-CAP- suite. The six uncited sites are the transferable lesson: grepping the identifier alone would have found none of them. |
+| 5 | **The token budget priced one thing twice** *(§4.6)*. The Opus escalation is a *delta* between two models on the same task. An earlier draft folded it into the dev-time subtotal and then applied it a second time to reach **$225** — which is why three figures in one table disagreed. A second fault in the same table scaled the 1.5× overrun off a *rounded* subtotal. | Re-derived every figure from the two rate lines and the task count, and quoted the escalation delta **unrounded** ($1.035) at every site that uses it. The subtotal is **$178.02**; the overrun case is re-derived rather than scaled, landing at **≈ $266**, with **$303** stated as the ceiling. | Both faults were visible **only because the table is fully re-derivable from its inputs** — the property is what caught them, so it is now the table's stated discipline rather than an accident. A budget that can be recomputed is auditable; one that quotes a total is not. |
+
 ---
 
 ## 2. Game Mechanics
@@ -405,9 +433,36 @@ hotseat**, a stretch feature (§2.10) — if it ships, add a move clock there.
 
 | | Contents |
 |---|---|
-| **IN** (core; phased wk 1–3 per §4.4) | Grid; 4 units; **6 terrains + the Factory tile**; move + attack; **multiple factories** (home-per-side + contested neutrals, ~4) + capture + Fame production *(these land wk 3, not wk 1–2)*; heuristic AI; **one hand-built scenario**; win-by-flag; functional UI |
-| **STRETCH** (if ahead) | 2nd–3rd scenario; LLM commander; fog/recon; sea/air units; map-gen MCP toolset; 2-player hotseat |
+| **IN** (core; the playable core phased wk 1–3, the remainder scheduled in §4.4) | Grid; 4 units; **6 terrains + the Factory tile**; move + attack; **multiple factories** (home-per-side + contested neutrals, ~4) + capture + Fame production *(these land wk 3, not wk 1–2)*; heuristic AI; **one hand-built scenario**, with the scenario file and headless validator it loads through (§4.7 Stub 7); win-by-flag; functional UI; the **§2.11.6 guided opening** — four beats, first match only *(onboarding, wk 5)*; the **§4.10 save/replay format + headless replayer** — *instrument, not feature* *(wk 2)*; minimal single-slot save/load *(wk 5)* |
+| **STRETCH** (if ahead) | 2nd–3rd scenario authored on that format — *Longwater March* (P1, wk 4) and *The Causeway* (P2, wk 4) — shipping under the conditions §2.13.7 states, which that section states alone; LLM commander; fog/recon; sea/air units; map-gen MCP toolset (§4.2) — the in-editor wrapper only, not the validator it wraps; 2-player hotseat |
 | **CUT** | All 16 original scenarios; campaign/meta; zones of control; elaborate art; anything real-time |
+
+**Reading this table.** Four notes, so that a scope question and a schedule
+question are answered on the same page:
+
+- **§1's *Scope at a glance* and this table are not the same line.** §1 names
+  the smallest set that is already a complete game — §4.5's hard MVP line. This
+  table names what is **scheduled**, which is a superset of it.
+- **Instrument, not feature.** The §4.10 format and headless replayer are IN
+  because two gates run on them, not because a player asks for them: T-INT-02's
+  input file is a save, and the week-4 self-play logs T-SAVE-07 validates are
+  the same format (§4.4, §4.11 row 10). §4.4 states the rule this turns on —
+  *a format is a test instrument; slot I/O is a feature* — so the format is
+  core, the save-slot UI is the ordinary week-5 UI half, and no player-facing
+  replay is scoped.
+- **Off the critical path is not the same as stretch.** §4.11 says nothing in
+  its chain waits on row 7, and §4.7 Stub 7 is nonetheless core: §4.4 has the
+  one scenario loading, validating and rendering in week 2; §4.11 row 8 (UI
+  binding) depends on row 7 because the snapshot needs full state; row 10(b)'s
+  replayer reads the `scenarioId`/`scenarioHash` it produces; §2.8's turn cap is
+  its `turnCap` field; and §2.11.6's guided opening is driven by its
+  `guidedOpening` entries. What is stretch is the **second and third scenarios
+  authored on that format**, and the in-editor toolset that wraps the
+  validator — the manual fallback stands (§4.11 row 7).
+- **A STRETCH row is a promise about cost, not about intent.** Where a section
+  already states the condition an item ships under, that section owns it and
+  this table does not restate it — for the two stretch maps that section is
+  §2.13.7.
 
 ### 2.11 UI/UX
 
@@ -573,7 +628,7 @@ The scoreboard exists because of revision §1.5-#1: the tiebreak must never be a
 - A **chevron (◀)** marks the current attrition-tiebreak leader, evaluated in criteria order, and flips visibly when the lead changes. It is drawn beside the leading side's value — in the mock above the enemy leads at criterion 1, 600 combat Fame to 450 (§2.8: higher wins), so the chevron sits on the enemy column. If both Destroyed values are zero, the chevron is replaced by `— no engagements —` spanning the row: the mutual-passivity draw (§2.8) made visible before it bites.
 - **Cap-approach banners** (transient, once each): at cap−5, `5 turns to the cap. The scoreboard decides a capped match.`; additionally, if both sides are still at zero combat Fame, `No engagements. A capped match with no combat is a draw.`
 
-**End-of-match screen.** The result is the tier first (§2.8 — Decisive / Marginal / Draw), then the same three rows in the same order, so the verdict is always a restatement of what was on screen all match. Beneath the tier, one **faction-voiced result line** (per the setting guide: faction voice appears only on result screens; ≤ 30 words; field-manual register). Samples, one per case, generated content to follow these:
+**End-of-match screen.** The result is the tier first (§2.8 — Decisive / Marginal / Draw), then the same three rows in the same order, so the verdict is always a restatement of what was on screen all match. Beneath the tier, one **faction-voiced result line**, written to the setting and voice guide (`kb/setting.md`), which supplies all three constraints on it: faction voice appears only in result-screen text, a result line is **≤ 30 words**, and the register is field-manual plain — terse tactical briefing, substance over drama, no melodrama or fantasy filler. The same file's two faction blocks supply the voices the samples below are written in — the **Directorate** cold, doctrinal, bureaucratic-military, framing every outcome as a matter of record; the **Vanguard** terse, pragmatic, defiant, measuring everything by ground held — and its pipeline note retrieves a faction block *only* for this screen, which is why faction voice appears nowhere else in the UI. Samples, one per case, generated content to follow these:
 
 - Directorate, decisive: `Command directive fulfilled. The enemy flag is struck from the record. Order is restored.`
 - Directorate, marginal: `The cap is reached. The ledger favors the Directorate. The record stands.`
@@ -616,7 +671,7 @@ The scoreboard exists because of revision §1.5-#1: the tiebreak must never be a
 
 1. **Constraint** — the first turn removes every option except the one being taught.
 2. **The forecast** (§2.11.3) — deterministic combat means every attack is a free, truthful lesson in terrain defense, range, and HP scaling. The plan makes the player *read* the forecast once, early; after that the game teaches itself.
-3. **One-shot event tips** — a single system-voice line (≤ 30 words, tone bible), fired the first time a concept becomes relevant, never repeated (boolean flags in the save slot, §4.1).
+3. **One-shot event tips** — a single system-voice line (neutral system voice per the tone bible in `kb/setting.md`; ≤ 30 words, borrowing that file's result-line ceiling — one-shot tips are not a length category it names), fired the first time a concept becomes relevant, never repeated (boolean flags in the save slot, §4.1).
 
 The first match runs on the one shipped scenario at **Easy** by default (player +150 opening Fame, §2.9) with a **guided opening**: four scripted directives inside a fixed four-turn window — the first appears on turn 1, the strip and every beat behind it are gone for good at the end of turn 4, then hands-off. Any completed match on the save skips all guidance automatically; a `Skip guidance` control kills it instantly for anyone, and kills the guided opening's board state with it — the objective ring and the turn-1a unit marker clear in the same frame as the strip.
 
@@ -629,7 +684,7 @@ The first match runs on the one shipped scenario at **Easy** by default (player 
 | 1a | Only one marked Infantry selectable; others dimmed (hover: `Locked this turn.`). End Turn is inert until that Infantry has moved (hover: `Move the marked Infantry first.`) — this is what makes 1a retire inside turn 1 in every branch, and it is the only guided-opening constraint that gates a player *input* rather than a selection, adopted under **Q27** (§4.7), ruled — it was registered rather than assumed because it gates an input | `Select the marked Infantry. Lit hexes are its true reach. Click one to move.` | Selection; the highlight is the real move set (§2.5) | Move completes |
 | 1b | End Turn pulses | `End turn. The enemy moves; then you.` | IGOUGO (§2.1) — the player watches a full AI turn | Enemy turn ends |
 | 2 *(standing)* | None on selection. The scenario's designated neutral factory (`guidedOpening.objective`, §2.13.1) is ringed from turn 1; its info-panel line appends `Only Infantry captures.` | `Move the Infantry onto the ringed Factory. Only Infantry captures.` | Capture; the Infantry-only rule (§2.7) | A capture pip appears — on whatever turn that happens. *Standing* means it stays **outstanding**, not that it holds the strip. How many turns it actually holds the line is decided by rules 1–2 and by when the pip lands, and the schedule table's three branches are exhaustive: **twice** — turn 2, then a turn-4 rule-2 last call, if the pip has still not landed (wandered); **once** — turn 2 only, retiring on a turn-2 or turn-3 pip; or **never** — the pip lands on turn 1 and beat 2 retires before rule 1 can select it (fast lane). On every turn it does not hold the line it runs on the ring and the unit marker. Hard-expires at end of turn 4 |
-| 3 | None. Fame ≥ 100 guaranteed by 200 start + home income (§2.7) | `Spend Fame at your Factory. Infantry costs 100.` | Fame → factory → unit | A unit spawns — on whatever turn that happens, including turn 1 |
+| 3 | None. Fame ≥ 100 whenever this beat is outstanding, and not because of income: builds are Fame's only sink (§2.7), and the beat retires on the first spawn — so an outstanding beat 3 means nothing has been spent and the player still holds **at least their opening Fame**, which is 350 at §2.11.6's default Easy tier and never below Infantry's 100 at any tier the player can pick (Normal 200, Hard 100 — §2.7, §2.9). Turn-1 income is not assumed anywhere in this beat: there is none (Q8, §4.7) | `Spend Fame at your Factory. Infantry costs 100.` | Fame → factory → unit | A unit spawns — on whatever turn that happens, including turn 1 |
 
 The Turn column is the beat's **order index** — the turn it takes the line in the common case — not a floor. Rules 1–2 below assign the line, so a beat moves up whenever a lower-numbered beat has already retired: beat 3 takes turn 2 in the fast-lane branch of the schedule table. The strip shows **one directive at a time**, and the line is assigned at the start of each turn by two rules in order:
 
@@ -1112,7 +1167,7 @@ difficulty handicap**, each a distinct deterministic puzzle:
 | 1–3 | *Ferrum Crossing*, West seat, Easy → Normal → Hard (§2.9 Fame ladder) | Core |
 | 4–6 | *Ferrum Crossing*, **East seat**, same ladder | Core (seat-select = scenario data + one menu affordance) |
 | 7–8 | *Longwater March*, Normal → Hard | Stretch P1 (§4.4 wk 4) |
-| 9–10 | *The Causeway*, Normal → Hard | Stretch P2 (wk 4, only after P1) |
+| 9–10 | *The Causeway*, Normal → Hard | Stretch P2 (wk 4) |
 
 If no stretch lands, the shipped scope alone moves the cliff from match ~3
 to match ~6 — that is what the asymmetric map buys, and why *Ferrum
@@ -1200,7 +1255,7 @@ factories pay for?* Over-expansion strands Infantry on capture duty while
 the center Woods fight is lost; under-expansion loses the income race and,
 at the cap, the objectives-held sort.
 
-#### 2.13.6 Stretch scenario — *The Causeway* (P2, wk 4, only after P1)
+#### 2.13.6 Stretch scenario — *The Causeway* (P2, wk 4)
 
 | Spec | Value |
 |---|---|
@@ -1302,8 +1357,18 @@ earns its keep.
 | *Longwater March* | Stretch P1 (wk 4) | 13×8 | 5 | 6 | 4 | 180° rotational | factory count → cap pressure | 16–20 |
 | *The Causeway* | Stretch P2 (wk 4) | 9×8 | 5 | 4 | 2 | 180° rotational | bridge lockout → decisiveness | 8–12 |
 
-Neither stretch map may pull work forward of week 4 or block core; if week 4
-is consumed by balance (its primary §4.4 purpose), the set stays on paper.
+**The stretch condition — stated here, once.** Neither stretch map may pull
+work forward of week 4 or block core; *The Causeway* is attempted only after
+*Longwater March* lands; and if week 4 is consumed by balance (its primary
+§4.4 purpose), the set stays on paper. Those four clauses are the whole test
+for whether either map gets built, and this is the only section that states
+it. Everywhere else the set is named — §2.13.4's configuration ladder,
+§2.13.5 and §2.13.6's headers, §2.10's scope table STRETCH row — carries the
+*labels* (P1/P2, week 4) as identification and defers here for the
+*condition*, so tightening or relaxing the scenario set is one edit in one
+place. Two sections stating one condition in their own words is exactly the
+drift §4.4 and §4.11 produced three times; the repair there was one owner and
+one pointer, and for the scenario set the owner is this paragraph.
 
 ---
 
@@ -1320,6 +1385,20 @@ The project is run as a small **agent team directed by a human**. Each role has 
 | **Content / Scenario Designer** | Agent | Build maps/scenarios; generate + populate unit/terrain DataTables | Custom **MCP toolset** in-editor | Scenario assets, data tables |
 | **UI Scaffolder** | Agent | Generate UMG widget skeletons + bindings for human polish | Claude Code + UE MCP | Wired UMG widgets |
 | **Opponent Commander** *(stretch, runtime)* | Agent (LLM) | Play a turn in-product as the enemy | In-game LLM call + move validator | A validated legal move per turn |
+| **Documentation crew** *(4 authors)* | Agent ×4 | Draft assigned GDD sections in parallel against a frozen snapshot; write only their own file, never the master (§1.6) | Claude Code sub-agents over a synced read-only snapshot | Section drafts, one file per author |
+| **Continuity gate** | Agent | Audit every draft against the live GDD for contradictions, stat drift, dead references and invented numbers; block merge until PASS (§1.6) | Claude Code | Per-section verdicts and violation counts in the gate's accept record |
+
+The last two rows are **document-side** rather than game-side: they authored and
+gated this GDD, not the build, and they are the crew §1.6 describes — including
+its recorded failure, where the gate filed four violations, the two authors
+responsible were re-spawned with them, and only the corrected drafts merged.
+They belong in this table because its contract is an I/O contract and those two
+were the only roles that had run without one. §1.5's **agent review crew**
+(Exploit-Hunter / Consistency / Pacing) gets this pointer rather than a row, for
+the opposite reason: its findings were human-adjudicated into §1.5's change
+table, so it has no machine-checkable artifact for the last column, and a role
+with no verifiable output does not belong in the one table whose purpose is
+verifiable outputs.
 
 **Pipeline.** Claude Code is the agent client. Two surfaces:
 - **Headless harness** (Systems / Test / Balance roles) — the rules module has **zero engine dependencies**, so these agents compile, test, and self-play in seconds without launching the editor. This is what makes agent authorship fast enough to dominate the build.
@@ -1371,7 +1450,7 @@ No human eyeballed the diff to catch that; the spec's invariant did, mechanicall
 
 **Provenance ledger — how agent contribution is reported.** The deliverable is the game (§1); agent authorship is reported honestly, not as a single hero percentage but as a **per-system ledger** — one row per system, marked by author and verification status, **each Verified row citing the commit and passing test IDs that back it** so the claim is auditable rather than asserted.
 
-*Status: live tracker — first rows populated 2026-07-26 from the Assignment-3 agent crew; **Repair** and **Type-effectiveness** added and gate-verified 2026-07-29; the rest land as each system is built (wk 1–3, §4.4).* Legend: **Author** ∈ {agent, agent+human, human}; **Agent-verified** ∈ {✓, —}; **Evidence** cites the git commit + passing test IDs so any row is independently checkable.
+*Status: live tracker — first rows populated 2026-07-26 from the Assignment-3 agent crew; **Repair** and **Type-effectiveness** added and gate-verified 2026-07-29; the rest land as each system is built (wk 1–3, §4.4). This draft stands at 2026-08-01, three days past the last code commit: §4.4's week-1 deliverable is §4.11 rows 1–3 — grid and hex math, the §4.8 tables, movement and pathfinding — and all three still read `*pending*` in the table below, with no hex-grid, movement or DataTable source in the crew repo, which holds the Combat module alone. Because §4.11's critical path runs 1 → 3 → 4 → 5 → 6/8, nothing §4.4 schedules for weeks 2–3 clears without those three rows — only row 2 itself, row 10(a)'s format spec, T-INT-01/04 and the parallel UMG skeletons proceed meanwhile — so weeks 2–3 move with week 1 one for one rather than absorbing it, which is why §4.5 now carries that as a named risk with a cut line attached rather than as a discovery.* Legend: **Author** ∈ {agent, agent+human, human}; **Agent-verified** ∈ {✓, —}; **Evidence** cites the git commit + passing test IDs so any row is independently checkable.
 
 | System | Author | Agent-verified? | Evidence (commit · tests) |
 |---|---|---|---|
@@ -1442,6 +1521,7 @@ Author the **core in C++ with the agent** (the on-thesis path — hex math, path
 | MCP plugin experimental/flaky | Off the critical path; Perforce checkpoints; manual fallback |
 | Pacing (the original's flaw) | Small maps, decisive damage, turn cap + tiebreak |
 | Agent code quality | Test-first; human review gates; headless module keeps loops fast |
+| **Specification outruns the build** — **69** written acceptance IDs at this revision (§4.7–§4.11) against **4** verified ledger rows (§3), all four inside Combat; §4.4 week 1 is due §4.11 rows 1–3 and all three read `*pending*` at 2026-08-01 | The **† cut line** (§4.7 head; members marked in §4.11's build-order table, which is authoritative for which side an ID is on) separates the IDs the MVP line above needs from the correctness infrastructure that stands down if the calendar takes it — so a slip drops named suites rather than silently thinning every suite. And the discipline Q20 and Q23 already applied holds for the rest of the table — *each piece lands in the week the thing that consumes it runs* (§4.4), and a gate that runs green over a subset does not flip its ledger row (Q29) — so a slip in rows 1–3 moves everything downstream of them rather than being absorbed by calling a row done on a partial pass |
 
 ### 4.6 Token budget
 
@@ -1492,6 +1572,16 @@ state, the gate is parameterized on a numbered open question — the Director
 rules, the gate then pins the ruling. The register below is the single place
 their extent is stated; nothing else in this document names a range of them,
 because every range named elsewhere has gone stale within a revision.
+
+**The cut line, read before adding a suite.** Every acceptance ID in §4.7–§4.11
+is either unmarked — the §4.5 MVP line needs it and no human read substitutes
+for it — or **†**, correctness infrastructure that does not *close* if the
+calendar takes it, because its fixtures live on §2.13.7's stretch maps or its
+only unique coverage is an in-editor Automation pass. The † members are marked
+in §4.11's build-order table and nowhere else, so that table is authoritative
+for the split and no count of it is stated here; what remains fixed is the rule
+that no rules-correctness invariant on the critical path §4.11 states is ever
+in it — those suites are the game, not the evidence about it.
 
 **Shared conventions (Director-owned contract):**
 
@@ -2539,15 +2629,60 @@ table could not supply it.
 | # | System (ledger row) | Depends on | Headless? | Acceptance test IDs |
 |---|---|---|---|---|
 | 1 | Hex grid & math (§4.7 Stub 1) | — (Q1 pins bounds) | Yes | T-HEX-01..07 |
-| 2 | Data tables (§4.8, incl. effectiveness CSV) | — (MoveClass column blocked on Q2) | Loader + T-DATA-06 yes; import parity in-editor | T-DATA-01..06 |
+| 2 | Data tables (§4.8, incl. effectiveness CSV) | — (MoveClass column blocked on Q2) | Loader + T-DATA-06 yes; import parity in-editor | T-DATA-01..06 (**T-DATA-05 †**) |
 | 3 | Movement & pathfinding (Stub 3) | 1, 2 | Yes | T-MOVE-01..06 |
 | 4 | Capture & Fame economy (Stub 4) | 3 | Yes | T-FAME-01..09 |
 | 5 | Turn loop & win/tiebreak (Stub 5) | 4 + verified Combat/Repair @ 5ffa8d6 | Yes | T-TURN-01..09 |
 | 6 | Opponent AI (Stub 6) | 5 | Yes | T-AI-01..06 + self-play smoke |
-| 7 | Scenario file & validator (Stub 7) | 1, 2 for the structural half (T-SCN-01..03, 05, 07, 09); **3 for the priced half** — T-SCN-04, 06, 08, 11 all cost a path, and **T-SCN-11 costs a full-board pass rather than a path**: it minimises over every Infantry the opposing seat deploys (Q28, ruled), which is **one reverse Dijkstra per `guidedOpening` objective** and is therefore independent of that seat's unit count — done naively as one path per opposing unit it scales with the deployment instead | Yes; MCP tool wraps it in-editor, manual fallback stands | T-SCN-01..09, 11 (10 reserved-unwritten on Q26) |
-| 8 | UI binding (Stub 8) | 5, 7 (snapshot needs full state) | Contract + queries yes; widgets in-editor | T-UI-01..04 |
-| 9 | Presentation bridge & integration — §4.9 (proposed ledger row) | **Run vs close.** Vendoring and **T-INT-01/04** depend on no rules row at all — the sync script and the standalone gate run *are* the assert — and close as soon as vendoring lands. **T-INT-02/03/05** need only the rows behind the log they replay: rows 1–3 for week 2's `{Move, Attack}` log, and they re-open when rows 4–5 add `Capture`/`Build`/`EndTurn`. They **close on rows 1–5**, which is what this cell used to state as the whole dependency | Source/compile gates yes; replay parity + statelessness in-editor | T-INT-01..05 |
-| 10 | Save & replay — §4.10 (proposed ledger row) | **Three parts, three dependency sets.** (a) *Format spec + header/version machinery* — **no deps at all; write it first**, and T-SAVE-04 (refusal on any header mismatch) closes on it alone, since it never applies a command. (b) *Headless replayer* — rows 1–3, plus row 7's **structural** half for the `scenarioId`/`scenarioHash` it loads; it runs T-SAVE-01/02/03/05/06 over week 2's `{Move, Attack}` log. (c) *Closure* — rows **4, 5** complete the command set (T-SAVE-01/03/05/06), row **6** completes T-SAVE-02's determinism composition, and T-SAVE-07 needs row 6's self-play besides. Slot I/O is week 5 and no headless gate waits on it | Yes, all but slot I/O | T-SAVE-01..07 |
+| 7 | Scenario file & validator (Stub 7) | 1, 2 for the structural half (T-SCN-01..03, 05, 07, 09); **3 for the priced half** — T-SCN-04, 06, 08, 11 all cost a path, and **T-SCN-11 costs a full-board pass rather than a path**: it minimises over every Infantry the opposing seat deploys (Q28, ruled), which is **one reverse Dijkstra per `guidedOpening` objective** and is therefore independent of that seat's unit count — done naively as one path per opposing unit it scales with the deployment instead | Yes; MCP tool wraps it in-editor, manual fallback stands | T-SCN-01..09, 11 (10 reserved-unwritten on Q26; **T-SCN-08, 09, 11 †**) |
+| 8 | UI binding (Stub 8) | 5, 7 (snapshot needs full state) | Contract + queries yes; widgets in-editor | T-UI-01..04 (**T-UI-03, 04 †**) |
+| 9 | Presentation bridge & integration — §4.9 (proposed ledger row) | **Run vs close.** Vendoring and **T-INT-01/04** depend on no rules row at all — the sync script and the standalone gate run *are* the assert — and close as soon as vendoring lands. **T-INT-02/03/05** need only the rows behind the log they replay: rows 1–3 for week 2's `{Move, Attack}` log, and they re-open when rows 4–5 add `Capture`/`Build`/`EndTurn`. They **close on rows 1–5**, which is what this cell used to state as the whole dependency | Source/compile gates yes; replay parity + statelessness in-editor | T-INT-01..05 (**T-INT-02, 05 †**) |
+| 10 | Save & replay — §4.10 (proposed ledger row) | **Three parts, three dependency sets.** (a) *Format spec + header/version machinery* — **no deps at all; write it first**, and T-SAVE-04 (refusal on any header mismatch) closes on it alone, since it never applies a command. (b) *Headless replayer* — rows 1–3, plus row 7's **structural** half for the `scenarioId`/`scenarioHash` it loads; it runs T-SAVE-01/02/03/05/06 over week 2's `{Move, Attack}` log. (c) *Closure* — rows **4, 5** complete the command set (T-SAVE-01/03/05/06), row **6** completes T-SAVE-02's determinism composition, and T-SAVE-07 needs row 6's self-play besides. Slot I/O is week 5 and no headless gate waits on it | Yes, all but slot I/O | T-SAVE-01..07 (**T-SAVE-06 †**) |
+
+**† — the cut line (§4.7 head).** A marked ID does not *close* if the calendar
+takes it, and what each mark costs is a **claim**, never a rule: no marked ID
+guards a rules invariant, so nothing in the game changes behaviour when one
+stands down. Unmarked is the default and the majority.
+
+- **T-DATA-05** — row 2's only in-editor half. Fallback is a Director read of
+  two frozen tables (4 unit rows × 11 columns, 7 terrain rows × 10). Cost: row
+  2's ledger flip, since Q29 requires the full acceptance set at one commit.
+- **T-SCN-08, 09, 11** — their fixtures are stretch-map-resident, and §2.13.7
+  states the condition plainly: if week 4 is consumed by balance, "the set stays
+  on paper." T-SCN-08 then loses fixtures (a) *The Causeway* and (b) *Longwater
+  March*, keeping only the synthetic ceiling refusal (c); T-SCN-11 loses fixture
+  (c) and keeps its two shipped-map fixtures, including the failing one; and
+  T-SCN-09's asserting branch loses both maps, because `symmetry == none`
+  asserts nothing and the shipped map declares `none`. T-SCN-01..07 stay
+  unmarked — they are what refuses a malformed shipped scenario, T-SCN-04 is the
+  precondition of the flag win §4.5 calls a complete MVP, and T-SCN-06 gates the
+  §2.11.6 opening §2.11.8 ranks must-have. Cost: row 7's ledger flip, on the same
+  Q29 reading as row 2.
+- **T-UI-03, 04** — in-editor Automation over widget bindings, where a Director
+  reading the screen is a real check. T-UI-01/02 stay unmarked: they are
+  headless queries, and T-UI-01 is what makes §2.11.3's forecast equal the
+  resolution.
+- **T-INT-02, 05 and T-SAVE-06** — the in-editor half of the parity pair
+  (T-SAVE-06 is asserted jointly with T-INT-02). This is the most expensive mark
+  in the list and its cost is a §3 cost rather than a §1 one: without it the
+  shipped engine build is never proven identical to the certified headless
+  module, so the ledger's evidence chain stops at the vendoring hash (T-INT-01)
+  instead of reaching the artifact that ships. T-INT-01/04 and T-SAVE-01..05
+  stay unmarked on **cost** — §4.9 runs T-INT-01/04 on every gate run and §4.10
+  takes T-SAVE-01..05 headless, so none of them needs the editor pass in order
+  to be asserted (T-SAVE-05 is *also* exercised in-editor via the load UI path,
+  which adds coverage rather than owning it). **T-INT-03 stays unmarked on the
+  rule, not on cost:** §4.9 does place it in the editor pass, but what it
+  asserts — an illegal command leaves the state hash unchanged and returns a
+  reason, no partial application — is the bridge behaviour §4.9 contracts ("an
+  invalid command returns a rejection reason and changes nothing"), and a marked
+  ID may not guard a rules invariant. The consequence is stated rather than
+  hidden: an editor pass cut to its marked IDs alone would still owe T-INT-03,
+  so this line thins that pass, it never cancels it.
+- **T-SAVE-07 is deliberately unmarked**, against the reading that grouped it
+  with T-SAVE-06. It is headless and §4.4 closes it on week 4's own self-play
+  output; under §2.13.7's slip condition self-play still runs and only the
+  stretch maps stand down, so cutting it would buy no calendar.
 
 **Critical path: 1 → 3 → 4 → 5 → 6/8.** Row 2 runs in parallel immediately.
 **Row 7 no longer sits beside the chain; it straddles it.** Its structural half
