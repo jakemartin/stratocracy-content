@@ -2688,14 +2688,20 @@ T-DATA-05, the in-editor Unreal Automation parity pass, has not run, and
 Q29 requires the full acceptance set at one commit, so the row records a
 partial pass and stays unverified; the editor pass is not yet due, so
 that is the ordinary schedule and not §4.7’s cut line firing. What week
-1 did not close is everything after it: rows 4–8 hold no code, and since
-§4.11’s critical path runs 1 → 3 → 4 → 5 → 6/8, its first two links are
-now evidence rather than schedule and row 4 (Capture & Fame) is blocked
-on nothing but itself. §4.5’s Specification outruns the build* risk is
-therefore reduced and re-scoped rather than retired, and that row now
-states the arithmetic.* Legend: Author ∈ {agent, agent+human, human};
-Agent-verified ∈ {✓, —}; Evidence cites the git commit + passing test
-IDs so any row is independently checkable.
+1 did not close is everything after it: rows 4–8 hold no code, and
+§4.4’s week-1 goal “Playable via debug commands” is unmet — at c224825
+five tracked sources define main() (cpp_reference/test_combat.cpp,
+cpp_reference/test_hex.cpp, cpp_reference/test_data.cpp,
+cpp_reference/test_move.cpp, cpp_reference/selfplay.cpp), which are four
+test harnesses and a combat duel simulator, and none of them drives a
+unit around a board, and since §4.11’s critical path runs 1 → 3 → 4 → 5
+→ 6/8, its first two links are now evidence rather than schedule and row
+4 (Capture & Fame) is blocked on nothing but itself. §4.5’s
+Specification outruns the build* risk is therefore reduced and re-scoped
+rather than retired, and that row now states the arithmetic.* Legend:
+Author ∈ {agent, agent+human, human}; Agent-verified ∈ {✓, —}; Evidence
+cites the git commit + passing test IDs so any row is independently
+checkable.
 
   -------------------------------------------------------------------------------------------------------
   System               Author            Agent-verified?   Evidence (commit · tests)
@@ -3173,12 +3179,15 @@ Each stub below follows the proven Combat-spec shape (§3): Inputs,
 Formula or state transition, Invariants (one per assertable rule),
 Determinism, Acceptance test IDs. All rules code is headless —
 namespace strat, pure C++17, zero engine dependencies, compiled by the
-same g++/clang++ + python run.py gate that certified Combat (§3 ledger).
-Where a stub needs a rule the GDD does not state, the gate is
-parameterized on a numbered open question — the Director rules, the gate
-then pins the ruling. The register below is the single place their
-extent is stated; nothing else in this document names a range of them,
-because every range named elsewhere has gone stale within a revision.
+same python run.py gate that certified Combat (§3 ledger). That gate
+detects one compiler per run — the first of g++, clang++, c++ or cl
+found on PATH — so a green run is green under whichever one it found,
+not under all four. Where a stub needs a rule the GDD does not state,
+the gate is parameterized on a numbered open question — the Director
+rules, the gate then pins the ruling. The register below is the single
+place their extent is stated; nothing else in this document names a
+range of them, because every range named elsewhere has gone stale within
+a revision.
 
 The cut line, read before adding a suite. Every acceptance ID in
 §4.7–§4.11 is either unmarked — the §4.5 MVP line needs it and no human
@@ -5012,13 +5021,15 @@ to it.
 
 1. Module layout — one source, two compilers. The certified headless
 sources live canonically in the crew repo, and each §4.7 stub joins them
-as it lands — where the g++/clang++ + python run.py gate runs (§3
-ledger). The UE project vendors them verbatim into a UBT runtime module,
-Source/StratRules/, via a sync script that records the source commit
-hash. StratRules contains no engine headers, no UObject, no third-party
-includes — pure C++17 in namespace strat, exactly the base-spec
-constraint. The standalone gate keeps compiling the identical files, so
-“the engine build works” never substitutes for “the gate passed.”
+as it lands — where the python run.py gate runs (§3 ledger), under the
+single compiler that gate detects: the first of g++, clang++, c++ or cl
+found on PATH. The UE project vendors them verbatim into a UBT runtime
+module, Source/StratRules/, via a sync script that records the source
+commit hash. StratRules contains no engine headers, no UObject, no
+third-party includes — pure C++17 in namespace strat, exactly the
+base-spec constraint. The standalone gate keeps compiling the identical
+files, so “the engine build works” never substitutes for “the gate
+passed.”
 
 2. Bridge — the only code that knows both worlds. The game module
 (Stratocracy) owns: - Load: FUnitRow/FTerrainRow/FEffectivenessRow →
@@ -5061,7 +5072,10 @@ formula’s round — mechanically instead of by playtest anecdote.
       T-INT-03  rejection safety: an illegal command leaves the state hash unchanged
                 and returns a reason; no partial application
       T-INT-04  no engine deps: StratRules compiles standalone under the existing
-                g++/clang++ gate — the gate run itself is the assert
+                python run.py gate, using whichever single compiler that gate
+                detects — the first of g++, clang++, c++, cl found on PATH. Any
+                one of them compiling clean satisfies this invariant; it does not
+                require all four. The gate run itself is the assert
       T-INT-05  (editor, Automation) presentation statelessness: after any event
                 sequence, rebuilding all widgets/actors from the current view-model
                 snapshot alone reproduces the same displayed values (nothing lives
