@@ -66,7 +66,10 @@ one pool, not three.
   hex; if the factory is boxed in, the build waits. **One build per factory per
   turn.** A waiting build holds that factory's slot until it spawns, and its
   Fame is committed when the build is queued, not when the unit appears, and is
-  not refundable.
+  not refundable. The slot and the per-turn limit are **two rules, not one**: the
+  slot is held only while a build waits and clears the moment the unit spawns,
+  while the per-turn limit binds for the rest of that turn either way — a factory
+  whose build spawns at once has still spent its build for the turn.
 - Destroying an enemy unit pays **exactly half its cost — Infantry 50 / Recon 75 /
   Artillery 100 / Tank 150**; there is **no undamaged-strike bonus** (cut, not priced);
   destroying the enemy **flag pays a flat +500 and ends the match** — the flag award
