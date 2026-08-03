@@ -4169,10 +4169,20 @@ Shared conventions (Director-owned contract):
       T-UI-04  the production menu binds to the buildlist derived from the four
                Stub-2 unit rows plus current fameTotal; the flag never appears
                (T-SCN-01's non-producible clause, enforced at the UI layer too)
+      GATE-CAP-PARTIAL
+               a capture in progress contributes zero to "objectives held" for
+               either side: raising a unit's captureProgress short of completion
+               leaves both sides' objectivesHeld unchanged. This is §2.8's
+               T-CAP-05, which aliases onto no T-TURN- ID; it is a differential
+               read of two fields this snapshot already carries, adding no field
+               and no numbered ID (the GATE-AI-SMOKE precedent, row 6)
     Determinism: widgets are pure functions of snapshot + events; asserted
              end-to-end by T-INT-05 (§4.9).
     Acceptance: T-UI-01..02 headless (the queries are headless functions);
-             T-UI-03..04 in-editor Automation.
+             T-UI-03..04 in-editor Automation; GATE-CAP-PARTIAL headless, on the
+             snapshot rather than on a widget — which is why it carries no † and
+             does not stand down if the editor pass does. A marked ID may not
+             guard a rules invariant (§4.11's † note), and T-CAP-05 is one.
 
 Open questions (Director rulings owed). Every gap found while writing
 the §4.7 gates (Q1–Q10), the stage-2 additions (Q11–Q13), the rules- and
@@ -4226,18 +4236,22 @@ now states no reading. The five that did — Q4’s interruption semantics,
 Q5’s stacking, Q6, Q8’s three sub-questions, and Q9’s target- and
 build-choice ties — were all ruled this revision, and the gates they
 blocked outright (T-FAME-02, T-FAME-04, T-FAME-05, T-FAME-07, T-AI-06
-and the T-CAP- tally suite) now assert. Fifteen of the thirty-one rows
-are ruled; the other sixteen remain open but readable — Q1, Q2, Q3,
-Q10–Q19, Q29, Q30 and the newly registered Q31 — each carrying a stated
-reading rather than a blank, which is why none of them blocks a gate
-outright. Three are worth naming: Q2 leaves T-MOVE-07
-reserved-but-unwritten, Q11’s reading is “no undo”, and Q30’s is partial
-and deliberately not hardened. (An earlier draft of this paragraph named
-only those three and called them the whole remainder — the test behind
-it looked for rows containing the word “unruled” rather than rows not
-marked RULED, and so could not see the other twelve.) The convention is
-unchanged: where a row states no reading, its gate stays blocked until
-the Director answers.
+and the T-CAP- tally suite less T-CAP-05) now assert. T-CAP-05 is
+excepted: it aliases onto no T-TURN- ID (§2.8), and its gate home was
+ruled on 2026-08-02 to be Stub 8’s snapshot, where it is
+GATE-CAP-PARTIAL; row 8 holds no code, so that gate has not run — it
+asserts, and it is not green. Fifteen of the thirty-one rows are ruled;
+the other sixteen remain open but readable — Q1, Q2, Q3, Q10–Q19, Q29,
+Q30 and the newly registered Q31 — each carrying a stated reading rather
+than a blank, which is why none of them blocks a gate outright. Three
+are worth naming: Q2 leaves T-MOVE-07 reserved-but-unwritten, Q11’s
+reading is “no undo”, and Q30’s is partial and deliberately not
+hardened. (An earlier draft of this paragraph named only those three and
+called them the whole remainder — the test behind it looked for rows
+containing the word “unruled” rather than rows not marked RULED, and so
+could not see the other twelve.) The convention is unchanged: where a
+row states no reading, its gate stays blocked until the Director
+answers.
 
   -------------------------------------------------------------------------------------------------------------------------------
   ID                Question                                                       Blocks                 Assumption in force
@@ -4371,7 +4385,15 @@ the Director answers.
                                                                                                           would have found none
                                                                                                           of them. T-FAME-07 and
                                                                                                           the T-CAP- tally suite
-                                                                                                          unblocked.
+                                                                                                          unblocked. T-CAP-05
+                                                                                                          aliases onto no T-TURN-
+                                                                                                          ID (§2.8), so it has a
+                                                                                                          gate of its own rather
+                                                                                                          than an alias:
+                                                                                                          GATE-CAP-PARTIAL, ruled
+                                                                                                          separately on
+                                                                                                          2026-08-02 into Stub
+                                                                                                          8’s snapshot.
 
   Q7                ~~Turn cap value.~~ RULED (this revision). The cap is          —                      Ruled. §2.8, §2.11.4
                     per-scenario data, stored in Stub 7’s turnCap; Ferrum Crossing                        and §2.13.2 now agree,
@@ -4574,13 +4596,17 @@ the Director answers.
   Q14               Capture-in-progress at the cap. Does a partially captured      T-CAP-05 — the one     It counts for nobody
                     objective count toward “objectives held” (§2.8 criterion 2)?   T-CAP- ID with no      until the objective
                                                                                    T-TURN- counterpart    flips — §2.7’s
-                                                                                   and no gate of its own flip-on-capture wording
-                                                                                   (§2.8’s alias map);    grants nothing before
-                                                                                   the kb victory table   the flip. Partial
-                                                                                                          credit would need a
-                                                                                                          fractional-count rule
-                                                                                                          and would invert
-                                                                                                          T-CAP-05.
+                                                                                   (§2.8’s alias map);    flip-on-capture wording
+                                                                                   its gate home was      grants nothing before
+                                                                                   ruled on 2026-08-02 to the flip. Partial
+                                                                                   be Stub 8’s snapshot,  credit would need a
+                                                                                   where it is            fractional-count rule
+                                                                                   GATE-CAP-PARTIAL, and  and would invert
+                                                                                   row 8 holds no code,   T-CAP-05.
+                                                                                   so that gate has not   
+                                                                                   run and T-CAP-05 is    
+                                                                                   not green; the kb      
+                                                                                   victory table          
 
   Q15               The 5-unit standard starting force (§2.13.1) — 1 Flag Tank, 2  §2.13.1; Stub 7’s      As drafted in §2.13.1:
                     Infantry, 1 Artillery, 1 Recon — has no antecedent outside     deployment list        one of each producible
@@ -5535,8 +5561,8 @@ this table could not supply it.
                                        instead                                    
 
   8              UI binding (Stub 8)   5, 7 (snapshot needs full Contract +       T-UI-01..04
-                                       state)                    queries yes;     (T-UI-03, 04 †)
-                                                                 widgets          
+                                       state)                    queries yes;     (T-UI-03, 04 †) +
+                                                                 widgets          GATE-CAP-PARTIAL
                                                                  in-editor        
 
   9              Presentation bridge & Run vs close. Vendoring   Source/compile   T-INT-01..05
@@ -5550,12 +5576,12 @@ this table could not supply it.
                                        the rows behind the log                    
                                        they replay: rows 1–3 for                  
                                        week 2’s {Move, Attack}                    
-                                       log, and they re-open                      
-                                       when rows 4–5 add                          
-                                       Capture/Build/EndTurn.                     
-                                       They close on rows 1–5,                    
-                                       which is what this cell                    
-                                       used to state as the                       
+                                       log, and they re-open on                   
+                                       the Capture/Build/EndTurn                  
+                                       that rows 4–5 have since                   
+                                       added. They close on rows                  
+                                       1–5, which is what this                    
+                                       cell used to state as the                  
                                        whole dependency                           
 
   10             Save & replay — §4.10 Three parts, three        Yes, all but     T-SAVE-01..07
