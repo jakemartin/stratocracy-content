@@ -2723,8 +2723,8 @@ asserted.
 Status: live tracker — first rows populated 2026-07-26 from the
 Assignment-3 agent crew; Repair and Type-effectiveness added and
 gate-verified 2026-07-29; the rest land as each system is built (wk 1–3,
-§4.4). This draft stands at 2026-08-02, at commit ad77b13 — the head of
-main in the crew repo, whose parent is caa8267. §4.4’s week-1
+§4.4). This draft stands at 2026-08-02, at commit d8284f1 — the head of
+main in the crew repo, whose parent is 2381ca0. §4.4’s week-1
 deliverable is §4.11 rows 1–3 — grid and hex math, the §4.8 tables,
 movement and pathfinding — and week 1 closed two of the three: rows 1
 and 3 passed their full acceptance sets at that commit (T-HEX-01..07,
@@ -2735,12 +2735,12 @@ Q29 requires the full acceptance set at one commit, so the row records a
 partial pass and stays unverified; the editor pass is not yet due, so
 that is the ordinary schedule and not §4.7’s cut line firing. What week
 1 did not close is everything after it: rows 4–8 held no code then, and
-rows 4 and 5 have since landed — both recorded at the end of this
-paragraph — so at ad77b13 only rows 6–8 hold none; since §4.11’s
-critical path runs 1 → 3 → 4 → 5 → 6/8, its first four links are
-evidence rather than schedule and row 6 (Opponent AI) is blocked on
-nothing but itself. §4.5’s Specification outruns the build* risk is
-therefore reduced and re-scoped rather than retired, and that row now
+rows 4, 5 and 6 have since landed — all three recorded at the end of
+this paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
+critical path runs 1 → 3 → 4 → 5 → 6/8, everything on that path but row
+8 is now evidence rather than schedule, and row 8’s other dependency is
+row 7, which holds no code. §4.5’s Specification outruns the build* risk
+is therefore reduced and re-scoped rather than retired, and that row now
 states the arithmetic. What landed after week 1 is a debug driver, at
 9f87ecd: cpp_reference/driver_main.cpp builds a command REPL,
 build/stratocracy_debug, over the built modules. The binary is not
@@ -2874,9 +2874,74 @@ below, and flips nothing. A Claude Code session authored row 5 from the
 Director-written stub spec/turn_spec.md, not a live CrewAI run. What
 ad77b13 still does not have is an AI or a scenario file (rows 6–8): the
 driver’s boards are built-in fixtures plus place/remove, and no file
-format is defined or read.* Legend: Author ∈ {agent, agent+human,
-human}; Agent-verified ∈ {✓, —}; Evidence cites the git commit + passing
-test IDs so any row is independently checkable.
+format is defined or read. Row 6 then landed, at d8284f1: Opponent AI,
+gated T-AI-01..06 plus GATE-AI-SMOKE, 7/7 under clang++ and MSVC both —
+g++ is not installed on this machine — while its pass-1 implementation
+cpp_reference/Ai.buggy.cpp is blocked at 5/7, on T-AI-05 and T-AI-06,
+under both compilers. Five tracked sources are cited, each probed
+present at that commit: spec/ai_spec.md, cpp_reference/Ai.h,
+cpp_reference/Ai.good.cpp, cpp_reference/Ai.buggy.cpp,
+cpp_reference/test_ai.cpp. The last of those is an eighth harness, so
+ten tracked sources define main() at d8284f1 — the nine named above plus
+cpp_reference/test_ai.cpp — eight test harnesses, one combat duel
+simulator, and one debug REPL. No ID is left uncovered: row 6 has no
+in-editor half and no reserved-unwritten ID, so its full acceptance set
+closes at one commit, Q29 is satisfied, and the row flips in the table
+below. GATE-AI-SMOKE mints no acceptance ID. The self-play smoke run is
+acceptance and §4.11 row 6 names it, but it carries no numbered ID in
+this document and spec/ai_spec.md declines to mint one, since a T-AI-07
+would move §4.5’s count. The gate is therefore 7/7 while six IDs close:
+§4.5’s 69 stands and its green count moves 36 → 42. §4.4 schedules row 6
+for week 3, so this row too is ahead of the milestone table, not behind
+it. This is the shipping opponent (§2.9) and not a stand-in: difficulty
+is a starting-Fame handicap and never a smarter routine, and nothing in
+the module reads a difficulty tier at all. It decides and applies
+nothing — it emits one ordinary command at a time and the caller applies
+it, in the gate through the debug driver’s own execute, the same door a
+typed command uses, which is what makes T-AI-01’s validated like any
+player command structural rather than asserted; T-AI-01’s counter
+printed 129 AI commands issued across 6 games. It holds no rules —
+routes to cpp_reference/Move.h, damage and counters to
+cpp_reference/Combat.h, stats to cpp_reference/Data.h, affordability and
+kill value to cpp_reference/Economy.h, act flags and alternation to
+cpp_reference/Turn.h — and it owns no board, reading a caller-composed
+AiState on which spec/ai_spec.md records no field a player could not
+read off the screen, which is where §4.7 Stub 6’s the AI cheats at
+nothing is carried. Q9 is executed rather than only written, and the
+gate caught pass 1 breaking it: T-AI-06 fixes position and target ties
+to canonical hex order — for a target, the hex it occupies — and build
+ties to Infantry > Recon > Artillery > Tank, ascending §2.4 cost and not
+the order §2.4’s table prints, which is the order pass 1 used. T-AI-05
+is a sweep rather than a fixture: of 348 exchanges in the shipped stat
+table where the counter kills the attacker, the good build skips 338 and
+permits 10, each permitted one checked not to trade down, while the
+pass-1 build permits 0 — its guard had collapsed to do not attack if the
+counter kills you, dropping §2.9’s and trades down half, which is the
+failure the sweep exists to catch. Five readings are recorded in
+spec/ai_spec.md as documented choices, not rules: the buildlist is
+caller-supplied data, since §2.9 names a composition and no ratio;
+undefended (T-AI-03) excludes an enemy adjacent to the objective as well
+as one standing on it, since cpp_reference/Move.h already refuses an
+occupied hex; near (T-AI-03) is reachable this turn and cheapest to
+reach among those, ties by canonical hex order; trades down (T-AI-05)
+prices value dealt as the victim’s kill award prorated by the damage
+share of its max HP and value lost as the attacker’s own kill award
+unprorated, both read through cpp_reference/Economy.h::killAward; and
+with no flag designated the advance goal is the canonically first enemy
+unit, isFlag being Stub 7’s placement field with row 7 unbuilt and Q10
+open. The driver reaches the module: ai plays the active side’s turn and
+ai buildlist sets §2.9’s list, and the start of a turn now runs repair,
+income and capture tick in that order. GATE-DRV-01..07 are unchanged and
+still pass; the driver suite is now GATE-DRV-01..10, 10/10 under clang++
+and MSVC both, GATE-DRV-10 being new at this commit — it replays the
+AI’s printed command lines by hand and asserts an identical state hash —
+and those IDs are still not T-*: the driver is not a §4.7 stub, has no
+row in the ledger below, and flips nothing. A Claude Code session
+authored row 6 from the Director-written stub spec/ai_spec.md, not a
+live CrewAI run. No scenario harness and no UI harness is among the ten
+main() definitions above.* Legend: Author ∈ {agent, agent+human, human};
+Agent-verified ∈ {✓, —}; Evidence cites the git commit + passing test
+IDs so any row is independently checkable.
 
   -------------------------------------------------------------------------------------------------------
   System               Author            Agent-verified?   Evidence (commit · tests)
@@ -2909,7 +2974,9 @@ test IDs so any row is independently checkable.
   tiebreak                                                 cpp_reference/test_turn.cpp @ ad77b13 ·
                                                            T-TURN-01..09 (9/9)
 
-  Opponent AI          pending           —                 pending build
+  Opponent AI          agent             ✓                 cpp_reference/Ai.good.cpp +
+                                                           cpp_reference/test_ai.cpp @ d8284f1 ·
+                                                           T-AI-01..06 (6/6) + GATE-AI-SMOKE
 
   Data tables          agent             —                 Partial pass — not a flip.
   (units/terrain)                                          cpp_reference/Data.good.cpp +
@@ -2932,7 +2999,7 @@ test IDs so any row is independently checkable.
   UI                   pending           —                 pending build
   -------------------------------------------------------------------------------------------------------
 
-Eight rows carry a ✓ in the table above, and a ninth carries evidence
+Nine rows carry a ✓ in the table above, and a tenth carries evidence
 without one. Four came from the headless Combat module built for the
 Assignment-3 agent crew (github.com/jakemartin/stratocracy-crew, commit
 5ffa8d6): Combat resolution and its Test suite, plus Repair and
@@ -2970,25 +3037,36 @@ from the Director-written stub spec/turn_spec.md, again not a live
 CrewAI run — crew/tasks.py is byte-unchanged from 5ffa8d6 to ad77b13, so
 the file the live crew runs from still describes the Combat spec alone,
 and that check likewise establishes only that the file has not moved
-across those commits. Two IDs are still recorded as uncovered rather
+across those commits. Opponent AI joined at d8284f1 — T-AI-01..06 plus
+GATE-AI-SMOKE, 7/7 under clang++ and MSVC both — and it leaves no ID
+uncovered either: no in-editor half and no reserved ID, so its full
+acceptance set closes at one commit and Q29 is satisfied rather than
+blocking. Six of those seven checks are numbered IDs; GATE-AI-SMOKE
+mints none, for the reason the paragraph above gives. It belongs to that
+same second sentence and does not start a third: a Claude Code session
+authored it from the Director-written stub spec/ai_spec.md, again not a
+live CrewAI run — crew/tasks.py is byte-unchanged from 5ffa8d6 to
+d8284f1, so the file the live crew runs from still describes the Combat
+spec alone, and that check carries the same extent as the two before it:
+the file has not moved. Two IDs are still recorded as uncovered rather
 than omitted: T-DATA-05, the in-editor Unreal Automation half, and
 T-MOVE-07, reserved and unwritten on Q2. The first is why Data tables is
-the ninth row and does not flip — T-DATA-01..04 and 06 are green at the
+the tenth row and does not flip — T-DATA-01..04 and 06 are green at the
 same commit, but Q29 requires the full acceptance set at one commit, so
-that row records a partial pass and stays unverified. (Commit ad77b13 is
-the head of main; its parent is caa8267, so 5ffa8d6, c224825, 9f87ecd,
-647d4df and caa8267 all remain ancestors and every commit link above
-resolves. The file paths resolve too, which they previously did not:
-four evidence cells carried five bare citations between them —
-Combat.cpp three times and test_combat.cpp twice — and neither bare name
-has ever existed in this repository at any commit. Those five citations
-resolve to two tracked files, cpp_reference/Combat.good.cpp and
-cpp_reference/test_combat.cpp, which the cells now name in full; every
-path this table cites was probed at the commit its own row names. The
-build/ directory is not tracked at all. That correction is what the
-“independently checkable” claim required, not a cosmetic one.) The
-remaining rows fill in the same format — commit + passing test IDs — as
-each system clears the gate.
+that row records a partial pass and stays unverified. (Commit d8284f1 is
+the head of main; its parent is 2381ca0, so 5ffa8d6, c224825, 9f87ecd,
+647d4df, caa8267, ad77b13 and 2381ca0 all remain ancestors and every
+commit link above resolves. The file paths resolve too, which they
+previously did not: four evidence cells carried five bare citations
+between them — Combat.cpp three times and test_combat.cpp twice — and
+neither bare name has ever existed in this repository at any commit.
+Those five citations resolve to two tracked files,
+cpp_reference/Combat.good.cpp and cpp_reference/test_combat.cpp, which
+the cells now name in full; every path this table cites was probed at
+the commit its own row names. The build/ directory is not tracked at
+all. That correction is what the “independently checkable” claim
+required, not a cosmetic one.) The remaining rows fill in the same
+format — commit + passing test IDs — as each system clears the gate.
 
 Rules that keep the ledger honest: - Scope = the game’s own source only.
 The UE engine, the MCP/AllToolsets plugins, and the bought reference
@@ -3218,28 +3296,28 @@ system, no §3 ledger row flips on a partial pass (Q29).
 
   Specification outruns the build —   The † cut line (§4.7 head; members
   69 written acceptance IDs at this   marked in §4.11’s build-order
-  revision (§4.7–§4.11) against 8     table, which is authoritative for
+  revision (§4.7–§4.11) against 9     table, which is authoritative for
   verified ledger rows (§3). Reduced  which side an ID is on) separates
   and re-scoped at 2026-08-02, not    the IDs the MVP line above needs
   retired: no new ID has been written from the correctness infrastructure
-  since c224825, and 36 of the 69 are that stands down if the calendar
-  green — 18 at c224825, where rows 1 takes it — so a slip drops named
-  and 3 closed their full acceptance  suites rather than silently
-  sets and row 2’s headless half      thinning every suite. And the
-  passed, 9 at 647d4df, where         discipline Q20 and Q23 already
-  T-FAME-01..09 closed row 4, and 9   applied holds for the rest of the
-  at ad77b13, where T-TURN-01..09     table — each piece lands in the
-  closed row 5 — so the first four    week the thing that consumes it
-  links of the critical path are      runs (§4.4), and a gate that runs
-  evidence rather than schedule. 33   green over a subset does not flip
-  IDs remain unclosed: T-DATA-05,     its ledger row (Q29) — so a slip in
-  which leaves row 2 unflipped, plus  rows 6–8 moves everything
-  the 32 in rows 6–10, which hold no  downstream of them rather than
-  code                                being absorbed by calling a row
-                                      done on a partial pass. Row 2 is
-                                      now that clause’s worked example
-                                      rather than its hypothetical: its
-                                      headless suite is green and its
+  since c224825 — row 6’s             that stands down if the calendar
+  GATE-AI-SMOKE is acceptance that    takes it — so a slip drops named
+  deliberately mints none, so it      suites rather than silently
+  closes a check without moving this  thinning every suite. And the
+  count — and 42 of the 69 are green: discipline Q20 and Q23 already
+  18 at c224825, where rows 1 and 3   applied holds for the rest of the
+  closed their full acceptance sets   table — each piece lands in the
+  and row 2’s headless half passed, 9 week the thing that consumes it
+  at 647d4df, where T-FAME-01..09     runs (§4.4), and a gate that runs
+  closed row 4, 9 at ad77b13, where   green over a subset does not flip
+  T-TURN-01..09 closed row 5, and 6   its ledger row (Q29) — so a slip in
+  at d8284f1, where T-AI-01..06       rows 7–8 moves everything
+  closed row 6 — so everything on the downstream of them rather than
+  critical path but row 8 is evidence being absorbed by calling a row
+  rather than schedule. 27 IDs remain done on a partial pass. Row 2 is
+  unclosed: T-DATA-05, which leaves   now that clause’s worked example
+  row 2 unflipped, plus the 26 in     rather than its hypothetical: its
+  rows 7–10, which hold no code       headless suite is green and its
                                       ledger row is not
   -----------------------------------------------------------------------
 
@@ -5389,27 +5467,28 @@ that wrote it.
 4.11 Build order
 
 Rows 1–8 are the §4.7 stubs — the eight ledger rows that read *pending*
-when this table was written, of which rows 1, 3, 4 and 5 have since
+when this table was written, of which rows 1, 3, 4, 5 and 6 have since
 flipped (§3). §4.7’s heading names the same eight as at 2026-08-01 and
 is dated for that reason: it records a state and is not a live count, so
 it does not move when a row flips and is not out of step with this
 sentence. Rows 9–10 are the §4.9 and §4.10 systems. Combat, its test
 suite, Repair, and Type-effectiveness are green at 5ffa8d6 and are
 prerequisites, not work items. Rows 1 and 3 are green at c224825, row 4
-at 647d4df and row 5 at ad77b13, so rows 6–8 depend on landed code
-rather than on scheduled code, and row 6 is the critical path’s next
-link, its dependency cell in the table below reading 5, which has
-landed. Row 2 is not green: T-DATA-01..04 and 06 pass at that commit and
-T-DATA-05 has not run, which is exactly the flip cost its † bullet below
-already priced — reached by the ordinary schedule, since the editor pass
-is not yet due, and not by the cut line firing. Note row 10’s format
-spec must exist by the row-9 integration pass, because T-INT-02’s input
-file is a §4.10 save. Rows 9 and 10 therefore state their dependencies
-in two parts — what each gate needs in order to run, and what it needs
-in order to close — because both are scoped to the command set of the
-log they replay, and week 2’s log carries only {Move, Attack} (§4.4).
-Reading either row’s requirement as a single set is what put a gate in a
-week this table could not supply it.
+at 647d4df, row 5 at ad77b13 and row 6 at d8284f1, so rows 7–8 depend on
+landed code rather than on scheduled code, and row 8 is the critical
+path’s remaining link, its dependency cell in the table below reading
+5, 7 — row 5 has landed and row 7 has not. Row 2 is not green:
+T-DATA-01..04 and 06 pass at that commit and T-DATA-05 has not run,
+which is exactly the flip cost its † bullet below already priced —
+reached by the ordinary schedule, since the editor pass is not yet due,
+and not by the cut line firing. Note row 10’s format spec must exist by
+the row-9 integration pass, because T-INT-02’s input file is a §4.10
+save. Rows 9 and 10 therefore state their dependencies in two parts —
+what each gate needs in order to run, and what it needs in order to
+close — because both are scoped to the command set of the log they
+replay, and week 2’s log carries only {Move, Attack} (§4.4). Reading
+either row’s requirement as a single set is what put a gate in a week
+this table could not supply it.
 
   ----------------------------------------------------------------------------------------------------
   #              System (ledger row)   Depends on                Headless?        Acceptance test IDs
