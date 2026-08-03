@@ -2723,23 +2723,24 @@ asserted.
 Status: live tracker — first rows populated 2026-07-26 from the
 Assignment-3 agent crew; Repair and Type-effectiveness added and
 gate-verified 2026-07-29; the rest land as each system is built (wk 1–3,
-§4.4). This draft stands at 2026-08-02, at commit d8284f1 — the head of
-main in the crew repo, whose parent is 2381ca0. §4.4’s week-1
-deliverable is §4.11 rows 1–3 — grid and hex math, the §4.8 tables,
-movement and pathfinding — and week 1 closed two of the three: rows 1
-and 3 passed their full acceptance sets at that commit (T-HEX-01..07,
-7/7; T-MOVE-01..06, 6/6) and flip in the table below. Row 2 does not
-flip. Its headless half is green — T-DATA-01..04 and 06, 5/5 — but
-T-DATA-05, the in-editor Unreal Automation parity pass, has not run, and
-Q29 requires the full acceptance set at one commit, so the row records a
-partial pass and stays unverified; the editor pass is not yet due, so
-that is the ordinary schedule and not §4.7’s cut line firing. What week
-1 did not close is everything after it: rows 4–8 held no code then, and
-rows 4, 5 and 6 have since landed — all three recorded at the end of
-this paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
+§4.4). This draft stands at 2026-08-03, at commit 9086d6a in the crew
+repo, whose parent is d8284f1. §4.4’s week-1 deliverable is §4.11 rows
+1–3 — grid and hex math, the §4.8 tables, movement and pathfinding — and
+week 1 closed two of the three: rows 1 and 3 passed their full
+acceptance sets at that commit (T-HEX-01..07, 7/7; T-MOVE-01..06, 6/6)
+and flip in the table below. Row 2 does not flip. Its headless half is
+green — T-DATA-01..04 and 06, 5/5 — but T-DATA-05, the in-editor Unreal
+Automation parity pass, has not run, and Q29 requires the full
+acceptance set at one commit, so the row records a partial pass and
+stays unverified; the editor pass is not yet due, so that is the
+ordinary schedule and not §4.7’s cut line firing. What week 1 did not
+close is everything after it: rows 4–8 held no code then, and rows 4, 5
+and 6 have since landed — all three recorded at the end of this
+paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
 critical path runs 1 → 3 → 4 → 5 → 6/8, everything on that path but row
 8 is now evidence rather than schedule, and row 8’s other dependency is
-row 7, which holds no code. §4.5’s Specification outruns the build* risk
+row 7, which has since landed at 9086d6a on a partial pass, recorded at
+the end of this paragraph. §4.5’s Specification outruns the build* risk
 is therefore reduced and re-scoped rather than retired, and that row now
 states the arithmetic. What landed after week 1 is a debug driver, at
 9f87ecd: cpp_reference/driver_main.cpp builds a command REPL,
@@ -2939,9 +2940,59 @@ and those IDs are still not T-*: the driver is not a §4.7 stub, has no
 row in the ledger below, and flips nothing. A Claude Code session
 authored row 6 from the Director-written stub spec/ai_spec.md, not a
 live CrewAI run. No scenario harness and no UI harness is among the ten
-main() definitions above.* Legend: Author ∈ {agent, agent+human, human};
-Agent-verified ∈ {✓, —}; Evidence cites the git commit + passing test
-IDs so any row is independently checkable.
+main() definitions above. Row 7 then landed, at 9086d6a: Scenario file &
+validator, gated 12/12 under clang++ and MSVC both — g++ is not
+installed on this machine — while its pass-1 implementation
+cpp_reference/Scenario.buggy.cpp is blocked at 11/12, on T-SCN-11 alone,
+under both compilers: it minimised the opposing route over the opposing
+seat’s guidedOpening.infantry alone rather than over every
+CanCapture-row unit that seat deploys, which is reading (b) at Q28 and
+the one that ruling refused. Six tracked sources are cited, each probed
+present at that commit: spec/scenario_spec.md, cpp_reference/Scenario.h,
+cpp_reference/Scenario.good.cpp, cpp_reference/Scenario.buggy.cpp,
+cpp_reference/test_scenario.cpp, data/ferrum_crossing.json. The fifth of
+those is a ninth harness, so eleven tracked sources define main() at
+9086d6a — the ten named above plus cpp_reference/test_scenario.cpp —
+nine test harnesses, one combat duel simulator, and one debug REPL. This
+row does not flip. Q29 requires the full acceptance set at one commit,
+and it is applied per acceptance ID as well as per row — an ID closes
+only when its whole written fixture set has run. Of the twelve checks
+that passed, T-SCN-01..07 ran in full and close; GATE-SCN-PARSE and
+GATE-SCN-HASH gate a file format rather than a §4.7 stub and mint no
+numbered acceptance ID, on the GATE-AI-SMOKE precedent; and T-SCN-08,
+T-SCN-09 and T-SCN-11 ran a part of their fixture sets and do not close
+— T-SCN-08 on fixture (c) plus its measure-and-report behaviour on the
+shipped map, T-SCN-09 on its refusal branch, T-SCN-11 on fixtures (a)
+and (b), (b) being a required failure. So the row records a partial pass
+and stays unverified, which is the posture row 2 holds on T-DATA-05. No
+new acceptance ID was written, so §4.5’s 69 stands and its green count
+moves 42 → 49. Four fixtures did not run, and each is named rather than
+absorbed — each printed by name with its reason before the tally and
+recorded in the acceptance record: T-SCN-08 (a) The Causeway and (b)
+Longwater March; T-SCN-09’s asserting branch; T-SCN-11 (c) The Causeway.
+Each needs a stretch map authored as a scenario file, and none was
+replaced by a synthetic map. Those three IDs are written, unblocked and
+asserting; what they lack is a map to run against, not a rule. T-SCN-10
+is a different state and is not one of them: it is reserved and
+unwritten on Q26, so no invariant text exists for it, nothing asserts
+and nothing waits. The shipped scenario file is a transcription, not an
+authoring: all 99 terrain hexes of data/ferrum_crossing.json were diffed
+against §2.13.2’s grid, zero mismatches, and the distribution is the one
+§2.13.2 states. A change request out of the build is registered rather
+than acted on: §2.13.1’s validation-invariants bullet names three checks
+no T-SCN- ID asserts as written, and the build implemented T-SCN-02 and
+T-SCN-04 to their exact written text rather than widening them —
+registered as Q32, with no invariant text changed and no acceptance ID
+minted. The debug driver’s suite is now GATE-DRV-01..11, 11/11 under
+clang++ and MSVC both, GATE-DRV-11 being new at this commit, and those
+IDs are still not T-*: the driver is not a §4.7 stub, has no row in the
+ledger below, and flips nothing. A Claude Code session authored row 7
+from the Director-written stub spec/scenario_spec.md, not a live CrewAI
+run. Row 7 is not on §4.11’s critical path: it was built because row 8
+queues behind it and its own dependencies had landed. No UI harness is
+among the eleven main() definitions above.* Legend: Author ∈ {agent,
+agent+human, human}; Agent-verified ∈ {✓, —}; Evidence cites the git
+commit + passing test IDs so any row is independently checkable.
 
   -------------------------------------------------------------------------------------------------------
   System               Author            Agent-verified?   Evidence (commit · tests)
@@ -2994,12 +3045,24 @@ IDs so any row is independently checkable.
   Type-effectiveness   agent             ✓                 cpp_reference/Combat.good.cpp::effectiveness @
   (§3 spec)                                                5ffa8d6 · T-COMBAT-09..10 (neutral, 2/2)
 
-  Content / scenario   pending           —                 pending build
+  Content / scenario   agent             —                 Partial pass — not a flip.
+                                                           cpp_reference/Scenario.good.cpp +
+                                                           cpp_reference/test_scenario.cpp over
+                                                           data/ferrum_crossing.json @ 9086d6a ·
+                                                           T-SCN-01..07 (7/7) headless, plus
+                                                           GATE-SCN-PARSE and GATE-SCN-HASH, which mint
+                                                           no acceptance ID. T-SCN-08, T-SCN-09 and
+                                                           T-SCN-11 ran only part of their fixture sets —
+                                                           the four fixtures that did not run each need a
+                                                           stretch map authored as a scenario file — so
+                                                           the acceptance set is incomplete at this
+                                                           commit and Q29, read per ID, keeps the row
+                                                           unverified
 
   UI                   pending           —                 pending build
   -------------------------------------------------------------------------------------------------------
 
-Nine rows carry a ✓ in the table above, and a tenth carries evidence
+Nine rows carry a ✓ in the table above, and two more carry evidence
 without one. Four came from the headless Combat module built for the
 Assignment-3 agent crew (github.com/jakemartin/stratocracy-crew, commit
 5ffa8d6): Combat resolution and its Test suite, plus Repair and
@@ -3048,15 +3111,21 @@ authored it from the Director-written stub spec/ai_spec.md, again not a
 live CrewAI run — crew/tasks.py is byte-unchanged from 5ffa8d6 to
 d8284f1, so the file the live crew runs from still describes the Combat
 spec alone, and that check carries the same extent as the two before it:
-the file has not moved. Two IDs are still recorded as uncovered rather
-than omitted: T-DATA-05, the in-editor Unreal Automation half, and
-T-MOVE-07, reserved and unwritten on Q2. The first is why Data tables is
-the tenth row and does not flip — T-DATA-01..04 and 06 are green at the
+the file has not moved. Six IDs are still recorded as uncovered rather
+than omitted, in two states that are not the same state. Two are
+unwritten: T-MOVE-07, reserved on Q2, and T-SCN-10, reserved on Q26 — no
+invariant text exists for either, so neither asserts and neither is
+waiting on a run. Four are written and not green: T-DATA-05, the
+in-editor Unreal Automation half, which has not run; and T-SCN-08,
+T-SCN-09 and T-SCN-11, each written, unblocked and asserting, each
+having run only part of its fixture set. T-DATA-05 is why Data tables
+carries evidence without a ✓ — T-DATA-01..04 and 06 are green at the
 same commit, but Q29 requires the full acceptance set at one commit, so
-that row records a partial pass and stays unverified. (Commit d8284f1 is
-the head of main; its parent is 2381ca0, so 5ffa8d6, c224825, 9f87ecd,
-647d4df, caa8267, ad77b13 and 2381ca0 all remain ancestors and every
-commit link above resolves. The file paths resolve too, which they
+that row records a partial pass and stays unverified — and the three
+T-SCN- IDs are why Content / scenario does the same at 9086d6a, Q29
+there being read per ID. (Every commit this section cites — d8284f1, row
+6’s, included — is reachable from the head of main in the crew repo, so
+every commit link above resolves. The file paths resolve too, which they
 previously did not: four evidence cells carried five bare citations
 between them — Combat.cpp three times and test_combat.cpp twice — and
 neither bare name has ever existed in this repository at any commit.
@@ -3298,27 +3367,33 @@ system, no §3 ledger row flips on a partial pass (Q29).
   69 written acceptance IDs at this   marked in §4.11’s build-order
   revision (§4.7–§4.11) against 9     table, which is authoritative for
   verified ledger rows (§3). Reduced  which side an ID is on) separates
-  and re-scoped at 2026-08-02, not    the IDs the MVP line above needs
+  and re-scoped at 2026-08-03, not    the IDs the MVP line above needs
   retired: no new ID has been written from the correctness infrastructure
   since c224825 — row 6’s             that stands down if the calendar
   GATE-AI-SMOKE is acceptance that    takes it — so a slip drops named
   deliberately mints none, so it      suites rather than silently
   closes a check without moving this  thinning every suite. And the
-  count — and 42 of the 69 are green: discipline Q20 and Q23 already
+  count — and 49 of the 69 are green: discipline Q20 and Q23 already
   18 at c224825, where rows 1 and 3   applied holds for the rest of the
   closed their full acceptance sets   table — each piece lands in the
   and row 2’s headless half passed, 9 week the thing that consumes it
   at 647d4df, where T-FAME-01..09     runs (§4.4), and a gate that runs
   closed row 4, 9 at ad77b13, where   green over a subset does not flip
-  T-TURN-01..09 closed row 5, and 6   its ledger row (Q29) — so a slip in
-  at d8284f1, where T-AI-01..06       rows 7–8 moves everything
-  closed row 6 — so everything on the downstream of them rather than
-  critical path but row 8 is evidence being absorbed by calling a row
-  rather than schedule. 27 IDs remain done on a partial pass. Row 2 is
-  unclosed: T-DATA-05, which leaves   now that clause’s worked example
-  row 2 unflipped, plus the 26 in     rather than its hypothetical: its
-  rows 7–10, which hold no code       headless suite is green and its
-                                      ledger row is not
+  T-TURN-01..09 closed row 5, 6 at    its ledger row (Q29) — so a slip in
+  d8284f1, where T-AI-01..06 closed   rows 7–8 moves everything
+  row 6, and 7 at 9086d6a, where      downstream of them rather than
+  T-SCN-01..07 closed without closing being absorbed by calling a row
+  row 7 — so everything on the        done on a partial pass. Row 2 is
+  critical path but row 8 is evidence now that clause’s worked example
+  rather than schedule. 20 IDs remain rather than its hypothetical: its
+  unclosed: T-DATA-05, which leaves   headless suite is green and its
+  row 2 unflipped; T-SCN-08, T-SCN-09 ledger row is not
+  and T-SCN-11, which are written,    
+  unblocked and asserting, but ran    
+  only part of their fixture sets,    
+  and which leave row 7 unflipped;    
+  and the 16 in rows 8–10, which hold 
+  no code                             
   -----------------------------------------------------------------------
 
 4.6 Token budget
@@ -4197,18 +4272,19 @@ criterion exposed by scoping the week-2 parity gate to its command set
 (Q29), and the quantifier the T-SCN-11 print convention never stated at
 a print site, found when a hex-scoped figure was read as a set minimum
 (Q30), and the reachability seam the Q8(c) commitment ruling exposed
-against §2.11.5’s Build-button rule (Q31) — so that each question
-carries exactly one ID across the whole document. This chain is a
-provenance record, not a statement of the register’s extent: the table
-below is authoritative for which rows exist, and any count must be taken
-from it. The distinction is not pedantry — this paragraph and the
-preamble beneath it are the register’s only two extent-bearing sites,
-and registering Q31 staled this one while the preamble was updated,
-which is the same way every pinned range in this document has failed.
-The Blocks column does not name one kind of thing: some open rows name a
-gate that waits on the ruling, others name only a section, a schema
-field or a stub, and a few state in terms that nothing is blocked at
-all. Where a gate is named, the Director writes the rule and the gate
+against §2.11.5’s Build-button rule (Q31), and the three §2.13.1
+validation checks row 7 found gated under no T-SCN- ID (Q32) — so that
+each question carries exactly one ID across the whole document. This
+chain is a provenance record, not a statement of the register’s extent:
+the table below is authoritative for which rows exist, and any count
+must be taken from it. The distinction is not pedantry — this paragraph
+and the preamble beneath it are the register’s only two extent-bearing
+sites, and registering Q31 staled this one while the preamble was
+updated, which is the same way every pinned range in this document has
+failed. The Blocks column does not name one kind of thing: some open
+rows name a gate that waits on the ruling, others name only a section, a
+schema field or a stub, and a few state in terms that nothing is blocked
+at all. Where a gate is named, the Director writes the rule and the gate
 then pins it. Two senses of blocked meet here and are worth separating.
 A row that states no reading blocks its gate outright — the gate is
 written-and-blocked: it can be written and parameterized on the row, as
@@ -4240,12 +4316,12 @@ and the T-CAP- tally suite less T-CAP-05) now assert. T-CAP-05 is
 excepted: it aliases onto no T-TURN- ID (§2.8), and its gate home was
 ruled on 2026-08-02 to be Stub 8’s snapshot, where it is
 GATE-CAP-PARTIAL; row 8 holds no code, so that gate has not run — it
-asserts, and it is not green. Fifteen of the thirty-one rows are ruled;
-the other sixteen remain open but readable — Q1, Q2, Q3, Q10–Q19, Q29,
-Q30 and the newly registered Q31 — each carrying a stated reading rather
-than a blank, which is why none of them blocks a gate outright. Three
-are worth naming: Q2 leaves T-MOVE-07 reserved-but-unwritten, Q11’s
-reading is “no undo”, and Q30’s is partial and deliberately not
+asserts, and it is not green. Fifteen of the thirty-two rows are ruled;
+the other seventeen remain open but readable — Q1, Q2, Q3, Q10–Q19, Q29,
+Q30, Q31 and the newly registered Q32 — each carrying a stated reading
+rather than a blank, which is why none of them blocks a gate outright.
+Three are worth naming: Q2 leaves T-MOVE-07 reserved-but-unwritten,
+Q11’s reading is “no undo”, and Q30’s is partial and deliberately not
 hardened. (An earlier draft of this paragraph named only those three and
 called them the whole remainder — the test behind it looked for rows
 containing the word “unruled” rather than rows not marked RULED, and so
@@ -5193,6 +5269,18 @@ answers.
                                                                                                           player-facing half is
                                                                                                           simply not exercised
                                                                                                           yet.
+
+  Q32               Three §2.13.1 validation checks that no T-SCN- ID asserts.     Nothing today: no      The invariants ship as
+                    §2.13.1’s validation-invariants bullet names every             T-SCN- ID gates the    written. Row 7
+                    land-passable hex reaches every factory, all deployment hexes  three, so no gate      implemented T-SCN-02
+                    are free and land-passable, and factory count in the map file  waits on the ruling. A and T-SCN-04 to their
+                    equals the count the domination check uses, for the §4.2       ruling that mints an   exact written text at
+                    validate_scenario tool whose schema is Stub 7’s. Building row  ID for one of the      9086d6a rather than
+                    7 against that stub found no T-SCN- ID that gates any of the   checks would move      widening them, and
+                    three as written. Widen an existing invariant, mint IDs for    §4.5’s written-ID      minted no ID for the
+                    the three checks, or accept that the tool description is wider count                  three checks, so the
+                    than the gated suite?                                                                 bullet describes more
+                                                                                                          than the suite gates.
   -------------------------------------------------------------------------------------------------------------------------------
 
 4.8 Data contract — DataTable schemas
@@ -5503,18 +5591,18 @@ prerequisites, not work items. Rows 1 and 3 are green at c224825, row 4
 at 647d4df, row 5 at ad77b13 and row 6 at d8284f1, so rows 7–8 depend on
 landed code rather than on scheduled code, and row 8 is the critical
 path’s remaining link, its dependency cell in the table below reading
-5, 7 — row 5 has landed and row 7 has not. Row 2 is not green:
-T-DATA-01..04 and 06 pass at that commit and T-DATA-05 has not run,
-which is exactly the flip cost its † bullet below already priced —
-reached by the ordinary schedule, since the editor pass is not yet due,
-and not by the cut line firing. Note row 10’s format spec must exist by
-the row-9 integration pass, because T-INT-02’s input file is a §4.10
-save. Rows 9 and 10 therefore state their dependencies in two parts —
-what each gate needs in order to run, and what it needs in order to
-close — because both are scoped to the command set of the log they
-replay, and week 2’s log carries only {Move, Attack} (§4.4). Reading
-either row’s requirement as a single set is what put a gate in a week
-this table could not supply it.
+5, 7 — both have landed, row 7 on a partial pass that leaves its ledger
+row unflipped (§3). Row 2 is not green: T-DATA-01..04 and 06 pass at
+that commit and T-DATA-05 has not run, which is exactly the flip cost
+its † bullet below already priced — reached by the ordinary schedule,
+since the editor pass is not yet due, and not by the cut line firing.
+Note row 10’s format spec must exist by the row-9 integration pass,
+because T-INT-02’s input file is a §4.10 save. Rows 9 and 10 therefore
+state their dependencies in two parts — what each gate needs in order to
+run, and what it needs in order to close — because both are scoped to
+the command set of the log they replay, and week 2’s log carries only
+{Move, Attack} (§4.4). Reading either row’s requirement as a single set
+is what put a gate in a week this table could not supply it.
 
   ----------------------------------------------------------------------------------------------------
   #              System (ledger row)   Depends on                Headless?        Acceptance test IDs
