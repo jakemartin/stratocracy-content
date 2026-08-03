@@ -116,7 +116,7 @@ cite goals by ID.
 | PX-1 | Matches feel short and decisive: ~10–15 minutes typical, ~20 worst-case at the cap. A match never becomes the hour-long slog the lineage was criticized for. | §1, §2.8 | Self-play turn-length distribution: the median match ends before the turn cap; cap-tiebreak matches are a minority of results. |
 | PX-2 | The rules can be trusted completely. The forecast shown before committing an attack is exactly what resolves — a whole turn can be planned in advance. | §2.6 | Every attack's forecast equals its resolution; identical inputs give identical results (determinism invariants, T-COMBAT suite). |
 | PX-3 | Depth comes from where units stand, not from a memorized counter chart. The triangle is read off movement and range on the board. | §2.4 | The type-effectiveness table ships all-1.0; no counter-multiplier is load-bearing at ship. |
-| PX-4 | Fighting is always better than hiding. There is no line of play where sealing a corner and running the clock wins. | §2.7, §2.8 | A side with zero combat Fame never wins a capped match (T-CAP-02, T-CAP-03). |
+| PX-4 | Fighting is always better than hiding. There is no line of play where sealing a corner and running the clock wins. | §2.7, §2.8 | A side with zero combat Fame never wins a capped match (T-CAP-02, T-CAP-03 — both gated as **T-TURN-05**). |
 | PX-5 | The player always knows who is currently winning and how close the cap is. The tiebreak is never a hidden win condition. | §2.8, §2.11 | The standings scoreboard displays every tiebreak input (combat Fame, objectives held *X/N*, surviving HP) plus the turn counter against the cap. |
 | PX-6 | The economy is one thought: earn Fame, spend Fame. The player never converts between currencies or tracks parallel pools. | §2.7 | Every income, build cost, and combat reward mutates a single per-side Fame pool; no second resource exists in the data schema. |
 
@@ -350,7 +350,10 @@ kill (§1.5 #5). For self-play tuning, log the tier plus the Fame breakdown per
 match. The result: a flag kill is always the best outcome, so Pillar 2 ("short
 and decisive") is enforced by the grading itself, not just by the turn cap.
 
-*Invariants (each phrases directly as a `T-CAP-` test):*
+*Invariants. `T-CAP-01..08` is §2.8's own numbering for the procedure §4.7
+Spec Stub 5 gates as `T-TURN-01..09`, so there is one suite, not two. The map
+below names, for each invariant, the ID or IDs that gate it; one row names
+none.*
 
 1. **T-CAP-01** — Flag destruction on any turn at or before the cap yields a
    Decisive result; the tiebreak procedure is never evaluated.
@@ -368,6 +371,24 @@ and decisive") is enforced by the grading itself, not just by the turn cap.
    result and tier.
 8. **T-CAP-08** — Controlling every factory at the start of your turn ends the
    match immediately as a Decisive win; towns do not count toward domination.
+
+*Alias map — the ID or IDs that gate each invariant above; one row names none:*
+
+| §2.8 | Aliases to | Why |
+|---|---|---|
+| T-CAP-01 | **T-TURN-02** | flag death ends the match at once; the tiebreak is never evaluated |
+| T-CAP-02 | **T-TURN-05** | the mutual-passivity guard |
+| T-CAP-03 | **T-TURN-05** | T-TURN-05's fixture is 4 objectives + zero kills losing to 1 objective + one 50-Fame kill. That combat Fame excludes passive income is **T-FAME-01** |
+| T-CAP-04 | **T-TURN-02** | no capped tally can contain the +500, because a flag kill ends the match before the cap |
+| T-CAP-05 | **nothing** | see below |
+| T-CAP-06 | **T-TURN-07** | tiers are categorical |
+| T-CAP-07 | **T-TURN-09** | determinism |
+| T-CAP-08 | **T-TURN-03** | domination, factories only |
+
+**T-CAP-05 is the exception.** No `T-TURN-` ID asserts it. It is discharged
+*structurally* by T-FAME-05 and T-FAME-06 — an objective's owner does not
+change until the capture completes, and the tally counts owners — but **no
+gate asserts it end to end, and it appears in no acceptance set.**
 
 > **Why this shape (the delete-test).** Every piece of the apparatus was
 > tested by deletion. Delete key 1 → the documented turtle exploit (§1.5 #1)
@@ -2388,7 +2409,7 @@ reading, its gate stays blocked until the Director answers.**
 | **Q11** | Undo. The command log makes single-step undo of an uncommitted move nearly free, but the GDD never grants it, and §2.6's forecast-then-commit flow arguably forbids it. | Nothing today — no gate assumes undo exists, and §2.11.1's `Z` binding is explicitly conditional | No undo: a completed move stands. |
 | **Q12** | Zero-RNG confirmation. §2.6 and §4.1 say any RNG "is seeded"; nothing in §2 actually uses RNG. | §4.10's `seed` field; T-SAVE-01/02 if RNG is ever added | The prototype ships with **none**, so `seed` is a reserved field written as 0. |
 | **Q13** | Player-facing replay. §4.10's format makes a "watch replay" feature cheap, but §2.10 does not scope one. | The §2.10 scope table; a UX handoff if it is scoped | The format stays internal — saves, gates, and balance logs only. |
-| **Q14** | Capture-in-progress at the cap. Does a partially captured objective count toward "objectives held" (§2.8 criterion 2)? | T-CAP-05; the kb victory table | It counts for nobody until the objective flips — §2.7's flip-on-capture wording grants nothing before the flip. Partial credit would need a fractional-count rule and would invert T-CAP-05. |
+| **Q14** | Capture-in-progress at the cap. Does a partially captured objective count toward "objectives held" (§2.8 criterion 2)? | T-CAP-05 — the one `T-CAP-` ID with no `T-TURN-` counterpart and no gate of its own (§2.8's alias map); the kb victory table | It counts for nobody until the objective flips — §2.7's flip-on-capture wording grants nothing before the flip. Partial credit would need a fractional-count rule and would invert T-CAP-05. |
 | **Q15** | The 5-unit standard starting force (§2.13.1) — 1 Flag Tank, 2 Infantry, 1 Artillery, 1 Recon — has no antecedent outside §2.13, alongside map dimensions and town counts. | §2.13.1; Stub 7's deployment list | As drafted in §2.13.1: one of each producible system live from turn 1, a 550-Fame producible force. |
 | **Q16** | Recon/Air vs. Water. §2.3 marks Water passable by "sea, air"; §2.4's "Recon/Air" never says whether it *is* air. If Recon crosses Water freely, every bridge chokepoint and *The Causeway*'s lockout premise leaks. | All three §2.13 maps; the terrain schema | Recon is a **land** unit with terrain-cost discounts, and bridges bind it. All three maps are priced on this reading. |
 | **Q17** | Cross-Water Artillery fire. With LOS blocking a stretch goal (§2.2), bank-to-bank fire across a one-hex river is legal at ship, and the two river maps price it **per map, not alike**: *Ferrum Crossing* prices contested **bank control** on it — opposite banks are distance 2, inside Artillery range, so fire crosses before units do (§2.13.2, which states as much explicitly: bridge control there is *tempo, not a topological wall*); *The Causeway* prices its **Mountain perches** on it — range 2–3 covers the bridge hex from +40% cover with no counter (§2.13.6). *Longwater March* has no Water and prices nothing on it (§2.13.5). | §2.13.2 and §2.13.6 balance, if LOS ever ships | Legal. If LOS blocking ships, Water must not block — or those two maps need a redesign pass. |

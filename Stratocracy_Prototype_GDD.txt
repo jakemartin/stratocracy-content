@@ -488,9 +488,9 @@ reports and playtest notes cite goals by ID.
   PX-4              Fighting is       §2.7, §2.8        A side with zero
                     always better                       combat Fame never
                     than hiding.                        wins a capped match
-                    There is no line                    (T-CAP-02,
-                    of play where                       T-CAP-03).
-                    sealing a corner                    
+                    There is no line                    (T-CAP-02, T-CAP-03
+                    of play where                       — both gated as
+                    sealing a corner                    T-TURN-05).
                     and running the                     
                     clock wins.                         
 
@@ -794,7 +794,10 @@ the tier plus the Fame breakdown per match. The result: a flag kill is
 always the best outcome, so Pillar 2 (“short and decisive”) is enforced
 by the grading itself, not just by the turn cap.
 
-Invariants (each phrases directly as a T-CAP- test):
+Invariants. T-CAP-01..08 is §2.8’s own numbering for the procedure §4.7
+Spec Stub 5 gates as T-TURN-01..09, so there is one suite, not two. The
+map below names, for each invariant, the ID or IDs that gate it; one row
+names none.
 
 1.  T-CAP-01 — Flag destruction on any turn at or before the cap yields
     a Decisive result; the tiebreak procedure is never evaluated.
@@ -813,6 +816,49 @@ Invariants (each phrases directly as a T-CAP- test):
 8.  T-CAP-08 — Controlling every factory at the start of your turn ends
     the match immediately as a Decisive win; towns do not count toward
     domination.
+
+Alias map — the ID or IDs that gate each invariant above; one row names
+none:
+
+  -----------------------------------------------------------------------
+  §2.8                    Aliases to              Why
+  ----------------------- ----------------------- -----------------------
+  T-CAP-01                T-TURN-02               flag death ends the
+                                                  match at once; the
+                                                  tiebreak is never
+                                                  evaluated
+
+  T-CAP-02                T-TURN-05               the mutual-passivity
+                                                  guard
+
+  T-CAP-03                T-TURN-05               T-TURN-05’s fixture is
+                                                  4 objectives + zero
+                                                  kills losing to 1
+                                                  objective + one 50-Fame
+                                                  kill. That combat Fame
+                                                  excludes passive income
+                                                  is T-FAME-01
+
+  T-CAP-04                T-TURN-02               no capped tally can
+                                                  contain the +500,
+                                                  because a flag kill
+                                                  ends the match before
+                                                  the cap
+
+  T-CAP-05                nothing                 see below
+
+  T-CAP-06                T-TURN-07               tiers are categorical
+
+  T-CAP-07                T-TURN-09               determinism
+
+  T-CAP-08                T-TURN-03               domination, factories
+                                                  only
+  -----------------------------------------------------------------------
+
+T-CAP-05 is the exception. No T-TURN- ID asserts it. It is discharged
+structurally by T-FAME-05 and T-FAME-06 — an objective’s owner does not
+change until the capture completes, and the tally counts owners — but no
+gate asserts it end to end, and it appears in no acceptance set.
 
   Why this shape (the delete-test). Every piece of the apparatus was
   tested by deletion. Delete key 1 → the documented turtle exploit (§1.5
@@ -4447,12 +4493,12 @@ the Director answers.
                                                                                    scoped                 gates, and balance logs
                                                                                                           only.
 
-  Q14               Capture-in-progress at the cap. Does a partially captured      T-CAP-05; the kb       It counts for nobody
-                    objective count toward “objectives held” (§2.8 criterion 2)?   victory table          until the objective
-                                                                                                          flips — §2.7’s
-                                                                                                          flip-on-capture wording
-                                                                                                          grants nothing before
-                                                                                                          the flip. Partial
+  Q14               Capture-in-progress at the cap. Does a partially captured      T-CAP-05 — the one     It counts for nobody
+                    objective count toward “objectives held” (§2.8 criterion 2)?   T-CAP- ID with no      until the objective
+                                                                                   T-TURN- counterpart    flips — §2.7’s
+                                                                                   and no gate of its own flip-on-capture wording
+                                                                                   (§2.8’s alias map);    grants nothing before
+                                                                                   the kb victory table   the flip. Partial
                                                                                                           credit would need a
                                                                                                           fractional-count rule
                                                                                                           and would invert
