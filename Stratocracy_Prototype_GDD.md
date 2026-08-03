@@ -123,8 +123,12 @@ cite goals by ID.
 ### 2.1 Core loop
 ```
 Player turn:
-  for each of your units (any order):
-     select → move (within range, terrain-costed) → act (attack / capture / build) → done
+  for each of your units (any order; a unit may be given its remaining command
+    with other units' commands in between — the rules module has no current unit):
+     select → move (within range, terrain-costed) and/or act (attack), in either order → done
+              (two independent flags: at most one move and at most one act per
+               unit in its own turn, and neither is required — gated as
+               T-TURN-01; capture and build set no act flag, §2.7)
   end turn
 Opponent turn: same, driven by AI
 repeat until a flag unit dies, an objective is met, or the turn cap triggers a tiebreak
@@ -506,12 +510,15 @@ UI is budgeted as core work from week 2 (§4.4, §4.5 — "UI underestimated" is
 
 #### 2.11.1 Control scheme
 
-**Selection state machine.** The core loop (§2.1: select → move → act → done, any unit order) maps to four UI states:
+**Selection state machine.** The core loop (§2.1) maps to four UI states. The loop's own sequence, and its list of what counts as an act, are §2.1's to state; this machine is the input surface for them and deliberately does not reprise them:
 
 ```
-IDLE ──LMB on own unacted unit──▶ SELECTED (reachable hexes lit, §2.5)
+IDLE ──LMB on own unacted unit──▶ SELECTED (reachable hexes lit, §2.5; attack targets lit)
 IDLE ──LMB on own factory──────▶ PRODUCTION MENU (§2.11.5)
-SELECTED ──LMB on lit hex──────▶ MOVED (attack targets lit; Wait available)
+SELECTED ──LMB on lit hex──────▶ MOVED (targets relit from the new hex; Wait available)
+SELECTED ──hover enemy target──▶ forecast card shown (§2.11.3)
+SELECTED ──LMB on lit target───▶ attack resolves as forecast → unit DONE (move unspent)
+SELECTED ──Space (Wait)────────▶ unit DONE without moving or acting
 SELECTED ──RMB / Esc───────────▶ IDLE (nothing committed)
 MOVED ──hover enemy target─────▶ forecast card shown (§2.11.3)
 MOVED ──LMB on lit target──────▶ attack resolves exactly as forecast → unit DONE
@@ -521,6 +528,12 @@ MOVED ──RMB / Esc──────────────▶ unit DONE whe
 
 \* Under a ruling that grants move-undo (**Q11**, §4.7 — currently unruled, and no gate assumes it), RMB/Esc in MOVED instead reverts the unit to its pre-move hex and returns to IDLE. Until that rule is adjudicated, the shipping semantics are the conservative ones shown: a completed move stands. The two behaviors share a UI; only the rules module differs.
 
+**The machine is narrower than the rule, and that is deliberate.** `T-TURN-01` (§4.7 Spec Stub 5) owns the per-unit move and act flags and the orderings they permit; read them there, not off this diagram. The machine above reaches an attack two ways — after a move, or straight from SELECTED with the move unspent — and it retires the unit at the act either way, whatever that unit has left. What it does not offer is the reverse, a unit returning to the board after acting: an ordering the invariant permits is not on screen. This is a UI restriction and nothing more: no line here asks the rules module to refuse a command it would otherwise accept, and AI turns, headless runs and replays are untouched. It is also not provisional the way the move-undo note above it is — that note waits on an unruled question, this one scopes a ruled rule down to what one screen teaches. The cost is paid to keep the per-unit vocabulary at exactly two verbs (*attack* or *wait*, below) and the board at one per-unit state: the SELECTED attack is precisely the case that retires a unit with a flag to spare, and a unit that could come back for it needs a third pip state, a rule for what **Tab** does with it, and an explanation — in a first session already spending its attention on hexes, capture and the forecast (§2.11.6). Nothing announces the restriction to the player, by §2.11.6's first principle: the option is never offered, so there is nothing to un-learn.
+
+**Standing still is never a move.** The unit's own hex does not join the lit reachable set (`T-MOVE-03`: a move never ends on an occupied hex), so SELECTED's two lit sets — reachable hexes and attack targets — are disjoint, and **LMB** on a lit hex is never ambiguous between moving and attacking. A unit that attacks from SELECTED has not moved; it has spent its act and been retired by this machine, not by the rules module.
+
+**What DONE means, and what binds to it.** DONE is this machine's own per-unit bit — *this unit takes no further command this turn* — and it is not the act flag. It is per-turn: it clears when the owner's next turn begins. **Space** (Wait) and RMB/Esc in MOVED both reach DONE without acting, so the two bits come apart in ordinary play. Every surface in §2.11 that says a unit *has not acted* binds to the machine's bit: the `unacted unit` entry into SELECTED, the **Tab** cycle, the **Enter** confirm's count and its `3 units have not acted. End turn?` string, the idle count and the unacted pip (§2.11.2), and the spawned unit's pip in §2.11.6-D. Bound that way each of those stays literally true, because the machine retires a unit the instant it acts — so every unit still carrying a pip has in fact not acted. Bound to the act flag instead, a waited unit would keep its pip, answer **Tab**, and be counted in the End Turn confirm the player had just dismissed it from: a surprise the player caused and the UI then denied, which is the one thing §2.11 does not ship.
+
 **Capture and build need no extra verbs.** Capture is by presence (§2.7: an Infantry that ends its move on a capturable tile begins capturing — a progress pip appears, no button). Building is the factory's own interaction, not a unit's. This keeps the per-unit action vocabulary to exactly two: *attack* or *wait*.
 
 **Input reference.**
@@ -528,7 +541,7 @@ MOVED ──RMB / Esc──────────────▶ unit DONE whe
 | Input | Effect |
 |---|---|
 | **Hover** hex | Terrain line in the info panel (§2.11.2); if a unit is SELECTED, dotted **path preview** along the cheapest route (§2.5) with the terrain-cost tick per hex |
-| **Hover** unit | Unit stats in the info panel; if own MOVED unit has it in reach, the **forecast card** (§2.11.3) |
+| **Hover** unit | Unit stats in the info panel; if an own SELECTED or MOVED unit has it in reach, the **forecast card** (§2.11.3) |
 | **LMB** | Select own unit / commit previewed move / commit forecast attack / open production menu on own factory / activate buttons |
 | **RMB / Esc** | Cancel: close menu or forecast, deselect, back out one state (see machine above) |
 | **MMB drag** or **WASD / arrows** | Pan camera |
@@ -584,7 +597,7 @@ No hidden double-functions, no drag-to-move, no context menus. A first-session p
 | Fame pool + `+X/turn` | Build now vs. save; which neutral factory is worth a fight | §2.7 income (+100 factory / +25 town), costs |
 | End Turn + idle count | Is my turn genuinely spent | §2.1 per-unit loop |
 | Flag `H` marker (both sides, always visible) | What to protect, what to hunt | §2.4 flag death ends the match; *Conflict*'s `H` convention |
-| Unacted pip on own units | Which units still have a move | §2.1 |
+| Unacted pip on own units | Which units I can still give an order to | §2.1 per-unit loop, via the DONE bit of §2.11.1's machine |
 | Reachable-hex highlight | Where can this unit truly go | §2.5 — "the real move set, not an estimate" |
 | Path preview with cost ticks | Which route; exposure en route (e.g. a turn spent on the Bridge at −10%) | §2.3, §2.5 cheapest-route |
 | Attack-target highlight (incl. Artillery's dark range-1 hole) | Who is actually hittable from here | §2.4 ranges; the Artillery dead zone |
@@ -596,7 +609,7 @@ No hidden double-functions, no drag-to-move, no context menus. A first-session p
 
 **Info panel** (bottom-left, hover-driven, ~3 lines, never modal):
 - Hovered hex: terrain name, move cost, defense bonus, and status if capturable — `Factory · move 1 · def +15% · yours (+100/turn)` or `· neutral` or `· enemy`.
-- Hovered unit: name, HP as `12/20`, Atk/Def/Move/Range, `has acted` flag. The flag unit's panel is red-edged and appends `FLAG — its loss ends the match.`
+- Hovered unit: name, HP as `12/20`, Atk/Def/Move/Range, and `ready` or `done` — the machine's DONE bit (§2.11.1), not a raw flag name: a waited unit reads `done` while its act flag is unspent. The flag unit's panel is red-edged and appends `FLAG — its loss ends the match.`
 - Empty when nothing is hovered. It never covers the board's lower-center where fighting happens.
 
 **Turn banner & AI playback.** A brief `YOUR TURN` / `ENEMY TURN` banner marks the IGOUGO handoff (§2.1). The headless AI resolves instantly (§2.8); the presentation layer **replays its action list at a watchable fixed pace** (~0.5 s per action, camera stepping to each) so the player can read what the AI built, captured, and attacked — this is presentation pacing only, no rules change. Any click or Esc skips to the end state. First-session value: watching the AI's economy phase is how the player learns the enemy shares the same Fame economy (§2.9).
@@ -605,7 +618,7 @@ No hidden double-functions, no drag-to-move, no context menus. A first-session p
 
 #### 2.11.3 The attack forecast — the game's centerpiece display
 
-Combat is a pure function (§2.6, §3 spec), so the forecast is not an estimate — it is the resolution, shown early. It appears on **hover** over any lit target from the MOVED state; **LMB commits**, RMB/Esc cancels. The card:
+Combat is a pure function (§2.6, §3 spec), so the forecast is not an estimate — it is the resolution, shown early. It appears on **hover** over any lit target from either the SELECTED or the MOVED state (§2.11.1); **LMB commits**, RMB/Esc cancels. A commit from SELECTED spends the act with the move unspent and retires the unit all the same. The card:
 
 ```
 +------------------------------------------+
@@ -709,7 +722,7 @@ The first match runs on the one shipped scenario at **Easy** by default (player 
 
 | Turn | Constraint | Directive | Teaches | Retires when |
 |---|---|---|---|---|
-| 1a | Only one marked Infantry selectable; others dimmed (hover: `Locked this turn.`). End Turn is inert until that Infantry has moved (hover: `Move the marked Infantry first.`) — this is what makes 1a retire inside turn 1 in every branch, and it is the only guided-opening constraint that gates a player *input* rather than a selection, adopted under **Q27** (§4.7), ruled — it was registered rather than assumed because it gates an input | `Select the marked Infantry. Lit hexes are its true reach. Click one to move.` | Selection; the highlight is the real move set (§2.5) | Move completes |
+| 1a | Only one marked Infantry selectable; others dimmed (hover: `Locked this turn.`). End Turn is inert until that Infantry has moved (hover: `Move the marked Infantry first.`), and while 1a is outstanding that Infantry cannot retire itself without moving: its attack targets are not lit, so the SELECTED → attack transition (§2.11.1) is closed to it, and **Space** is inert for it on the same footing as End Turn and for the same reason. Those are the machine's only two routes from SELECTED to DONE that do not pass through MOVED, so both are closed for that one unit and nothing the player can do leaves End Turn inert with no move left to satisfy it — this is what makes 1a retire inside turn 1 in every branch, and it is the only guided-opening constraint that gates a player *input* rather than a selection, adopted under **Q27** (§4.7), ruled — it was registered rather than assumed because it gates an input | `Select the marked Infantry. Lit hexes are its true reach. Click one to move.` | Selection; the highlight is the real move set (§2.5) | Move completes |
 | 1b | End Turn pulses | `End turn. The enemy moves; then you.` | IGOUGO (§2.1) — the player watches a full AI turn | Enemy turn ends |
 | 2 *(standing)* | None on selection. The scenario's designated neutral factory (`guidedOpening.objective`, §2.13.1) is ringed from turn 1; its info-panel line appends `Only Infantry captures.` | `Move the Infantry onto the ringed Factory. Only Infantry captures.` | Capture; the Infantry-only rule (§2.7) | A capture pip appears — on whatever turn that happens. *Standing* means it stays **outstanding**, not that it holds the strip. How many turns it actually holds the line is decided by rules 1–2 and by when the pip lands, and the schedule table's three branches are exhaustive: **twice** — turn 2, then a turn-4 rule-2 last call, if the pip has still not landed (wandered); **once** — turn 2 only, retiring on a turn-2 or turn-3 pip; or **never** — the pip lands on turn 1 and beat 2 retires before rule 1 can select it (fast lane). On every turn it does not hold the line it runs on the ring and the unit marker. Hard-expires at end of turn 4 |
 | 3 | None. Fame ≥ 100 whenever this beat is outstanding, and not because of income: builds are Fame's only sink (§2.7), and the beat retires on the first spawn — so an outstanding beat 3 means nothing has been spent and the player still holds **at least their opening Fame**, which is 350 at §2.11.6's default Easy tier and never below Infantry's 100 at any tier the player can pick (Normal 200, Hard 100 — §2.7, §2.9). Turn-1 income is not assumed anywhere in this beat: there is none (Q8, §4.7) | `Spend Fame at your Factory. Infantry costs 100.` | Fame → factory → unit | A unit spawns — on whatever turn that happens, including turn 1 |
@@ -1770,13 +1783,28 @@ Inputs:  game state; per-unit move and act flags — TWO flags per unit, not one
 Transition: I-GO-U-GO alternation (§2.1); win/loss/draw evaluation (§2.8);
          start-of-turn repair application (§2.7).
 Invariants:
-  T-TURN-01  strict alternation; each unit carries TWO independent flags in its
-             own turn and may move at most once AND act at most once, per
-             §2.1's select → move → act sequence — moving never consumes the
-             act, so a unit that has moved is still a legal attacker that turn
-             — and the owner takes its units in any order it chooses (§2.1).
-             The gate asserts that a move-then-attack by one unit COMPLETES,
-             and that a second move, or a second act, by that unit is refused
+  T-TURN-01  strict alternation; each unit carries TWO INDEPENDENT flags in
+             its own turn — one for its move, one for its act — and may
+             move at most once AND act at most once, IN EITHER ORDER
+             (Director ruling, 2026-08-03). Moving never consumes the act,
+             and acting never consumes the move: a unit that has moved is
+             still a legal attacker that turn, and a unit that has attacked
+             may still move that turn. The per-unit sequence is §2.1's to
+             state; this gate asserts the two flags and reads no ordering
+             constraint into them. The owner takes its units in any order
+             it chooses (§2.1). The gate asserts: (a) a move-then-attack
+             by one unit COMPLETES; (b) an attack-then-move by the same
+             unit COMPLETES, leaving both of that unit's flags spent
+             exactly as (a) leaves them — the two orders are NOT
+             state-equivalent, since the two attacks are made from
+             different hexes, so the assertion is on the flags and not on
+             a state match; (c) a second move, or a second act, is
+             REFUSED whichever of the two the unit spent first; (d) a
+             refused command changes nothing (§4.9) — it sets neither
+             flag and moves no unit; and (e) BOTH flags clear at the
+             start of the owner's turn — the same moment T-TURN-10's
+             per-factory build allowance renews — so a unit that spent
+             both last turn moves and acts again on this one
   T-TURN-02  flag death ends the match immediately — Decisive win for the killer,
              loss for the owner (§2.8)
   T-TURN-03  territorial domination: controlling every factory on the map at the
