@@ -2367,8 +2367,14 @@ Scope:   NOT layout or visual design (§2.11's lane) — this is
          snapshot plus the §4.9 event list, and hold no rules state (§4.1).
 Snapshot fields (read-only, produced by the rules module):
          per-hex   {terrainId, owner}
-         per-unit  {id, side, unitId, hex, hp, hpMax, isFlag, hasActed,
-                    captureProgress}
+         per-unit  {id, side, unitId, hex, hp, hpMax, isFlag, hasMoved,
+                    hasActed, captureProgress}
+                    `hasMoved` and `hasActed` are the TWO INDEPENDENT flags
+                    T-TURN-01 asserts, carried into the snapshot as two
+                    fields: one field cannot express a unit that has spent
+                    exactly one of them. Neither is §2.11.1's DONE bit, and
+                    no §2.11 surface reading "has not acted" binds to
+                    either — §2.11.1 states where those bind.
          per-side  {fameTotal, fameCombat, objectivesHeld X of N, survivingHP}
          match     {turn, turnCap, sideToMove, resultTier or null}
 Queries: reachable(unit) → the T-MOVE-01 set; forecast(attacker, defenderHex) →
