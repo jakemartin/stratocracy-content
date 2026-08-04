@@ -1092,14 +1092,16 @@ its act and been retired by this machine, not by the rules module.
 What DONE means, and what binds to it. DONE is this machine’s own
 per-unit bit — this unit takes no further command this turn — and it is
 not the act flag. It lives in the view-model — the rules-produced
-snapshot plus a declared presentation block — as that block’s sole
-member. The rules module has no DONE bit and no Wait command; no
-snapshot field mirrors this bit and none is asked for. It is per-turn:
-it clears when the owner’s next turn begins. Space (Wait) and RMB/Esc in
-MOVED both reach DONE without acting, so the two bits come apart in
-ordinary play. Every surface in §2.11 that says a unit has not acted
-binds to the machine’s bit: the unacted unit entry into SELECTED, the
-Tab cycle, the Enter confirm’s count and its
+snapshot plus a declared presentation block — as a member of that block,
+alongside the guided opening’s lockedThisTurn (§2.11.6-B, turn 1a),
+which is per-unit and per-turn and which the guidance layer owns rather
+than the selection machine. The rules module has no DONE bit and no Wait
+command; no snapshot field mirrors this bit and none is asked for. It is
+per-turn: it clears when the owner’s next turn begins. Space (Wait) and
+RMB/Esc in MOVED both reach DONE without acting, so the two bits come
+apart in ordinary play. Every surface in §2.11 that says a unit has not
+acted binds to the machine’s bit: the unacted unit entry into SELECTED,
+the Tab cycle, the Enter confirm’s count and its
 3 units have not acted. End turn? string, the idle count and the unacted
 pip (§2.11.2), and the spawned unit’s pip in §2.11.6-D. Bound that way
 each of those stays literally true, because the machine retires a unit
@@ -1235,7 +1237,15 @@ decision it supports, and the rule it surfaces:
                                                   figure derived from the
                                                   scoreboard’s X of N,
                                                   which does not separate
-                                                  factories from towns
+                                                  factories from towns;
+                                                  and incomePerTurn is
+                                                  the standing rate, so
+                                                  on turn 1 the widget
+                                                  shows the rate that
+                                                  will pay at the start
+                                                  of turn 2 (Q8, §4.7)
+                                                  rather than the 0 that
+                                                  pays on turn 1
 
   End Turn + idle count   Is my turn genuinely    §2.1 per-unit loop
                           spent                   
@@ -1528,9 +1538,20 @@ center, one instruction at a time, each retiring on completion:
   -------------- ----------------------------------- ------------------------------------------------------------------------------ --------------- --------------
   1a             Only one marked Infantry            Select the marked Infantry. Lit hexes are its true reach. Click one to move.   Selection; the  Move completes
                  selectable; others dimmed (hover:                                                                                  highlight is    
-                 Locked this turn.). End Turn is                                                                                    the real move   
-                 inert until that Infantry has moved                                                                                set (§2.5)      
-                 (hover:                                                                                                                            
+                 Locked this turn.). The two states                                                                                 the real move   
+                 behind that surface read from two                                                                                  set (§2.5)      
+                 places. Marked — whether this unit                                                                                                 
+                 is the scenario’s                                                                                                                  
+                 guidedOpening.infantry — is the                                                                                                    
+                 snapshot field isGuidedMarked,                                                                                                     
+                 which the turn-1a unit marker reads                                                                                                
+                 out of the snapshot. lockedThisTurn                                                                                                
+                 is per-unit and per-turn, owned by                                                                                                 
+                 the guidance layer, so the dimming                                                                                                 
+                 and its hover string read it out of                                                                                                
+                 the view-model’s presentation                                                                                                      
+                 block. End Turn is inert until that                                                                                                
+                 Infantry has moved (hover:                                                                                                         
                  Move the marked Infantry first.),                                                                                                  
                  and while 1a is outstanding that                                                                                                   
                  Infantry cannot retire itself                                                                                                      
@@ -3547,6 +3568,15 @@ the game” claim holds.
                                       determinism gate (T-AI-06) it
                                       composes. Only T-SAVE-07 still
                                       waits — for wk 4’s self-play logs.
+                                      T-UI-05 is scheduled here too
+                                      (ruled 2026-08-04), and not as one
+                                      of those re-runs: it is headless,
+                                      and it asserts over the per-factory
+                                      build record, which Build reaches
+                                      and which rows 4–5 supply — the
+                                      piece landing in the week the thing
+                                      that consumes it runs, the
+                                      principle stated below this table.
                                       AI second pass (utility + threat
                                       map) and the custom MCP scenario
                                       toolset follow only if the slice
@@ -4123,9 +4153,14 @@ Shared conventions (Director-owned contract):
                                        map, and §2.11.6's turn-2 directive has no
                                        other source for the pair. The guidance layer
                                        reads this field from the loaded scenario
-                                       directly — marked/locked is presentation
-                                       state, not rules state, so it stays out of
-                                       the Stub-8 snapshot.
+                                       directly. Its two halves sit in two places
+                                       (ruled 2026-08-04): MARKED is the per-unit
+                                       Stub-8 snapshot field `isGuidedMarked`,
+                                       DECLARED DERIVED at that stub on this
+                                       field; LOCKED THIS TURN is per-unit and
+                                       per-turn, owned by the guidance layer, and
+                                       is a member of Stub 8's presentation block
+                                       rather than of the snapshot.
                symmetry        enum    REQUIRED. `rot180` or `none`, the two values
                                        §2.13.1 declares (Q24, ruled). The enum is
                                        narrow by SCOPE, not by impossibility, and
@@ -4568,11 +4603,11 @@ Shared conventions (Director-owned contract):
              the contract for how every widget is fed. Widgets bind to the
              VIEW-MODEL plus the §4.9 event list, and hold no rules state (§4.1).
              The VIEW-MODEL is the rules-produced SNAPSHOT below plus a declared
-             PRESENTATION BLOCK: the per-unit state §2.11.1's SELECTION MACHINE
-             owns and no rules field expresses. It is declared here rather than
-             improvised in a widget because T-INT-05 (§4.9) rebuilds from the
-             view-model: state in the block satisfies it, state in a widget does
-             not.
+             PRESENTATION BLOCK: per-unit state that no rules field expresses,
+             held by owners named member by member at the block below. It is
+             declared here rather than improvised in a widget because T-INT-05
+             (§4.9) rebuilds from the view-model: state in the block satisfies
+             it, state in a widget does not.
     Snapshot fields (read-only, produced by the rules module). Every field in the
              snapshot groups that follow has one of TWO KINDS. A MIRROR — the
              unmarked default — equals, unchanged, the module-side value it
@@ -4584,7 +4619,15 @@ Shared conventions (Director-owned contract):
              the only two kinds, and T-UI-05 asserts both:
              per-hex   {terrainId, owner}
              per-unit  {id, side, unitId, hex, hp, hpMax, isFlag, hasMoved,
-                        hasActed, captureProgress}
+                        hasActed, captureProgress, isGuidedMarked}
+                        `isGuidedMarked` is DECLARED DERIVED: true exactly on the
+                        placement that the Stub-7 scenario file's
+                        `guidedOpening.infantry` names for that unit's seat —
+                        T-SCN-02 makes a hex identify one placement — and false
+                        on every other unit, computed by the module and never
+                        widget-side. It is a property of the placement, not of
+                        the unit's current hex, so it does not move when the unit
+                        does.
                         `hasMoved` and `hasActed` are the TWO INDEPENDENT flags
                         T-TURN-01 asserts, carried into the snapshot as two
                         fields: one field cannot express a unit that has spent
@@ -4618,30 +4661,55 @@ Shared conventions (Director-owned contract):
                         asserts a player-queued one.
              per-side  {fameTotal, fameCombat, objectivesHeld X of N, survivingHP,
                         incomePerTurn}
-                        `fameTotal` and `fameCombat` are mirrors. The other
-                        three are DECLARED DERIVED: `objectivesHeld X of N` and
-                        `survivingHP` on §2.8's definitions of tiebreak criteria
-                        2 and 3 — GATE-CAP-PARTIAL already gates the first's one
-                        edge case, a capture in progress counting for nobody —
-                        and `incomePerTurn` as §2.7's rate over that side's held
+                        `fameTotal` and `fameCombat` are mirrors. The other three
+                        are DECLARED DERIVED, and each derivation is stated here
+                        so that T-UI-05 clause (b) has one to recompute.
+                        `objectivesHeld X of N` is §2.8 criterion 2 in that
+                        criterion's own words: "the factories and captured towns
+                        a side owns at the cap, as X of N. Ownership only: a
+                        capture in progress (§2.7) counts for nobody until the
+                        objective flips." X is that side's count under that text;
+                        N is the same count taken over every factory and
+                        capturable town the scenario supplies (§2.11.4). Citing
+                        the criterion mints no rule — the criterion text is the
+                        derivation. GATE-CAP-PARTIAL gates its one edge case, a
+                        capture in progress counting for nobody.
+                        `survivingHP` is §2.8 criterion 3 in that criterion's own
+                        words: "total remaining HP of a side's units" — the sum
+                        of `hp` over that side's units in the per-unit group
+                        above, and likewise no new rule.
+                        `incomePerTurn` is §2.7's rate over that side's held
                         factories (+100 each) and towns (+25 each), computed by
                         the module so that no surface sums it widget-side
-                        (T-UI-03's no-arithmetic clause).
+                        (T-UI-03's no-arithmetic clause). It is the STANDING
+                        rate, and that is what it reads on turn 1: the amount
+                        those holdings will pay at the start of that side's turn
+                        2, not the 0 that Q8(a) pays on turn 1. The field is the
+                        rate the holdings carry and never the accrual of the
+                        current turn.
              match     {turn, turnCap, sideToMove, resultTier or null}
-    Presentation block (NOT produced by the rules module; owned by §2.11.1's
-             selection machine, which is a state machine and not a widget; its
-             membership is that machine's per-unit state and nothing else):
+    Presentation block (NOT produced by the rules module; TWO members, each with
+             its owner named beside it, and neither owner a widget):
              per-unit  {done}
+                        OWNER: §2.11.1's selection machine, which is a state
+                        machine and not a widget.
                         §2.11.1's DONE bit — this unit takes no further command
                         this turn. Per-turn: it clears when the owner's next turn
-                        begins. It is the selection machine's only per-unit bit,
-                        and so the block's sole member. It is in the view-model
-                        rather than in a widget precisely so that T-INT-05 (§4.9)
-                        can rebuild the screen from the view-model alone. The
-                        guided opening's marked/locked state is not here: the
-                        guidance layer reads it from the loaded scenario (Stub
-                        7's `guidedOpening` note), and where it belongs is not
-                        decided at this stub.
+                        begins. It is the selection machine's only per-unit bit.
+                        It is in the view-model rather than in a widget precisely
+                        so that T-INT-05 (§4.9) can rebuild the screen from the
+                        view-model alone.
+             per-unit  {lockedThisTurn}
+                        OWNER: the guidance layer, which is neither the rules
+                        module nor a widget.
+                        §2.11.6 turn 1a's `Locked this turn.` — this unit is not
+                        selectable under the guided opening while beat 1a is
+                        outstanding. It clears when 1a retires, which §2.11.6-B
+                        states is when the marked Infantry's move completes.
+                        Ruled 2026-08-04, which is the question this stub
+                        previously left undecided; the guided opening's other
+                        half, marked, is the snapshot field `isGuidedMarked`
+                        above and is not in this block.
     Queries: reachable(unit) → the T-MOVE-01 set; forecast(attacker, defenderHex) →
              {damage, counterDamage} computed by the verified resolveDamage /
              defenderCanCounter (5ffa8d6).
@@ -5592,20 +5660,30 @@ blocked until the Director answers.
   Q27               ~~Is gating End Turn during beat 1a presentation or rule?~~    Nothing today, and     Ruled: ships as
                     RULED. It ships as specified: End Turn is inert during beat 1a nothing in §4.7: no    specified. The
                     until the marked Infantry has moved. Teaching by constraint is stub or T- ID gates    alternative, recorded
-                    accepted here because it guarantees beat 1a retires inside     the directive strip,   because it was weighed:
-                    turn 1, which is what makes §2.11.6-B’s schedule predictable.  and Stub 7             a player who ends turn
-                    Original question: During beat 1a of a guided opening only,    deliberately keeps the 1 without moving leaves
-                    End Turn is inert until the marked Infantry                    guidance layer out of  1a outstanding, and
-                    (guidedOpening.infantry) has moved; hover reads                Stub 8’s snapshot. The rule 1 hands the strip
-                    Move the marked Infantry first. It is scoped to the first      dependency is internal to 1b (End turn.) — an
-                    match, dies with Skip guidance, and never applies outside the  to §2 — §2.11.6-B’s    instruction they have
-                    guided window — but it is the only guided-opening constraint   turn-1 row is          just followed — so the
-                    that gates a player input rather than a selection, which is    unconditional in all   fallback is to let 1a
-                    why it is registered rather than assumed.                      three branches only if expire silently at the
-                                                                                   1a cannot outlive turn turn boundary like 1b,
-                                                                                   1, so a ruling of “no  and §2.11.6-B’s turn-1
-                                                                                   input gating” would    row gains a footnote.
-                                                                                   require that row to be 
+                    accepted here because it guarantees beat 1a retires inside     the directive strip.   because it was weighed:
+                    turn 1, which is what makes §2.11.6-B’s schedule predictable.  Stub 7 kept the        a player who ends turn
+                    Original question: During beat 1a of a guided opening only,    guidance layer out of  1 without moving leaves
+                    End Turn is inert until the marked Infantry                    Stub 8’s view-model    1a outstanding, and
+                    (guidedOpening.infantry) has moved; hover reads                entirely; since        rule 1 hands the strip
+                    Move the marked Infantry first. It is scoped to the first      2026-08-04 it does not to 1b (End turn.) — an
+                    match, dies with Skip guidance, and never applies outside the  — marked is the        instruction they have
+                    guided window — but it is the only guided-opening constraint   snapshot field         just followed — so the
+                    that gates a player input rather than a selection, which is    isGuidedMarked and     fallback is to let 1a
+                    why it is registered rather than assumed.                      locked this turn is    expire silently at the
+                                                                                   the presentation-block turn boundary like 1b,
+                                                                                   member lockedThisTurn  and §2.11.6-B’s turn-1
+                                                                                   (§4.7 Stub 8), and     row gains a footnote.
+                                                                                   T-INT-05 reaches both. 
+                                                                                   The dependency is      
+                                                                                   internal to §2 —       
+                                                                                   §2.11.6-B’s turn-1 row 
+                                                                                   is unconditional in    
+                                                                                   all three branches     
+                                                                                   only if 1a cannot      
+                                                                                   outlive turn 1, so a   
+                                                                                   ruling of “no input    
+                                                                                   gating” would require  
+                                                                                   that row to be         
                                                                                    re-derived             
 
   Q28               ~~Whose Infantry the T-SCN-11 opposing route is measured       Nothing further.       Ruled the strict way,
@@ -5984,8 +6062,13 @@ formula’s round — mechanically instead of by playtest anecdote.
                 sequence, rebuilding all widgets/actors from the current view-model
                 alone — §4.7 Stub 8's snapshot plus its presentation block —
                 reproduces the same displayed values (nothing lives only in a
-                widget). §2.11.1's selection machine is not a widget, so its DONE
-                bit satisfies this gate from the presentation block
+                widget). The subject is every member of the view-model, and the
+                presentation block has two: §2.11.1's selection machine is not a
+                widget, so its DONE bit satisfies this gate from the block, and
+                the guidance layer is not a widget either, so its `lockedThisTurn`
+                bit satisfies it from the block on the same footing. The guided
+                opening's other half, `isGuidedMarked`, is a snapshot field and
+                satisfies this gate from there
     Determinism: the bridge never reorders, drops, or synthesizes events.
     Acceptance: T-INT-01, 04 on every gate run; T-INT-02, 03, 05 in the editor pass.
 
