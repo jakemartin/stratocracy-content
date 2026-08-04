@@ -2805,22 +2805,25 @@ asserted.
 Status: live tracker — first rows populated 2026-07-26 from the
 Assignment-3 agent crew; Repair and Type-effectiveness added and
 gate-verified 2026-07-29; the rest land as each system is built (wk 1–3,
-§4.4). This draft stands at 2026-08-03, at commit 9086d6a in the crew
-repo, whose parent is d8284f1. §4.4’s week-1 deliverable is §4.11 rows
-1–3 — grid and hex math, the §4.8 tables, movement and pathfinding — and
-week 1 closed two of the three: rows 1 and 3 passed their full
-acceptance sets at that commit (T-HEX-01..07, 7/7; T-MOVE-01..06, 6/6)
-and flip in the table below. Row 2 does not flip. Its headless half is
-green — T-DATA-01..04 and 06, 5/5 — but T-DATA-05, the in-editor Unreal
-Automation parity pass, has not run, and Q29 requires the full
-acceptance set at one commit, so the row records a partial pass and
-stays unverified; the editor pass is not yet due, so that is the
-ordinary schedule and not §4.7’s cut line firing. What week 1 did not
-close is everything after it: rows 4–8 held no code then, and rows 4, 5
-and 6 have since landed — all three recorded at the end of this
-paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
+§4.4). This draft stands at 2026-08-03, at commit 6ccd40b in the crew
+repo, whose parent is 9086d6a; 6ccd40b is cited without a link, for the
+reason the paragraph below the table gives. §4.4’s week-1 deliverable is
+§4.11 rows 1–3 — grid and hex math, the §4.8 tables, movement and
+pathfinding — and week 1 closed two of the three: rows 1 and 3 passed
+their full acceptance sets at that commit (T-HEX-01..07, 7/7;
+T-MOVE-01..06, 6/6) and flip in the table below. Row 2 does not flip.
+Its headless half is green — T-DATA-01..04 and 06, 5/5 — but T-DATA-05,
+the in-editor Unreal Automation parity pass, has not run, and Q29
+requires the full acceptance set at one commit, so the row records a
+partial pass and stays unverified; the editor pass is not yet due, so
+that is the ordinary schedule and not §4.7’s cut line firing. What week
+1 did not close is everything after it: rows 4–8 held no code then, and
+rows 4, 5 and 6 have since landed — all three recorded at the end of
+this paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
 critical path runs 1 → 3 → 4 → 5 → 6/8, everything on that path but row
-8 is now evidence rather than schedule, and row 8’s other dependency is
+8 is now evidence rather than schedule — per acceptance ID as well as
+per row, since T-TURN-10, the one path ID that was written and asserting
+without being green, closed at 6ccd40b, and row 8’s other dependency is
 row 7, which has since landed at 9086d6a on a partial pass, recorded at
 the end of this paragraph. §4.5’s Specification outruns the build* risk
 is therefore reduced and re-scoped rather than retired, and that row now
@@ -2901,35 +2904,41 @@ structure, and GATE-DRV-01..07 is still 7/7 and still not T-*. What
 there is no way to do at 647d4df is still play a match: there is no turn
 structure, no AI and no scenario file, and a setter for the turn number
 is not the first of those. Row 5 then landed, at ad77b13: Turn loop &
-win/tiebreak, gated T-TURN-01..09, 9/9 under clang++ and MSVC both — g++
-is not installed on this machine — while its pass-1 implementation
-cpp_reference/Turn.buggy.cpp is blocked at 6/9, on T-TURN-05, T-TURN-06
-and T-TURN-07, under both compilers. Five tracked sources are cited,
-each probed present at that commit: spec/turn_spec.md,
-cpp_reference/Turn.h, cpp_reference/Turn.good.cpp,
+win/tiebreak, gated, as the acceptance set then read, T-TURN-01..09, 9/9
+under clang++ and MSVC both — g++ is not installed on this machine —
+while its pass-1 implementation cpp_reference/Turn.buggy.cpp is blocked
+at 6/9, on T-TURN-05, T-TURN-06 and T-TURN-07, under both compilers.
+That set has since widened to T-TURN-01..10 and row 5 was rebuilt
+against it; this sentence records what ran at ad77b13 and is not row 5’s
+current evidence, which is recorded at the end of this paragraph. Five
+tracked sources are cited, each probed present at that commit:
+spec/turn_spec.md, cpp_reference/Turn.h, cpp_reference/Turn.good.cpp,
 cpp_reference/Turn.buggy.cpp, cpp_reference/test_turn.cpp. The last of
 those is a seventh harness, so nine tracked sources define main() at
 ad77b13 — the eight named above plus cpp_reference/test_turn.cpp — seven
 test harnesses, one combat duel simulator, and one debug REPL. No ID is
 left uncovered: row 5 has no in-editor half and no reserved-unwritten
-ID, so its full acceptance set closes at one commit, Q29 is satisfied,
-and the row flips in the table below. No new acceptance ID was written,
-so §4.5’s written-ID count does not move at this landing and its green
-count moves 27 → 36. §4.4 schedules rows 4–5 for week 3, so this row too
-is ahead of the milestone table, not behind it. Rows 3 and 4 declined
-the turn — row 4 takes the turn number as an argument — so row 5 is the
-first module to own alternation, per-unit act flags, the start-of-turn
-moment and the §2.8 result; it owns no board, since the §2.8 facts
-arrive as a caller-supplied BoardSnapshot, the same discipline row 4
-uses. T-TURN-04, 05, 06 and 07 encode §2.8’s procedure exactly — one
-guard, one three-key comparison, one grade — and Q7 is executed rather
-than only written: the cap is per-scenario data and the module refuses a
-cap below 1 rather than substituting a default, so no literal 20 exists
-in it. T-TURN-08 asserts only that the loop calls the already-verified
-repairAmount at the right moment with the right board facts, every
-expectation in it being a direct cpp_reference/Combat.h call; the heal
-values stay green at 5ffa8d6 under T-REPAIR-01..07 and are not
-re-asserted. Two readings are recorded in spec/turn_spec.md as
+ID, so its full acceptance set closes at one commit — but that commit is
+no longer this one. The set was widened to T-TURN-01..10 this revision,
+and it closes at the 6ccd40b rebuild recorded at the end of this
+paragraph; Q29, read per acceptance ID, is satisfied there, and the row
+flips in the table below on that commit rather than on this one. No new
+acceptance ID was written, so §4.5’s written-ID count does not move at
+this landing and its green count moves 27 → 36. §4.4 schedules rows 4–5
+for week 3, so this row too is ahead of the milestone table, not behind
+it. Rows 3 and 4 declined the turn — row 4 takes the turn number as an
+argument — so row 5 is the first module to own alternation, per-unit act
+flags, the start-of-turn moment and the §2.8 result; it owns no board,
+since the §2.8 facts arrive as a caller-supplied BoardSnapshot, the same
+discipline row 4 uses. T-TURN-04, 05, 06 and 07 encode §2.8’s procedure
+exactly — one guard, one three-key comparison, one grade — and Q7 is
+executed rather than only written: the cap is per-scenario data and the
+module refuses a cap below 1 rather than substituting a default, so no
+literal 20 exists in it. T-TURN-08 asserts only that the loop calls the
+already-verified repairAmount at the right moment with the right board
+facts, every expectation in it being a direct cpp_reference/Combat.h
+call; the heal values stay green at 5ffa8d6 under T-REPAIR-01..07 and
+are not re-asserted. Two readings are recorded in spec/turn_spec.md as
 documented choices, not rules: a turn is one full I-GO-U-GO round shared
 by both sides, read off two sites that keep the turn number and the side
 to move as separate fields — §4.7 Stub 8’s UI snapshot
@@ -2945,47 +2954,53 @@ flag <side> <id> are new commands, joined by act-flag and alternation
 enforcement on move/attack and active-side gating on
 income/build/capture, and each is a call into cpp_reference/Turn.h, so
 the driver still holds no rules of its own. flag is a debug designation
-standing in for Stub 7’s isFlag — row 7 is unbuilt and Q10 is open on
-exactness — the human names the flag unit and the driver never picks
-one, and it is what makes the flag kill award reachable, paid as the
-flat 500 through cpp_reference/Economy.h::killAward. turn <n> remains a
-debug setter and is now refused while a match runs; with no match
-running the board is the same free sandbox it was at 647d4df, which is
-why GATE-DRV-01..07 are unchanged and still pass. The driver suite is
-now GATE-DRV-01..09, 9/9 under clang++ and MSVC both, and those IDs are
-still not T-*: the driver is not a §4.7 stub, has no row in the ledger
-below, and flips nothing. A Claude Code session authored row 5 from the
-Director-written stub spec/turn_spec.md, not a live CrewAI run. What
-ad77b13 still does not have is an AI or a scenario file (rows 6–8): the
-driver’s boards are built-in fixtures plus place/remove, and no file
-format is defined or read. Row 6 then landed, at d8284f1: Opponent AI,
-gated T-AI-01..06 plus GATE-AI-SMOKE, 7/7 under clang++ and MSVC both —
-g++ is not installed on this machine — while its pass-1 implementation
-cpp_reference/Ai.buggy.cpp is blocked at 5/7, on T-AI-05 and T-AI-06,
-under both compilers. Five tracked sources are cited, each probed
-present at that commit: spec/ai_spec.md, cpp_reference/Ai.h,
-cpp_reference/Ai.good.cpp, cpp_reference/Ai.buggy.cpp,
-cpp_reference/test_ai.cpp. The last of those is an eighth harness, so
-ten tracked sources define main() at d8284f1 — the nine named above plus
-cpp_reference/test_ai.cpp — eight test harnesses, one combat duel
-simulator, and one debug REPL. No ID is left uncovered: row 6 has no
-in-editor half and no reserved-unwritten ID, so its full acceptance set
-closes at one commit, Q29 is satisfied, and the row flips in the table
-below. GATE-AI-SMOKE mints no acceptance ID. The self-play smoke run is
-acceptance and §4.11 row 6 names it, but it carries no numbered ID in
-this document and spec/ai_spec.md declines to mint one, since a T-AI-07
-would move §4.5’s count. The gate is therefore 7/7 while six IDs close:
-§4.5’s written-ID count does not move at this landing and its green
-count moves 36 → 42. §4.4 schedules row 6 for week 3, so this row too is
-ahead of the milestone table, not behind it. This is the shipping
-opponent (§2.9) and not a stand-in: difficulty is a starting-Fame
-handicap and never a smarter routine, and nothing in the module reads a
-difficulty tier at all. It decides and applies nothing — it emits one
-ordinary command at a time and the caller applies it, in the gate
-through the debug driver’s own execute, the same door a typed command
-uses, which is what makes T-AI-01’s validated like any player command
-structural rather than asserted; T-AI-01’s counter printed
-129 AI commands issued across 6 games. It holds no rules — routes to
+standing in for Stub 7’s isFlag — at that commit row 7 held no code, and
+Q10 is open on exactness — the human names the flag unit and the driver
+never picks one, and it is what makes the flag kill award reachable,
+paid as the flat 500 through cpp_reference/Economy.h::killAward.
+turn <n> remains a debug setter and is now refused while a match runs;
+with no match running the board is the same free sandbox it was at
+647d4df, which is why GATE-DRV-01..07 are unchanged and still pass. The
+driver suite is now GATE-DRV-01..09, 9/9 under clang++ and MSVC both,
+and those IDs are still not T-*: the driver is not a §4.7 stub, has no
+row in the ledger below, and flips nothing. A Claude Code session
+authored row 5 from the Director-written stub spec/turn_spec.md, not a
+live CrewAI run. What ad77b13 still does not have is an AI or a scenario
+file (rows 6–8): the driver’s boards are built-in fixtures plus
+place/remove, and no file format is defined or read. Row 6 then landed,
+at d8284f1: Opponent AI, gated T-AI-01..06 plus GATE-AI-SMOKE, 7/7 under
+clang++ and MSVC both — g++ is not installed on this machine — while its
+pass-1 implementation cpp_reference/Ai.buggy.cpp is blocked at 5/7, on
+T-AI-05 and T-AI-06, under both compilers. Five tracked sources are
+cited, each probed present at that commit: spec/ai_spec.md,
+cpp_reference/Ai.h, cpp_reference/Ai.good.cpp,
+cpp_reference/Ai.buggy.cpp, cpp_reference/test_ai.cpp. The last of those
+is an eighth harness, so ten tracked sources define main() at d8284f1 —
+the nine named above plus cpp_reference/test_ai.cpp — eight test
+harnesses, one combat duel simulator, and one debug REPL. No ID is left
+uncovered: row 6 has no in-editor half and no reserved-unwritten ID, so
+its full acceptance set closes at one commit, Q29 is satisfied, and the
+row flips in the table below. GATE-AI-SMOKE mints no acceptance ID. The
+self-play smoke run is acceptance and §4.11 row 6 names it, but it
+carries no numbered ID in this document and spec/ai_spec.md declines to
+mint one, since a T-AI-07 would move §4.5’s count. The gate is therefore
+7/7 while six IDs close: §4.5’s written-ID count does not move at this
+landing and its green count moves 36 → 42. §4.4 schedules row 6 for week
+3, so this row too is ahead of the milestone table, not behind it. This
+is the shipping opponent (§2.9) and not a stand-in: difficulty is a
+starting-Fame handicap and never a smarter routine, and nothing in the
+module reads a difficulty tier at all. It decides and applies nothing —
+it emits one ordinary command at a time and the caller applies it, in
+the gate through the debug driver’s own execute, the same door a typed
+command uses, which is what makes T-AI-01’s validated like any player
+command structural rather than asserted; T-AI-01’s counter printed
+129 AI commands issued across 6 games at that commit. That figure is
+commit-scoped and is not an invariant — it counts what the routine
+emitted against the rules as they then stood, so an upstream rule change
+moves it without moving anything else in this row: re-run at 6ccd40b,
+after row 5’s rebuild, the same counter prints
+120 AI commands issued across 6 games, while row 6’s commit, its 7/7
+tally and its ledger row are unchanged. It holds no rules — routes to
 cpp_reference/Move.h, damage and counters to cpp_reference/Combat.h,
 stats to cpp_reference/Data.h, affordability and kill value to
 cpp_reference/Economy.h, act flags and alternation to
@@ -3013,54 +3028,55 @@ prices value dealt as the victim’s kill award prorated by the damage
 share of its max HP and value lost as the attacker’s own kill award
 unprorated, both read through cpp_reference/Economy.h::killAward; and
 with no flag designated the advance goal is the canonically first enemy
-unit, isFlag being Stub 7’s placement field with row 7 unbuilt and Q10
-open. The driver reaches the module: ai plays the active side’s turn and
-ai buildlist sets §2.9’s list, and the start of a turn now runs repair,
-income and capture tick in that order. GATE-DRV-01..07 are unchanged and
-still pass; the driver suite is now GATE-DRV-01..10, 10/10 under clang++
-and MSVC both, GATE-DRV-10 being new at this commit — it replays the
-AI’s printed command lines by hand and asserts an identical state hash —
-and those IDs are still not T-*: the driver is not a §4.7 stub, has no
-row in the ledger below, and flips nothing. A Claude Code session
-authored row 6 from the Director-written stub spec/ai_spec.md, not a
-live CrewAI run. No scenario harness and no UI harness is among the ten
-main() definitions above. Row 7 then landed, at 9086d6a: Scenario file &
-validator, gated 12/12 under clang++ and MSVC both — g++ is not
-installed on this machine — while its pass-1 implementation
-cpp_reference/Scenario.buggy.cpp is blocked at 11/12, on T-SCN-11 alone,
-under both compilers: it minimised the opposing route over the opposing
-seat’s guidedOpening.infantry alone rather than over every
-CanCapture-row unit that seat deploys, which is reading (b) at Q28 and
-the one that ruling refused. Six tracked sources are cited, each probed
-present at that commit: spec/scenario_spec.md, cpp_reference/Scenario.h,
-cpp_reference/Scenario.good.cpp, cpp_reference/Scenario.buggy.cpp,
-cpp_reference/test_scenario.cpp, data/ferrum_crossing.json. The fifth of
-those is a ninth harness, so eleven tracked sources define main() at
-9086d6a — the ten named above plus cpp_reference/test_scenario.cpp —
-nine test harnesses, one combat duel simulator, and one debug REPL. This
-row does not flip. Q29 requires the full acceptance set at one commit,
-and it is applied per acceptance ID as well as per row — an ID closes
-only when its whole written fixture set has run. Of the twelve checks
-that passed, T-SCN-01..07 ran in full and close; GATE-SCN-PARSE and
-GATE-SCN-HASH gate a file format rather than a §4.7 stub and mint no
-numbered acceptance ID, on the GATE-AI-SMOKE precedent; and T-SCN-08,
-T-SCN-09 and T-SCN-11 ran a part of their fixture sets and do not close
-— T-SCN-08 on fixture (c) plus its measure-and-report behaviour on the
-shipped map, T-SCN-09 on its refusal branch, T-SCN-11 on fixtures (a)
-and (b), (b) being a required failure. So the row records a partial pass
-and stays unverified, which is the posture row 2 holds on T-DATA-05. No
-new acceptance ID was written, so §4.5’s written-ID count does not move
-at this landing and its green count moves 42 → 49. Four fixtures did not
-run, and each is named rather than absorbed — each printed by name with
-its reason before the tally and recorded in the acceptance record:
-T-SCN-08 (a) The Causeway and (b) Longwater March; T-SCN-09’s asserting
-branch; T-SCN-11 (c) The Causeway. Each needs a stretch map authored as
-a scenario file, and none was replaced by a synthetic map. Those three
-IDs are written, unblocked and asserting; what they lack is a map to run
-against, not a rule. T-SCN-10 is a different state and is not one of
-them: it is reserved and unwritten on Q26, so no invariant text exists
-for it, nothing asserts and nothing waits. The shipped scenario file is
-a transcription, not an authoring: all 99 terrain hexes of
+unit, isFlag being Stub 7’s placement field, which held no code at that
+commit, and Q10 being open on exactness. The driver reaches the module:
+ai plays the active side’s turn and ai buildlist sets §2.9’s list, and
+the start of a turn now runs repair, income and capture tick in that
+order. GATE-DRV-01..07 are unchanged and still pass; the driver suite is
+now GATE-DRV-01..10, 10/10 under clang++ and MSVC both, GATE-DRV-10
+being new at this commit — it replays the AI’s printed command lines by
+hand and asserts an identical state hash — and those IDs are still not
+T-*: the driver is not a §4.7 stub, has no row in the ledger below, and
+flips nothing. A Claude Code session authored row 6 from the
+Director-written stub spec/ai_spec.md, not a live CrewAI run. No
+scenario harness and no UI harness is among the ten main() definitions
+above. Row 7 then landed, at 9086d6a: Scenario file & validator, gated
+12/12 under clang++ and MSVC both — g++ is not installed on this machine
+— while its pass-1 implementation cpp_reference/Scenario.buggy.cpp is
+blocked at 11/12, on T-SCN-11 alone, under both compilers: it minimised
+the opposing route over the opposing seat’s guidedOpening.infantry alone
+rather than over every CanCapture-row unit that seat deploys, which is
+reading (b) at Q28 and the one that ruling refused. Six tracked sources
+are cited, each probed present at that commit: spec/scenario_spec.md,
+cpp_reference/Scenario.h, cpp_reference/Scenario.good.cpp,
+cpp_reference/Scenario.buggy.cpp, cpp_reference/test_scenario.cpp,
+data/ferrum_crossing.json. The fifth of those is a ninth harness, so
+eleven tracked sources define main() at 9086d6a — the ten named above
+plus cpp_reference/test_scenario.cpp — nine test harnesses, one combat
+duel simulator, and one debug REPL. This row does not flip. Q29 requires
+the full acceptance set at one commit, and it is applied per acceptance
+ID as well as per row — an ID closes only when its whole written fixture
+set has run. Of the twelve checks that passed, T-SCN-01..07 ran in full
+and close; GATE-SCN-PARSE and GATE-SCN-HASH gate a file format rather
+than a §4.7 stub and mint no numbered acceptance ID, on the
+GATE-AI-SMOKE precedent; and T-SCN-08, T-SCN-09 and T-SCN-11 ran a part
+of their fixture sets and do not close — T-SCN-08 on fixture (c) plus
+its measure-and-report behaviour on the shipped map, T-SCN-09 on its
+refusal branch, T-SCN-11 on fixtures (a) and (b), (b) being a required
+failure. So the row records a partial pass and stays unverified, which
+is the posture row 2 holds on T-DATA-05. No new acceptance ID was
+written, so §4.5’s written-ID count does not move at this landing and
+its green count moves 42 → 49. Four fixtures did not run, and each is
+named rather than absorbed — each printed by name with its reason before
+the tally and recorded in the acceptance record: T-SCN-08 (a) The
+Causeway and (b) Longwater March; T-SCN-09’s asserting branch; T-SCN-11
+(c) The Causeway. Each needs a stretch map authored as a scenario file,
+and none was replaced by a synthetic map. Those three IDs are written,
+unblocked and asserting; what they lack is a map to run against, not a
+rule. T-SCN-10 is a different state and is not one of them: it is
+reserved and unwritten on Q26, so no invariant text exists for it,
+nothing asserts and nothing waits. The shipped scenario file is a
+transcription, not an authoring: all 99 terrain hexes of
 data/ferrum_crossing.json were diffed against §2.13.2’s grid, zero
 mismatches, and the distribution is the one §2.13.2 states. A change
 request out of the build is registered rather than acted on: §2.13.1’s
@@ -3075,7 +3091,54 @@ nothing. A Claude Code session authored row 7 from the Director-written
 stub spec/scenario_spec.md, not a live CrewAI run. Row 7 is not on
 §4.11’s critical path: it was built because row 8 queues behind it and
 its own dependencies had landed. No UI harness is among the eleven
-main() definitions above.* Legend: Author ∈ {agent, agent+human, human};
+main() definitions above. Row 5 was then rebuilt, at 6ccd40b, whose
+parent is 9086d6a, against three rulings whose GDD half had already
+merged before any code satisfied them: T-TURN-01’s move/act split into
+two independent per-unit flags, the new T-TURN-10 build allowance, and
+T-FAME-04’s dropped per-turn clause. This commit modifies only —
+git show --summary prints no create, delete or rename line, 14 files
+changed: README.md, crew/tools.py, spec/ai_spec.md, spec/driver_spec.md,
+spec/turn_spec.md, and in cpp_reference/, Ai.buggy.cpp, Ai.good.cpp,
+Driver.good.cpp, Driver.h, Turn.buggy.cpp, Turn.good.cpp, Turn.h,
+test_driver.cpp and test_turn.cpp. No harness was added: the same eleven
+tracked sources define main() as at 9086d6a. The gate is T-TURN-01..10,
+11/11 under clang++ and MSVC both — g++ is still not installed on this
+machine — and the 11 counts printed checks, not IDs: ten IDs close, and
+T-TURN-01 prints two of the eleven lines,
+alternation-and-once-per-own-turn and
+two-independent-flags-in-either-order. Pass-1
+cpp_reference/Turn.buggy.cpp is blocked at 5/11 — six FAIL lines over
+five distinct IDs: T-TURN-01 (both of its lines), T-TURN-05, T-TURN-06,
+T-TURN-07 and T-TURN-10 — under both compilers. This is the commit at
+which row 5’s acceptance set closes. Because the set was widened to
+T-TURN-01..10 in the GDD half, row 5’s ✓ rested on nine of its ten
+written IDs between that merge and this commit; Q29, read per acceptance
+ID, is satisfied at 6ccd40b and at no earlier commit, and the evidence
+cell below names it. No new acceptance ID was written here — T-TURN-10
+was minted in the GDD half — so §4.5’s written-ID count does not move at
+this landing, its green count moves 49 → 50, and its unclosed count
+moves 21 → 20. Q8(b) is now executed rather than only written: a Build
+naming a factory that has already taken its build this turn is refused,
+fameTotal is unchanged by the refusal, and both dispositions of the
+first build — one that spawned and one that waits holding the slot
+(T-FAME-04) — count against the allowance. Two rulings carried in with
+the code are recorded here because neither is derivable from the
+invariant text alone: the allowance’s renewal boundary is per side-turn,
+not per round — beginTurn clears both act flags and the allowance
+together, so a factory captured at the start of a side’s half arrives
+with a clear record, and T-TURN-10 asserts that case inside one round
+number — and command ordering is unconstrained, move-then-attack and
+attack-then-move both completing and spending the same two flags, which
+is what T-TURN-01’s second printed check asserts. The debug driver’s
+suite is GATE-DRV-01..11, 11/11 under clang++ and MSVC both, the same ID
+range as at 9086d6a, and those IDs are still not T-*, so nothing flips
+on the driver’s account here either. Row 6 was re-run and is not
+re-recorded: its commit, its T-AI-01..06 plus GATE-AI-SMOKE 7/7 and its
+ledger row are unmoved, and only T-AI-01’s printed command counter
+moves, as recorded above. How 6ccd40b was authored is deliberately not
+stated: no harness claim is made for it, because none was established,
+and reporting a harness that did not run is the exact failure this
+ledger exists to prevent.* Legend: Author ∈ {agent, agent+human, human};
 Agent-verified ∈ {✓, —}; Evidence cites the git commit + passing test
 IDs so any row is independently checkable.
 
@@ -3107,8 +3170,14 @@ IDs so any row is independently checkable.
                                                            T-FAME-01..09 (9/9)
 
   Turn loop & win /    agent             ✓                 cpp_reference/Turn.good.cpp +
-  tiebreak                                                 cpp_reference/test_turn.cpp @ ad77b13 ·
-                                                           T-TURN-01..09 (9/9)
+  tiebreak                                                 cpp_reference/test_turn.cpp @ 6ccd40b ·
+                                                           T-TURN-01..10, all ten closing — the runner
+                                                           prints 11 PASS lines over those ten IDs,
+                                                           T-TURN-01 printing two of them, so the 11
+                                                           counts checks and not IDs. T-TURN-01..09 first
+                                                           closed at ad77b13; 6ccd40b is the rebuild at
+                                                           which the full set closes at one commit, which
+                                                           is what Q29 requires
 
   Opponent AI          agent             ✓                 cpp_reference/Ai.good.cpp +
                                                            cpp_reference/test_ai.cpp @ d8284f1 ·
@@ -3177,50 +3246,58 @@ That check establishes that the file has not moved across those commits;
 it is not evidence about what any run did, and the harness is reported
 here because it is known and not because a diff proved it. Turn loop &
 win / tiebreak joined at ad77b13 — T-TURN-01..09, 9/9 under clang++ and
-MSVC both — and it leaves no ID uncovered either: no in-editor half and
-no reserved ID, so its full acceptance set closes at one commit and Q29
-is satisfied rather than blocking. It belongs to that same second
-sentence and does not start a third: a Claude Code session authored it
-from the Director-written stub spec/turn_spec.md, again not a live
-CrewAI run — crew/tasks.py is byte-unchanged from 5ffa8d6 to ad77b13, so
-the file the live crew runs from still describes the Combat spec alone,
-and that check likewise establishes only that the file has not moved
-across those commits. Opponent AI joined at d8284f1 — T-AI-01..06 plus
-GATE-AI-SMOKE, 7/7 under clang++ and MSVC both — and it leaves no ID
-uncovered either: no in-editor half and no reserved ID, so its full
-acceptance set closes at one commit and Q29 is satisfied rather than
-blocking. Six of those seven checks are numbered IDs; GATE-AI-SMOKE
-mints none, for the reason the paragraph above gives. It belongs to that
-same second sentence and does not start a third: a Claude Code session
-authored it from the Director-written stub spec/ai_spec.md, again not a
-live CrewAI run — crew/tasks.py is byte-unchanged from 5ffa8d6 to
-d8284f1, so the file the live crew runs from still describes the Combat
-spec alone, and that check carries the same extent as the two before it:
-the file has not moved. Six IDs are still recorded as uncovered rather
-than omitted, in two states that are not the same state. Two are
-unwritten: T-MOVE-07, reserved on Q2, and T-SCN-10, reserved on Q26 — no
-invariant text exists for either, so neither asserts and neither is
-waiting on a run. Four are written and not green: T-DATA-05, the
-in-editor Unreal Automation half, which has not run; and T-SCN-08,
-T-SCN-09 and T-SCN-11, each written, unblocked and asserting, each
-having run only part of its fixture set. T-DATA-05 is why Data tables
-carries evidence without a ✓ — T-DATA-01..04 and 06 are green at the
-same commit, but Q29 requires the full acceptance set at one commit, so
-that row records a partial pass and stays unverified — and the three
-T-SCN- IDs are why Content / scenario does the same at 9086d6a, Q29
-there being read per ID. (Every commit this section cites — d8284f1, row
-6’s, included — is reachable from the head of main in the crew repo, so
-every commit link above resolves. The file paths resolve too, which they
-previously did not: four evidence cells carried five bare citations
-between them — Combat.cpp three times and test_combat.cpp twice — and
-neither bare name has ever existed in this repository at any commit.
-Those five citations resolve to two tracked files,
-cpp_reference/Combat.good.cpp and cpp_reference/test_combat.cpp, which
-the cells now name in full; every path this table cites was probed at
-the commit its own row names. The build/ directory is not tracked at
-all. That correction is what the “independently checkable” claim
-required, not a cosmetic one.) The remaining rows fill in the same
-format — commit + passing test IDs — as each system clears the gate.
+MSVC both — and its acceptance set has since widened to T-TURN-01..10,
+green at the 6ccd40b rebuild under clang++ and MSVC both, on 11 printed
+checks over those ten IDs. It leaves no ID uncovered: no in-editor half
+and no reserved ID, so its full acceptance set closes at one commit —
+6ccd40b, not ad77b13 — and Q29, read per acceptance ID, is satisfied
+rather than blocking. It belongs to that same second sentence and does
+not start a third: a Claude Code session authored it from the
+Director-written stub spec/turn_spec.md, again not a live CrewAI run —
+crew/tasks.py is byte-unchanged from 5ffa8d6 to ad77b13, so the file the
+live crew runs from still describes the Combat spec alone, and that
+check likewise establishes only that the file has not moved across those
+commits. Opponent AI joined at d8284f1 — T-AI-01..06 plus GATE-AI-SMOKE,
+7/7 under clang++ and MSVC both — and it leaves no ID uncovered either:
+no in-editor half and no reserved ID, so its full acceptance set closes
+at one commit and Q29 is satisfied rather than blocking. Six of those
+seven checks are numbered IDs; GATE-AI-SMOKE mints none, for the reason
+the paragraph above gives. It belongs to that same second sentence and
+does not start a third: a Claude Code session authored it from the
+Director-written stub spec/ai_spec.md, again not a live CrewAI run —
+crew/tasks.py is byte-unchanged from 5ffa8d6 to d8284f1, so the file the
+live crew runs from still describes the Combat spec alone, and that
+check carries the same extent as the two before it: the file has not
+moved. Six IDs are still recorded as uncovered rather than omitted, in
+two states that are not the same state. Two are unwritten: T-MOVE-07,
+reserved on Q2, and T-SCN-10, reserved on Q26 — no invariant text exists
+for either, so neither asserts and neither is waiting on a run. Four are
+written and not green: T-DATA-05, the in-editor Unreal Automation half,
+which has not run; and T-SCN-08, T-SCN-09 and T-SCN-11, each written,
+unblocked and asserting, each having run only part of its fixture set.
+T-DATA-05 is why Data tables carries evidence without a ✓ —
+T-DATA-01..04 and 06 are green at the same commit, but Q29 requires the
+full acceptance set at one commit, so that row records a partial pass
+and stays unverified — and the three T-SCN- IDs are why Content /
+scenario does the same at 9086d6a, Q29 there being read per ID. (Every
+commit this section links — d8284f1, row 6’s, included — is reachable
+from the head of main in the crew repo, so every commit link above
+resolves. 6ccd40b, row 5’s rebuild, carries no link anywhere in this
+section: it is committed on main and not yet pushed, so it is reachable
+in the working repository and not on GitHub, and the section states the
+commit rather than a link that would fail. Pushing it is what makes the
+link form available, and this sentence is the only one that has to move
+when it does. The file paths resolve too, which they previously did not:
+four evidence cells carried five bare citations between them —
+Combat.cpp three times and test_combat.cpp twice — and neither bare name
+has ever existed in this repository at any commit. Those five citations
+resolve to two tracked files, cpp_reference/Combat.good.cpp and
+cpp_reference/test_combat.cpp, which the cells now name in full; every
+path this table cites was probed at the commit its own row names. The
+build/ directory is not tracked at all. That correction is what the
+“independently checkable” claim required, not a cosmetic one.) The
+remaining rows fill in the same format — commit + passing test IDs — as
+each system clears the gate.
 
 Rules that keep the ledger honest: - Scope = the game’s own source only.
 The UE engine, the MCP/AllToolsets plugins, and the bought reference
@@ -3457,38 +3534,38 @@ system, no §3 ledger row flips on a partial pass (Q29).
   written since c224825 — T-TURN-10,  that stands down if the calendar
   minted this revision into Spec Stub takes it — so a slip drops named
   5 for the per-turn build limit      suites rather than silently
-  Q8(b) ruled — and it is written,    thinning every suite. And the
-  unblocked and asserting, and not    discipline Q20 and Q23 already
-  green, because the code that        applied holds for the rest of the
-  satisfies it does not exist yet;    table — each piece lands in the
-  row 6’s GATE-AI-SMOKE is acceptance week the thing that consumes it
-  that deliberately mints none, so it runs (§4.4), and a gate that runs
-  closes a check without moving this  green over a subset does not flip
-  count. 49 of the 70 are green: 18   its ledger row (Q29) — so a slip in
-  at c224825, where rows 1 and 3      rows 7–8 moves everything
-  closed their full acceptance sets   downstream of them rather than
-  and row 2’s headless half passed, 9 being absorbed by calling a row
-  at 647d4df, where T-FAME-01..09     done on a partial pass. Row 2 is
-  closed row 4, 9 at ad77b13, where   now that clause’s worked example
-  T-TURN-01..09 closed row 5, 6 at    rather than its hypothetical: its
-  d8284f1, where T-AI-01..06 closed   headless suite is green and its
-  row 6, and 7 at 9086d6a, where      ledger row is not
-  T-SCN-01..07 closed without closing 
-  row 7 — so everything on the        
-  critical path but row 8 is evidence 
-  rather than schedule. 21 IDs remain 
-  unclosed: T-DATA-05, which leaves   
-  row 2 unflipped; T-SCN-08, T-SCN-09 
-  and T-SCN-11, which are written,    
+  Q8(b) ruled — and it is green at    thinning every suite. And the
+  6ccd40b, the rebuild at which row   discipline Q20 and Q23 already
+  5’s widened acceptance set closes   applied holds for the rest of the
+  in full (§3); row 6’s GATE-AI-SMOKE table — each piece lands in the
+  is acceptance that deliberately     week the thing that consumes it
+  mints none, so it closes a check    runs (§4.4), and a gate that runs
+  without moving this count. 50 of    green over a subset does not flip
+  the 70 are green: 18 at c224825,    its ledger row (Q29) — so a slip in
+  where rows 1 and 3 closed their     rows 7–8 moves everything
+  full acceptance sets and row 2’s    downstream of them rather than
+  headless half passed, 9 at 647d4df, being absorbed by calling a row
+  where T-FAME-01..09 closed row 4, 9 done on a partial pass. Row 2 is
+  at ad77b13, where T-TURN-01..09     now that clause’s worked example
+  closed, 6 at d8284f1, where         rather than its hypothetical: its
+  T-AI-01..06 closed row 6, 7 at      headless suite is green and its
+  9086d6a, where T-SCN-01..07 closed  ledger row is not
+  without closing row 7, and 1 at     
+  6ccd40b, where T-TURN-10 closed and 
+  completed row 5’s acceptance set —  
+  so everything on the critical path  
+  but row 8 is evidence rather than   
+  schedule, per acceptance ID as well 
+  as per row now that T-TURN-10 has   
+  closed. 20 IDs remain unclosed:     
+  T-DATA-05, which leaves row 2       
+  unflipped; T-SCN-08, T-SCN-09 and   
+  T-SCN-11, which are written,        
   unblocked and asserting, but ran    
   only part of their fixture sets,    
   and which leave row 7 unflipped;    
-  T-TURN-10, written this revision,   
-  unblocked and asserting — the code  
-  it gates does not exist yet, so it  
-  has not run and is not green; and   
-  the 16 in rows 8–10, which hold no  
-  code                                
+  and the 16 in rows 8–10, which hold 
+  no code                             
   -----------------------------------------------------------------------
 
 4.6 Token budget
@@ -5719,21 +5796,23 @@ it does not move when a row flips and is not out of step with this
 sentence. Rows 9–10 are the §4.9 and §4.10 systems. Combat, its test
 suite, Repair, and Type-effectiveness are green at 5ffa8d6 and are
 prerequisites, not work items. Rows 1 and 3 are green at c224825, row 4
-at 647d4df, row 5 at ad77b13 and row 6 at d8284f1, so rows 7–8 depend on
-landed code rather than on scheduled code, and row 8 is the critical
-path’s remaining link, its dependency cell in the table below reading
-5, 7 — both have landed, row 7 on a partial pass that leaves its ledger
-row unflipped (§3). Row 2 is not green: T-DATA-01..04 and 06 pass at
-that commit and T-DATA-05 has not run, which is exactly the flip cost
-its † bullet below already priced — reached by the ordinary schedule,
-since the editor pass is not yet due, and not by the cut line firing.
-Note row 10’s format spec must exist by the row-9 integration pass,
-because T-INT-02’s input file is a §4.10 save. Rows 9 and 10 therefore
-state their dependencies in two parts — what each gate needs in order to
-run, and what it needs in order to close — because both are scoped to
-the command set of the log they replay, and week 2’s log carries only
-{Move, Attack} (§4.4). Reading either row’s requirement as a single set
-is what put a gate in a week this table could not supply it.
+at 647d4df, row 5 at 6ccd40b — its rebuild, where the widened
+T-TURN-01..10 closes; T-TURN-01..09 first closed at ad77b13 — and row 6
+at d8284f1, so rows 7–8 depend on landed code rather than on scheduled
+code, and row 8 is the critical path’s remaining link, its dependency
+cell in the table below reading 5, 7 — both have landed, row 7 on a
+partial pass that leaves its ledger row unflipped (§3). Row 2 is not
+green: T-DATA-01..04 and 06 pass at that commit and T-DATA-05 has not
+run, which is exactly the flip cost its † bullet below already priced —
+reached by the ordinary schedule, since the editor pass is not yet due,
+and not by the cut line firing. Note row 10’s format spec must exist by
+the row-9 integration pass, because T-INT-02’s input file is a §4.10
+save. Rows 9 and 10 therefore state their dependencies in two parts —
+what each gate needs in order to run, and what it needs in order to
+close — because both are scoped to the command set of the log they
+replay, and week 2’s log carries only {Move, Attack} (§4.4). Reading
+either row’s requirement as a single set is what put a gate in a week
+this table could not supply it.
 
   ----------------------------------------------------------------------------------------------------
   #              System (ledger row)   Depends on                Headless?        Acceptance test IDs
