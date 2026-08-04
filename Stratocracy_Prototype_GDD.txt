@@ -871,7 +871,8 @@ is asserted end to end by GATE-CAP-PARTIAL, which is named in Spec Stub
 8’s acceptance set (§4.7). Nothing blocks that gate. It has since run,
 and §3 records the run: it passed on a fixture configured with
 captureTurns = 2, a state Ferrum Crossing cannot reach at N = 1 (Q4).
-Whether that closes T-CAP-05 is unruled (§4.7, Q14).
+That closes T-CAP-05 — ruled 2026-08-04; the reasoning is recorded once,
+at §4.7’s Q14.
 
   Why this shape (the delete-test). Every piece of the apparatus was
   tested by deletion. Delete key 1 → the documented turtle exploit (§1.5
@@ -2872,12 +2873,19 @@ retracting it: the current state is acceptable at this current time and
 is not a final call, because “Playable via debug commands” should
 eventually include all game features as they come online. The goal is
 therefore provisionally met — met against the feature set that existed
-at the commit it was ruled on, and re-opened by each system that lands
-after it, rows 5–8 included. The bare word met is a current-state
-acceptance and not a permanent closure. Row 4 then landed, at 647d4df:
-Capture & Fame economy, gated T-FAME-01..09, 9/9 under clang++ and MSVC
-both, cited by five tracked sources each probed present at that commit —
-spec/economy_spec.md, cpp_reference/Economy.h,
+at the commit it was ruled on, re-opened by each system that lands after
+it, rows 5–8 included, and re-opened equally by a rebuild of an
+already-landed row that changes what a human can reach at the REPL
+(ruled 2026-08-04: a rebuild is not a landing, so the rule as first
+written did not reach one). On that second account the goal was met
+again at 6ccd40b, where the move/act split into two independent per-unit
+flags made §2.1’s move and act, in either order reachable at the REPL
+for the first time; before it the two commands spent one shared flag, so
+that sequence was unimplementable there. The bare word met is a
+current-state acceptance and not a permanent closure. Row 4 then landed,
+at 647d4df: Capture & Fame economy, gated T-FAME-01..09, 9/9 under
+clang++ and MSVC both, cited by five tracked sources each probed present
+at that commit — spec/economy_spec.md, cpp_reference/Economy.h,
 cpp_reference/Economy.good.cpp, cpp_reference/Economy.buggy.cpp,
 cpp_reference/test_economy.cpp. The last of those is a sixth harness, so
 eight tracked sources define main() at 647d4df — the seven listed above
@@ -4602,19 +4610,18 @@ GATE-CAP-PARTIAL; row 8 has since landed at 7c36303, where that gate ran
 and passed under clang++ and MSVC both — on a fixture configured with
 captureTurns = 2, a state the shipped scenario cannot reach at N = 1
 (Q4). It mints no numbered acceptance ID, so no §4.5 count moves on its
-account, and whether T-CAP-05 itself closes on a fixture no shipped map
-can reach is unruled (Q14). Fifteen of the thirty-two rows are ruled;
-the other seventeen remain open but readable — Q1, Q2, Q3, Q10–Q19, Q29,
-Q30, Q31 and the newly registered Q32 — each carrying a stated reading
-rather than a blank, which is why none of them blocks a gate outright.
-Three are worth naming: Q2 leaves T-MOVE-07 reserved-but-unwritten,
-Q11’s reading is “no undo”, and Q30’s is partial and deliberately not
-hardened. (An earlier draft of this paragraph named only those three and
-called them the whole remainder — the test behind it looked for rows
-containing the word “unruled” rather than rows not marked RULED, and so
-could not see the other twelve.) The convention is unchanged: where a
-row states no reading, its gate stays blocked until the Director
-answers.
+account, and T-CAP-05 closes there, ruled 2026-08-04 (Q14). Fifteen of
+the thirty-two rows are ruled; the other seventeen remain open but
+readable — Q1, Q2, Q3, Q10–Q19, Q29, Q30, Q31 and the newly registered
+Q32 — each carrying a stated reading rather than a blank, which is why
+none of them blocks a gate outright. Three are worth naming: Q2 leaves
+T-MOVE-07 reserved-but-unwritten, Q11’s reading is “no undo”, and Q30’s
+is partial and deliberately not hardened. (An earlier draft of this
+paragraph named only those three and called them the whole remainder —
+the test behind it looked for rows containing the word “unruled” rather
+than rows not marked RULED, and so could not see the other twelve.) The
+convention is unchanged: where a row states no reading, its gate stays
+blocked until the Director answers.
 
   -------------------------------------------------------------------------------------------------------------------------------
   ID                Question                                                       Blocks                 Assumption in force
@@ -4983,12 +4990,68 @@ answers.
                                                                                    this row’s stated      
                                                                                    reading is asserted    
                                                                                    rather than only       
-                                                                                   written. Whether       
-                                                                                   T-CAP-05 closes on a   
-                                                                                   fixture no shipped map 
-                                                                                   can reach is not ruled 
-                                                                                   here; the kb victory   
-                                                                                   table                  
+                                                                                   written. T-CAP-05      
+                                                                                   closes at that commit  
+                                                                                   — ruled 2026-08-04.    
+                                                                                   The fixture is the     
+                                                                                   configuration the      
+                                                                                   invariant is about,    
+                                                                                   not a stand-in for a   
+                                                                                   map nobody authored:   
+                                                                                   the invariant raises a 
+                                                                                   unit’s captureProgress 
+                                                                                   short of completion, a 
+                                                                                   state that does not    
+                                                                                   exist at N = 1, so its 
+                                                                                   own text entails N ≥   
+                                                                                   2. N is per-scenario   
+                                                                                   data (§2.7) rather     
+                                                                                   than a constant, so a  
+                                                                                   rule that governs      
+                                                                                   every scenario is      
+                                                                                   properly gated at a    
+                                                                                   value that rule is     
+                                                                                   about, and a synthetic 
+                                                                                   fixture is legitimate  
+                                                                                   exactly where the stub 
+                                                                                   calls for one and      
+                                                                                   counts when it runs —  
+                                                                                   the precedent is       
+                                                                                   T-SCN-08 (c), whose    
+                                                                                   stub asks for a        
+                                                                                   scenario whose lanes   
+                                                                                   both cost 7 and names  
+                                                                                   no map, and which ran  
+                                                                                   and was counted at     
+                                                                                   9086d6a. T-SCN-08      
+                                                                                   itself does not close, 
+                                                                                   on fixtures (a) and    
+                                                                                   (b), which need a      
+                                                                                   stretch map nobody has 
+                                                                                   authored — and that    
+                                                                                   contrast is what       
+                                                                                   carries this ruling:   
+                                                                                   GATE-CAP-PARTIAL has   
+                                                                                   one written fixture    
+                                                                                   and it ran, under      
+                                                                                   clang++ and MSVC both, 
+                                                                                   so no part of its set  
+                                                                                   is outstanding and     
+                                                                                   Q29, read per ID, is   
+                                                                                   satisfied here where   
+                                                                                   it is not satisfied    
+                                                                                   there. This rules the  
+                                                                                   closure only, and not  
+                                                                                   Q14’s own rules        
+                                                                                   question — whether a   
+                                                                                   partially captured     
+                                                                                   objective counts       
+                                                                                   toward “objectives     
+                                                                                   held” — which keeps    
+                                                                                   the stated reading in  
+                                                                                   the next column and    
+                                                                                   stays open; the kb     
+                                                                                   victory table          
 
   Q15               The 5-unit standard starting force (§2.13.1) — 1 Flag Tank, 2  §2.13.1; Stub 7’s      As drafted in §2.13.1:
                     Infantry, 1 Artillery, 1 Recon — has no antecedent outside     deployment list        one of each producible
