@@ -1091,19 +1091,23 @@ its act and been retired by this machine, not by the rules module.
 
 What DONE means, and what binds to it. DONE is this machine’s own
 per-unit bit — this unit takes no further command this turn — and it is
-not the act flag. It is per-turn: it clears when the owner’s next turn
-begins. Space (Wait) and RMB/Esc in MOVED both reach DONE without
-acting, so the two bits come apart in ordinary play. Every surface in
-§2.11 that says a unit has not acted binds to the machine’s bit: the
-unacted unit entry into SELECTED, the Tab cycle, the Enter confirm’s
-count and its 3 units have not acted. End turn? string, the idle count
-and the unacted pip (§2.11.2), and the spawned unit’s pip in §2.11.6-D.
-Bound that way each of those stays literally true, because the machine
-retires a unit the instant it acts — so every unit still carrying a pip
-has in fact not acted. Bound to the act flag instead, a waited unit
-would keep its pip, answer Tab, and be counted in the End Turn confirm
-the player had just dismissed it from: a surprise the player caused and
-the UI then denied, which is the one thing §2.11 does not ship.
+not the act flag. It lives in the view-model — the rules-produced
+snapshot plus a declared presentation block — as that block’s sole
+member. The rules module has no DONE bit and no Wait command; no
+snapshot field mirrors this bit and none is asked for. It is per-turn:
+it clears when the owner’s next turn begins. Space (Wait) and RMB/Esc in
+MOVED both reach DONE without acting, so the two bits come apart in
+ordinary play. Every surface in §2.11 that says a unit has not acted
+binds to the machine’s bit: the unacted unit entry into SELECTED, the
+Tab cycle, the Enter confirm’s count and its
+3 units have not acted. End turn? string, the idle count and the unacted
+pip (§2.11.2), and the spawned unit’s pip in §2.11.6-D. Bound that way
+each of those stays literally true, because the machine retires a unit
+the instant it acts — so every unit still carrying a pip has in fact not
+acted. Bound to the act flag instead, a waited unit would keep its pip,
+answer Tab, and be counted in the End Turn confirm the player had just
+dismissed it from: a surprise the player caused and the UI then denied,
+which is the one thing §2.11 does not ship.
 
 Capture and build need no extra verbs. Capture is by presence (§2.7: an
 Infantry that ends its move on a capturable tile begins capturing — a
@@ -1224,7 +1228,14 @@ decision it supports, and the rule it surfaces:
 
   Fame pool + +X/turn     Build now vs. save;     §2.7 income (+100
                           which neutral factory   factory / +25 town),
-                          is worth a fight        costs
+                          is worth a fight        costs — the +X/turn
+                                                  figure is the
+                                                  snapshot’s per-side
+                                                  incomePerTurn, not a
+                                                  figure derived from the
+                                                  scoreboard’s X of N,
+                                                  which does not separate
+                                                  factories from towns
 
   End Turn + idle count   Is my turn genuinely    §2.1 per-unit loop
                           spent                   
@@ -1235,7 +1246,10 @@ decision it supports, and the rule it surfaces:
 
   Unacted pip on own      Which units I can still §2.1 per-unit loop, via
   units                   give an order to        the DONE bit of
-                                                  §2.11.1’s machine
+                                                  §2.11.1’s machine,
+                                                  carried in the
+                                                  view-model’s
+                                                  presentation block
 
   Reachable-hex highlight Where can this unit     §2.5 — “the real move
                           truly go                set, not an estimate”
@@ -1271,10 +1285,11 @@ Info panel (bottom-left, hover-driven, ~3 lines, never modal): - Hovered
 hex: terrain name, move cost, defense bonus, and status if capturable —
 Factory · move 1 · def +15% · yours (+100/turn) or · neutral or
 · enemy. - Hovered unit: name, HP as 12/20, Atk/Def/Move/Range, and
-ready or done — the machine’s DONE bit (§2.11.1), not a raw flag name: a
-waited unit reads done while its act flag is unspent. The flag unit’s
-panel is red-edged and appends FLAG — its loss ends the match. - Empty
-when nothing is hovered. It never covers the board’s lower-center where
+ready or done — the machine’s DONE bit (§2.11.1), read from the
+view-model’s presentation block and not from a snapshot flag: a waited
+unit reads done while its act flag is unspent. The flag unit’s panel is
+red-edged and appends FLAG — its loss ends the match. - Empty when
+nothing is hovered. It never covers the board’s lower-center where
 fighting happens.
 
 Turn banner & AI playback. A brief YOUR TURN / ENEMY TURN banner marks
@@ -1444,11 +1459,20 @@ it:
   is one static line in the footer. If the factory is fully boxed in,
   the footer swaps to Boxed in — build waits for a free hex. and Build
   buttons disable: the space-throttle (§2.7) explains itself at the
-  moment it applies.
+  moment it applies. Both the swap and the disable read the snapshot’s
+  per-factory spawnBlocked — board geometry, computed by the module, no
+  board scan the widget runs for itself. They do not read buildWaiting,
+  which is the narrower §2.7 fact that a build is holding this factory’s
+  slot until it spawns: a boxed-in factory need not have anything
+  queued.
 - When any unit is affordable and the factory has not built this turn,
   the factory tile shows a small BUILD pulse — the nudge that connects
   hoarded Fame to an army (a first-session failure mode, §2.11.6
-  ledger).
+  ledger). The second half of that condition is read rather than
+  inferred: the factory’s own hasBuiltThisTurn — the per-factory build
+  record the rules module already holds — out of the snapshot’s
+  per-factory block
+  {hex, owner, hasBuiltThisTurn, buildWaiting, spawnBlocked}.
 - The row hover shows the unit’s stat line in the info panel, so buying
   is done with the §2.4 table in view.
 
@@ -2826,10 +2850,10 @@ critical path runs 1 → 3 → 4 → 5 → 6/8, every row on that path has since
 landed, row 8 last and on a partial pass that leaves its ledger row
 unflipped — per acceptance ID as well as per row: T-TURN-10 closed at
 6ccd40b, and the path IDs still written and asserting without being
-green are T-UI-03 and T-UI-04, and row 8’s other dependency is row 7,
-which has since landed at 9086d6a on a partial pass, recorded at the end
-of this paragraph. §4.5’s Specification outruns the build* risk is
-therefore reduced and re-scoped rather than retired, and that row now
+green are T-UI-03, T-UI-04 and T-UI-05, and row 8’s other dependency is
+row 7, which has since landed at 9086d6a on a partial pass, recorded at
+the end of this paragraph. §4.5’s Specification outruns the build* risk
+is therefore reduced and re-scoped rather than retired, and that row now
 states the arithmetic. What landed after week 1 is a debug driver, at
 9f87ecd: cpp_reference/driver_main.cpp builds a command REPL,
 build/stratocracy_debug, over the built modules. The binary is not
@@ -3188,21 +3212,33 @@ invented to fill a gap. No buildlist query is offered, because whether
 T-UI-04’s buildlist reaches the UI as a snapshot field or as a query is
 stated nowhere in this document; and three known-absent snapshot fields
 were left absent — the per-factory record of builds taken this turn, the
-income rate, and §2.11.1’s DONE bit. The debug driver’s snapshot command
-now prints the view model rather than refusing on row 8’s account, and
-its suite is GATE-DRV-01..12, 12/12 under clang++ and MSVC both,
-GATE-DRV-12 being new at this commit; those IDs are still not T-*: the
-driver is not a §4.7 stub, has no row in the ledger below, and flips
-nothing. How row 8 was authored differs from rows 5, 6 and 7, and is not
-reported in their words. A Claude Code session authored it, and the same
-session also authored spec/ui_spec.md, as an elaboration of §4.7 Spec
-Stub 8. Each of rows 5, 6 and 7 names a Director-written stub in spec/
-that predated its build; §4.7 Stub 8 is Director-written, and the
-crew-repo spec derived from it is not. Row 8 was the last unbuilt link
-on §4.11’s critical path. No in-editor harness is among the twelve
-main() definitions above.* Legend: Author ∈ {agent, agent+human, human};
-Agent-verified ∈ {✓, —}; Evidence cites the git commit + passing test
-IDs so any row is independently checkable.
+income rate, and §2.11.1’s DONE bit. All three have since been ruled
+into §4.7 Stub 8, on 2026-08-04: the first two as snapshot fields — the
+per-factory block
+{hex, owner, hasBuiltThisTurn, buildWaiting, spawnBlocked} and the
+per-side incomePerTurn — and the DONE bit into the stub’s presentation
+block, which the rules module does not produce and which is the second
+half of the view-model beside the snapshot. No code implements any of
+the three, and the same rulings minted T-UI-05, a headless
+snapshot-fidelity check that no code implements either, so what row 8
+lacks after this commit is no longer the in-editor pass alone. The debug
+driver’s snapshot command now prints the snapshot rather than refusing
+on row 8’s account — the snapshot and not the whole view-model, whose
+other half, §4.7 Stub 8’s presentation block, is produced by no rules
+field and implemented by no code at that commit or since, and its suite
+is GATE-DRV-01..12, 12/12 under clang++ and MSVC both, GATE-DRV-12 being
+new at this commit; those IDs are still not T-*: the driver is not a
+§4.7 stub, has no row in the ledger below, and flips nothing. How row 8
+was authored differs from rows 5, 6 and 7, and is not reported in their
+words. A Claude Code session authored it, and the same session also
+authored spec/ui_spec.md, as an elaboration of §4.7 Spec Stub 8. Each of
+rows 5, 6 and 7 names a Director-written stub in spec/ that predated its
+build; §4.7 Stub 8 is Director-written, and the crew-repo spec derived
+from it is not. Row 8 was the last unbuilt link on §4.11’s critical
+path. No in-editor harness is among the twelve main() definitions
+above.* Legend: Author ∈ {agent, agent+human, human}; Agent-verified ∈
+{✓, —}; Evidence cites the git commit + passing test IDs so any row is
+independently checkable.
 
   -------------------------------------------------------------------------------------------------------
   System               Author            Agent-verified?   Evidence (commit · tests)
@@ -3282,11 +3318,14 @@ IDs so any row is independently checkable.
                                                            GATE-CAP-PARTIAL, which mints no acceptance ID
                                                            and which ran on a fixture configured with
                                                            captureTurns = 2 — a state the shipped N = 1
-                                                           scenario cannot reach. T-UI-03 and T-UI-04
-                                                           have not run: both are in-editor Unreal
-                                                           Automation over widget bindings and no
-                                                           in-editor pass exists at this commit, so the
-                                                           acceptance set is incomplete and Q29, read per
+                                                           scenario cannot reach. T-UI-03, T-UI-04 and
+                                                           T-UI-05 have not run: T-UI-03 and T-UI-04 are
+                                                           in-editor Unreal Automation over widget
+                                                           bindings and no in-editor pass exists at this
+                                                           commit; T-UI-05 was minted 2026-08-04, after
+                                                           this commit, is headless, and no code
+                                                           implements it. The acceptance set is
+                                                           incomplete on both counts and Q29, read per
                                                            ID, keeps the row unverified
   -------------------------------------------------------------------------------------------------------
 
@@ -3342,30 +3381,34 @@ Director-written stub spec/ai_spec.md, again not a live CrewAI run —
 crew/tasks.py is byte-unchanged from 5ffa8d6 to d8284f1, so the file the
 live crew runs from still describes the Combat spec alone, and that
 check carries the same extent as the two before it: the file has not
-moved. Eight IDs are still recorded as uncovered rather than omitted, in
+moved. Nine IDs are still recorded as uncovered rather than omitted, in
 two states that are not the same state. Two are unwritten: T-MOVE-07,
 reserved on Q2, and T-SCN-10, reserved on Q26 — no invariant text exists
-for either, so neither asserts and neither is waiting on a run. Six are
-written and not green: T-DATA-05, the in-editor Unreal Automation half,
-which has not run; T-SCN-08, T-SCN-09 and T-SCN-11, each written,
+for either, so neither asserts and neither is waiting on a run. Seven
+are written and not green: T-DATA-05, the in-editor Unreal Automation
+half, which has not run; T-SCN-08, T-SCN-09 and T-SCN-11, each written,
 unblocked and asserting, each having run only part of its fixture set;
-and T-UI-03 and T-UI-04, written, unblocked and asserting, in-editor
-Unreal Automation for which no in-editor pass exists at row 8’s commit.
-T-DATA-05 is why Data tables carries evidence without a ✓ —
-T-DATA-01..04 and 06 are green at the same commit, but Q29 requires the
-full acceptance set at one commit, so that row records a partial pass
-and stays unverified — the three T-SCN- IDs are why Content / scenario
-does the same at 9086d6a, Q29 there being read per ID, and T-UI-03 and
-T-UI-04 are why UI does the same at 7c36303. (Every commit this section
-cites — d8284f1, row 6’s, included — is reachable from the head of main
-in the crew repo, so every commit link above resolves. The file paths
-resolve too, which they previously did not: four evidence cells carried
-five bare citations between them — Combat.cpp three times and
-test_combat.cpp twice — and neither bare name has ever existed in this
-repository at any commit. Those five citations resolve to two tracked
-files, cpp_reference/Combat.good.cpp and cpp_reference/test_combat.cpp,
-which the cells now name in full; every path this table cites was probed
-at the commit its own row names. The build/ directory is not tracked at
+T-UI-03 and T-UI-04, written, unblocked and asserting, in-editor Unreal
+Automation for which no in-editor pass exists at row 8’s commit; and
+T-UI-05, written, unblocked and asserting, headless, minted 2026-08-04
+and implemented by no code — it waits on neither a harness nor a rule
+but on an implementation. T-DATA-05 is why Data tables carries evidence
+without a ✓ — T-DATA-01..04 and 06 are green at the same commit, but Q29
+requires the full acceptance set at one commit, so that row records a
+partial pass and stays unverified — the three T-SCN- IDs are why Content
+/ scenario does the same at 9086d6a, Q29 there being read per ID, and
+T-UI-03, T-UI-04 and T-UI-05 are why UI does the same at 7c36303 — the
+first two for want of an in-editor pass, the third because no code
+implements it. (Every commit this section cites — d8284f1, row 6’s,
+included — is reachable from the head of main in the crew repo, so every
+commit link above resolves. The file paths resolve too, which they
+previously did not: four evidence cells carried five bare citations
+between them — Combat.cpp three times and test_combat.cpp twice — and
+neither bare name has ever existed in this repository at any commit.
+Those five citations resolve to two tracked files,
+cpp_reference/Combat.good.cpp and cpp_reference/test_combat.cpp, which
+the cells now name in full; every path this table cites was probed at
+the commit its own row names. The build/ directory is not tracked at
 all. That correction is what the “independently checkable” claim
 required, not a cosmetic one.) The remaining rows fill in the same
 format — commit + passing test IDs — as each system clears the gate.
@@ -3597,30 +3640,42 @@ system, no §3 ledger row flips on a partial pass (Q29).
                                       headless module keeps loops fast
 
   Specification outruns the build —   The † cut line (§4.7 head; members
-  70 written acceptance IDs at this   marked in §4.11’s build-order
+  71 written acceptance IDs at this   marked in §4.11’s build-order
   revision (§4.7–§4.11) against 9     table, which is authoritative for
   verified ledger rows (§3). Reduced  which side an ID is on) separates
   and re-scoped at 2026-08-04, not    the IDs the MVP line above needs
-  retired: one new ID has been        from the correctness infrastructure
-  written since c224825 — T-TURN-10,  that stands down if the calendar
-  minted this revision into Spec Stub takes it — so a slip drops named
-  5 for the per-turn build limit      suites rather than silently
-  Q8(b) ruled — and it is green at    thinning every suite. And the
-  6ccd40b, the rebuild at which row   discipline Q20 and Q23 already
-  5’s widened acceptance set closes   applied holds for the rest of the
-  in full (§3); row 6’s GATE-AI-SMOKE table — each piece lands in the
-  is acceptance that deliberately     week the thing that consumes it
-  mints none, so it closes a check    runs (§4.4), and a gate that runs
-  without moving this count. 52 of    green over a subset does not flip
-  the 70 are green: 18 at c224825,    its ledger row (Q29) — so a slip in
-  where rows 1 and 3 closed their     rows 7–8 moves everything
-  full acceptance sets and row 2’s    downstream of them rather than
-  headless half passed, 9 at 647d4df, being absorbed by calling a row
-  where T-FAME-01..09 closed row 4, 9 done on a partial pass. Row 2 is
-  at ad77b13, where T-TURN-01..09     now that clause’s worked example
-  closed, 6 at d8284f1, where         rather than its hypothetical: its
-  T-AI-01..06 closed row 6, 7 at      headless suite is green and its
-  9086d6a, where T-SCN-01..07 closed  ledger row is not
+  retired: two new IDs have been      from the correctness infrastructure
+  written since c224825. T-TURN-10,   that stands down if the calendar
+  minted into Spec Stub 5 for the     takes it — so a slip drops named
+  per-turn build limit Q8(b) ruled,   suites rather than silently
+  is green at 6ccd40b, the rebuild at thinning every suite. And the
+  which row 5’s widened acceptance    discipline Q20 and Q23 already
+  set closes in full (§3). T-UI-05,   applied holds for the rest of the
+  minted 2026-08-04 into Spec Stub 8  table — each piece lands in the
+  for the snapshot-fidelity check row week the thing that consumes it
+  8’s landing left ungated, is        runs (§4.4), and a gate that runs
+  implemented by no code and widens   green over a subset does not flip
+  this gap by one — the two movements its ledger row (Q29) — so a slip in
+  are counted separately and the      rows 7–8 moves everything
+  second is not absorbed by the       downstream of them rather than
+  first. Row 6’s GATE-AI-SMOKE is     being absorbed by calling a row
+  acceptance that deliberately mints  done on a partial pass. Row 2 is
+  none, so it closes a check without  now that clause’s worked example
+  moving this count; the same holds   rather than its hypothetical: its
+  for row 8’s GATE-CAP-PARTIAL, and   headless suite is green and its
+  for the presentation block and the  ledger row is not
+  snapshot fields ruled beside        
+  T-UI-05 on the same day, which mint 
+  no ID at all. 52 of the 71 are      
+  green: 18 at c224825, where rows 1  
+  and 3 closed their full acceptance  
+  sets and row 2’s headless half      
+  passed, 9 at 647d4df, where         
+  T-FAME-01..09 closed row 4, 9 at    
+  ad77b13, where T-TURN-01..09        
+  closed, 6 at d8284f1, where         
+  T-AI-01..06 closed row 6, 7 at      
+  9086d6a, where T-SCN-01..07 closed  
   without closing row 7, 1 at         
   6ccd40b, where T-TURN-10 closed and 
   completed row 5’s acceptance set,   
@@ -3629,7 +3684,7 @@ system, no §3 ledger row flips on a partial pass (Q29).
   8 — so every row on the critical    
   path has now landed, row 8 last and 
   on a partial pass, per acceptance   
-  ID as well as per row. 18 IDs       
+  ID as well as per row. 19 IDs       
   remain unclosed: T-DATA-05, which   
   leaves row 2 unflipped; T-SCN-08,   
   T-SCN-09 and T-SCN-11, which are    
@@ -3640,9 +3695,13 @@ system, no §3 ledger row flips on a partial pass (Q29).
   which are written, unblocked and    
   asserting, and for which no         
   in-editor pass exists at row 8’s    
-  commit, and which leave row 8       
-  unflipped; and the 12 in rows 9–10, 
-  which hold no code                  
+  commit; T-UI-05, which is written,  
+  unblocked, asserting and headless,  
+  and which no code implements — so   
+  row 8 stays unflipped on it         
+  whatever the editor pass does; and  
+  the 12 in rows 9–10, which hold no  
+  code                                
   -----------------------------------------------------------------------
 
 4.6 Token budget
@@ -4506,9 +4565,23 @@ Shared conventions (Director-owned contract):
 
     SPEC STUB 8: UI binding contract           (Director → UI Scaffolder)
     Scope:   NOT layout or visual design (§2.11's lane) — this is
-             the contract for how every widget is fed. Widgets bind to a view-model
-             snapshot plus the §4.9 event list, and hold no rules state (§4.1).
-    Snapshot fields (read-only, produced by the rules module):
+             the contract for how every widget is fed. Widgets bind to the
+             VIEW-MODEL plus the §4.9 event list, and hold no rules state (§4.1).
+             The VIEW-MODEL is the rules-produced SNAPSHOT below plus a declared
+             PRESENTATION BLOCK: the per-unit state §2.11.1's SELECTION MACHINE
+             owns and no rules field expresses. It is declared here rather than
+             improvised in a widget because T-INT-05 (§4.9) rebuilds from the
+             view-model: state in the block satisfies it, state in a widget does
+             not.
+    Snapshot fields (read-only, produced by the rules module). Every field in the
+             snapshot groups that follow has one of TWO KINDS. A MIRROR — the
+             unmarked default — equals, unchanged, the module-side value it
+             names, in the authoritative `GameState`, in the §4.8 tables the
+             bridge loaded, or in the Stub-7 scenario file it loaded; §4.9 names
+             those three separately, and a mirror may draw on any of them.
+             A field marked DECLARED DERIVED is computed from them instead, and
+             its derivation is stated beside it. Within these groups those are
+             the only two kinds, and T-UI-05 asserts both:
              per-hex   {terrainId, owner}
              per-unit  {id, side, unitId, hex, hp, hpMax, isFlag, hasMoved,
                         hasActed, captureProgress}
@@ -4517,9 +4590,58 @@ Shared conventions (Director-owned contract):
                         fields: one field cannot express a unit that has spent
                         exactly one of them. Neither is §2.11.1's DONE bit, and
                         no §2.11 surface reading "has not acted" binds to
-                        either — §2.11.1 states where those bind.
-             per-side  {fameTotal, fameCombat, objectivesHeld X of N, survivingHP}
+                        either — §2.11.1 states where those bind. The DONE bit
+                        is DERIVABLE FROM NEITHER, and from no pair of them:
+                        Wait and RMB-in-MOVED both reach DONE without spending
+                        the act flag (§2.11.1). It is therefore not a snapshot
+                        field, the module produces no field for it, and it sits
+                        in the presentation block below.
+             per-factory {hex, owner, hasBuiltThisTurn, buildWaiting,
+                        spawnBlocked}
+                        `hasBuiltThisTurn` is T-TURN-10's per-factory build
+                        allowance and `buildWaiting` the §2.7 build that holds
+                        the factory's slot until it spawns (T-FAME-04); both
+                        mirror state the module already holds, and this exposes
+                        it rather than adding it. The `hex` mirrors the scenario
+                        file's factory placement (Stub 7). `spawnBlocked` is
+                        DECLARED DERIVED: true exactly when no hex at or
+                        adjacent to the factory is free (board geometry, §2.7's
+                        spawn rule), computed by the module and never
+                        widget-side. It and `buildWaiting` are DISTINCT, and the
+                        difference is the case §2.11.5 must display: a boxed-in
+                        factory with nothing queued has `spawnBlocked` true and
+                        `buildWaiting` false, which `buildWaiting` alone cannot
+                        express. Q31 asks whether a player may queue into a
+                        boxed-in factory; `buildWaiting` is the field such a
+                        ruling would bind to, and nothing here rules it — today
+                        the waiting build is an AI-only path (Q31) and no gate
+                        asserts a player-queued one.
+             per-side  {fameTotal, fameCombat, objectivesHeld X of N, survivingHP,
+                        incomePerTurn}
+                        `fameTotal` and `fameCombat` are mirrors. The other
+                        three are DECLARED DERIVED: `objectivesHeld X of N` and
+                        `survivingHP` on §2.8's definitions of tiebreak criteria
+                        2 and 3 — GATE-CAP-PARTIAL already gates the first's one
+                        edge case, a capture in progress counting for nobody —
+                        and `incomePerTurn` as §2.7's rate over that side's held
+                        factories (+100 each) and towns (+25 each), computed by
+                        the module so that no surface sums it widget-side
+                        (T-UI-03's no-arithmetic clause).
              match     {turn, turnCap, sideToMove, resultTier or null}
+    Presentation block (NOT produced by the rules module; owned by §2.11.1's
+             selection machine, which is a state machine and not a widget; its
+             membership is that machine's per-unit state and nothing else):
+             per-unit  {done}
+                        §2.11.1's DONE bit — this unit takes no further command
+                        this turn. Per-turn: it clears when the owner's next turn
+                        begins. It is the selection machine's only per-unit bit,
+                        and so the block's sole member. It is in the view-model
+                        rather than in a widget precisely so that T-INT-05 (§4.9)
+                        can rebuild the screen from the view-model alone. The
+                        guided opening's marked/locked state is not here: the
+                        guidance layer reads it from the loaded scenario (Stub
+                        7's `guidedOpening` note), and where it belongs is not
+                        decided at this stub.
     Queries: reachable(unit) → the T-MOVE-01 set; forecast(attacker, defenderHex) →
              {damage, counterDamage} computed by the verified resolveDamage /
              defenderCanCounter (5ffa8d6).
@@ -4535,6 +4657,24 @@ Shared conventions (Director-owned contract):
       T-UI-04  the production menu binds to the buildlist derived from the four
                Stub-2 unit rows plus current fameTotal; the flag never appears
                (T-SCN-01's non-producible clause, enforced at the UI layer too)
+      T-UI-05  snapshot fidelity: the snapshot tells the truth about the state
+               the module holds — the authoritative `strat::GameState`, the §4.8
+               tables and the Stub-7 scenario file it loaded (§4.9) — field by
+               field, in three parts. (a) MIRRORS: every unmarked field equals
+               the module-side value it names, exactly, with nothing widened,
+               narrowed, rounded or reordered. (b) DECLARED DERIVED: every field
+               marked DECLARED DERIVED equals the derivation stated beside it at
+               this stub, recomputed inside the check rather than read back out
+               of the snapshot — so a wrong derivation fails here and is not
+               merely reproduced. (c) NO OTHER KIND: a snapshot field that is
+               neither an unmarked mirror of a named module-side value nor a
+               marked field with a stated derivation FAILS this invariant, which
+               is what stops a field entering the snapshot without a contract.
+               Asserted by rebuilding the snapshot after each command of a fixed
+               command sequence and comparing every field under (a), (b) and
+               (c). The presentation block is NOT in this invariant's subject:
+               it has no module-side counterpart and no derivation from one.
+               Headless, unmarked (§4.11)
       GATE-CAP-PARTIAL
                a capture in progress contributes zero to "objectives held" for
                either side: raising a unit's captureProgress short of completion
@@ -4542,13 +4682,17 @@ Shared conventions (Director-owned contract):
                T-CAP-05, which aliases onto no T-TURN- ID; it is a differential
                read of two fields this snapshot already carries, adding no field
                and no numbered ID (the GATE-AI-SMOKE precedent, row 6)
-    Determinism: widgets are pure functions of snapshot + events; asserted
-             end-to-end by T-INT-05 (§4.9).
-    Acceptance: T-UI-01..02 headless (the queries are headless functions);
-             T-UI-03..04 in-editor Automation; GATE-CAP-PARTIAL headless, on the
-             snapshot rather than on a widget — which is why it carries no † and
-             does not stand down if the editor pass does. A marked ID may not
-             guard a rules invariant (§4.11's † note), and T-CAP-05 is one.
+    Determinism: widgets are pure functions of view-model + events — snapshot
+             plus presentation block; asserted end-to-end by T-INT-05 (§4.9).
+    Acceptance: T-UI-01..02 and T-UI-05 headless (the queries and the snapshot
+             builder are headless functions); T-UI-03..04 in-editor Automation;
+             GATE-CAP-PARTIAL headless, on the snapshot rather than on a widget —
+             which is why it carries no † and does not stand down if the editor
+             pass does. A marked ID may not guard a rules invariant (§4.11's †
+             note), and T-CAP-05 is one. T-UI-05 was minted 2026-08-04 and NO
+             CODE IMPLEMENTS IT: it is written, unblocked and asserting, and it
+             is not green — four states this document keeps distinct. Nothing in
+             the snapshot additions ruled with it is implemented either.
 
 Open questions (Director rulings owed). Every gap found while writing
 the §4.7 gates (Q1–Q10), the stage-2 additions (Q11–Q13), the rules- and
@@ -5803,13 +5947,13 @@ Build{factoryHex, unitId}, Capture{unit}, EndTurn{} — the rules module
 validates then applies each, and emits an ordered, deterministic event
 list: Moved(path), Damaged, Destroyed, Captured, Spawned, BuildWaiting,
 Repaired, IncomePaid, MatchEnded(tier). Actors and widgets animate and
-rebind from events and the view-model snapshot only (§4.7 Stub 8). An
-invalid command returns a rejection reason and changes nothing. -
-Threading: synchronous on the game thread. A full turn resolution is
-microseconds of integer math; the shipping AI “moves instantly” (§2.8).
-No async, and no MCP involvement anywhere in the runtime path — the MCP
-plugin remains editor-only tooling, experimental, off the critical path
-(§3 guardrails, §4.2, §4.5).
+rebind from events and the view-model only — §4.7 Stub 8’s snapshot plus
+its presentation block (§4.7). An invalid command returns a rejection
+reason and changes nothing. - Threading: synchronous on the game thread.
+A full turn resolution is microseconds of integer math; the shipping AI
+“moves instantly” (§2.8). No async, and no MCP involvement anywhere in
+the runtime path — the MCP plugin remains editor-only tooling,
+experimental, off the critical path (§3 guardrails, §4.2, §4.5).
 
 3. Parity gates. The command log format of §4.10 is the instrument: the
 same recorded match is replayed by the headless harness and by an
@@ -5838,8 +5982,10 @@ formula’s round — mechanically instead of by playtest anecdote.
                 require all four. The gate run itself is the assert
       T-INT-05  (editor, Automation) presentation statelessness: after any event
                 sequence, rebuilding all widgets/actors from the current view-model
-                snapshot alone reproduces the same displayed values (nothing lives
-                only in a widget)
+                alone — §4.7 Stub 8's snapshot plus its presentation block —
+                reproduces the same displayed values (nothing lives only in a
+                widget). §2.11.1's selection machine is not a widget, so its DONE
+                bit satisfies this gate from the presentation block
     Determinism: the bridge never reorders, drops, or synthesizes events.
     Acceptance: T-INT-01, 04 on every gate run; T-INT-02, 03, 05 in the editor pass.
 
@@ -5902,11 +6048,29 @@ File layout — versioned JSON, one file:
 Canonical state hash. Defined once, in the headless module: serialize
 the GameState in a fixed field order — turn counter, side to move,
 per-side fameTotal/fameCombat, objective ownership, per-unit
-{id, side, hex, hp, isFlag, captureProgress, pendingBuilds} sorted by
-the canonical hex order (§4.7 conventions, T-HEX-07) — then hash the
-bytes. Every field is an integer (eff and the HP ratio exist only
-transiently inside resolveDamage), so the hash is platform-stable by
-construction; T-INT-02 proves it across compilers.
+{id, side, hex, hp, isFlag, hasMoved, hasActed, captureProgress, pendingBuilds}
+sorted by the canonical hex order (§4.7 conventions, T-HEX-07), then the
+per-factory build record {hex, hasBuiltThisTurn, buildWaiting}
+(T-TURN-10) in that same canonical hex order — then hash the bytes.
+Every field is an integer, the four turn and build flags written as 0 or
+1 (eff and the HP ratio exist only transiently inside resolveDamage), so
+the hash is platform-stable by construction; T-INT-02 proves it across
+compilers. The flags are hashed because a save is accepted mid-turn
+(Policies below): at hash time a unit may have spent one of its two
+flags and a factory may have taken its build for the turn, so a hash
+without them is identical across states the rules distinguish, and
+T-INT-02 and T-SAVE-06 would both agree over that difference rather than
+catch it. What the hash omits is anything recomputable from the fields
+it already carries, since such a value can add no distinction and only
+one more way for two builds of one state to disagree: §4.7 Stub 8’s
+spawnBlocked is that case, being a function of the unit positions this
+hash carries and the terrain the scenario file fixes, whose own
+scenarioHash is a header field above. That is a narrower test than
+“derived”, and deliberately so — the Policies below call a waiting build
+and capture-in-progress derived pending state because they are a
+function of the log, and both are hashed. Row 10 holds no code and no
+save file exists, so widening the hash costs nothing at this revision
+and would not stay free.
 
 Policies (prototype): - Single slot — one file (slot0), stored via a
 thin USaveGame wrapper holding the JSON so platform save paths are
@@ -5964,15 +6128,17 @@ code, and row 8 was the critical path’s remaining link, its dependency
 cell in the table below reading 5, 7 — both landed before it. Row 8 has
 since landed too, at 7c36303, on a partial pass that leaves its ledger
 row unflipped, as row 7’s does (§3): T-UI-03 and T-UI-04 are the
-in-editor half and no in-editor pass exists at that commit. Row 2 is not
-green: T-DATA-01..04 and 06 pass at that commit and T-DATA-05 has not
-run, which is exactly the flip cost its † bullet below already priced —
-reached by the ordinary schedule, since the editor pass is not yet due,
-and not by the cut line firing. Note row 10’s format spec must exist by
-the row-9 integration pass, because T-INT-02’s input file is a §4.10
-save. Rows 9 and 10 therefore state their dependencies in two parts —
-what each gate needs in order to run, and what it needs in order to
-close — because both are scoped to the command set of the log they
+in-editor half and no in-editor pass exists at that commit, and T-UI-05
+is headless and unimplemented — minted 2026-08-04, after that commit, so
+the editor pass is not the whole of what this row still lacks. Row 2 is
+not green: T-DATA-01..04 and 06 pass at that commit and T-DATA-05 has
+not run, which is exactly the flip cost its † bullet below already
+priced — reached by the ordinary schedule, since the editor pass is not
+yet due, and not by the cut line firing. Note row 10’s format spec must
+exist by the row-9 integration pass, because T-INT-02’s input file is a
+§4.10 save. Rows 9 and 10 therefore state their dependencies in two
+parts — what each gate needs in order to run, and what it needs in order
+to close — because both are scoped to the command set of the log they
 replay, and week 2’s log carries only {Move, Attack} (§4.4). Reading
 either row’s requirement as a single set is what put a gate in a week
 this table could not supply it.
@@ -6021,7 +6187,7 @@ this table could not supply it.
                                        with the deployment                        
                                        instead                                    
 
-  8              UI binding (Stub 8)   5, 7 (snapshot needs full Contract +       T-UI-01..04
+  8              UI binding (Stub 8)   5, 7 (snapshot needs full Contract +       T-UI-01..05
                                        state)                    queries yes;     (T-UI-03, 04 †) +
                                                                  widgets          GATE-CAP-PARTIAL
                                                                  in-editor        
@@ -6097,9 +6263,11 @@ when one stands down. Unmarked is the default and the majority.
       opening §2.11.8 ranks must-have. Cost: row 7’s ledger flip, on the
       same Q29 reading as row 2.
 - T-UI-03, 04 — in-editor Automation over widget bindings, where a
-  Director reading the screen is a real check. T-UI-01/02 stay unmarked:
-  they are headless queries, and T-UI-01 is what makes §2.11.3’s
-  forecast equal the resolution.
+  Director reading the screen is a real check. T-UI-01/02 and T-UI-05
+  stay unmarked: all three are headless, T-UI-01 is what makes §2.11.3’s
+  forecast equal the resolution, and T-UI-05 is the sole assertion that
+  the snapshot tells the truth about the state the module holds — the
+  contract every other ID in the row reads through.
 - T-INT-02, 05 and T-SAVE-06 — the in-editor half of the parity pair
   (T-SAVE-06 is asserted jointly with T-INT-02). This is the most
   expensive mark in the list and its cost is a §3 cost rather than a §1
