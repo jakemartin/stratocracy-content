@@ -2806,20 +2806,19 @@ Status: live tracker — first rows populated 2026-07-26 from the
 Assignment-3 agent crew; Repair and Type-effectiveness added and
 gate-verified 2026-07-29; the rest land as each system is built (wk 1–3,
 §4.4). This draft stands at 2026-08-03, at commit 6ccd40b in the crew
-repo, whose parent is 9086d6a; 6ccd40b is cited without a link, for the
-reason the paragraph below the table gives. §4.4’s week-1 deliverable is
-§4.11 rows 1–3 — grid and hex math, the §4.8 tables, movement and
-pathfinding — and week 1 closed two of the three: rows 1 and 3 passed
-their full acceptance sets at that commit (T-HEX-01..07, 7/7;
-T-MOVE-01..06, 6/6) and flip in the table below. Row 2 does not flip.
-Its headless half is green — T-DATA-01..04 and 06, 5/5 — but T-DATA-05,
-the in-editor Unreal Automation parity pass, has not run, and Q29
-requires the full acceptance set at one commit, so the row records a
-partial pass and stays unverified; the editor pass is not yet due, so
-that is the ordinary schedule and not §4.7’s cut line firing. What week
-1 did not close is everything after it: rows 4–8 held no code then, and
-rows 4, 5 and 6 have since landed — all three recorded at the end of
-this paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
+repo, whose parent is 9086d6a. §4.4’s week-1 deliverable is §4.11 rows
+1–3 — grid and hex math, the §4.8 tables, movement and pathfinding — and
+week 1 closed two of the three: rows 1 and 3 passed their full
+acceptance sets at that commit (T-HEX-01..07, 7/7; T-MOVE-01..06, 6/6)
+and flip in the table below. Row 2 does not flip. Its headless half is
+green — T-DATA-01..04 and 06, 5/5 — but T-DATA-05, the in-editor Unreal
+Automation parity pass, has not run, and Q29 requires the full
+acceptance set at one commit, so the row records a partial pass and
+stays unverified; the editor pass is not yet due, so that is the
+ordinary schedule and not §4.7’s cut line firing. What week 1 did not
+close is everything after it: rows 4–8 held no code then, and rows 4, 5
+and 6 have since landed — all three recorded at the end of this
+paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
 critical path runs 1 → 3 → 4 → 5 → 6/8, everything on that path but row
 8 is now evidence rather than schedule — per acceptance ID as well as
 per row, since T-TURN-10, the one path ID that was written and asserting
@@ -3280,14 +3279,9 @@ T-DATA-01..04 and 06 are green at the same commit, but Q29 requires the
 full acceptance set at one commit, so that row records a partial pass
 and stays unverified — and the three T-SCN- IDs are why Content /
 scenario does the same at 9086d6a, Q29 there being read per ID. (Every
-commit this section links — d8284f1, row 6’s, included — is reachable
+commit this section cites — d8284f1, row 6’s, included — is reachable
 from the head of main in the crew repo, so every commit link above
-resolves. 6ccd40b, row 5’s rebuild, carries no link anywhere in this
-section: it is committed on main and not yet pushed, so it is reachable
-in the working repository and not on GitHub, and the section states the
-commit rather than a link that would fail. Pushing it is what makes the
-link form available, and this sentence is the only one that has to move
-when it does. The file paths resolve too, which they previously did not:
+resolves. The file paths resolve too, which they previously did not:
 four evidence cells carried five bare citations between them —
 Combat.cpp three times and test_combat.cpp twice — and neither bare name
 has ever existed in this repository at any commit. Those five citations
