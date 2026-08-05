@@ -2853,26 +2853,33 @@ asserted.
 Status: live tracker — first rows populated 2026-07-26 from the
 Assignment-3 agent crew; Repair and Type-effectiveness added and
 gate-verified 2026-07-29; the rest land as each system is built (wk 1–3,
-§4.4). This draft stands at 2026-08-04, at commit d837fc8 in the crew
-repo and at 9dec48c in the Stratocracy UE project repo, each verified
-with git ls-remote to be the head of its own repo’s default branch —
-main in the crew repo, master in the UE project — with both working
-trees clean. The landing this ledger records before them is b23823f in
-the crew repo, whose parent is e06c44b and whose grandparent is 41a1452,
-with the UE project’s half at 99fcb84, the first commit in that repo
-since its Git LFS migration. §4.4’s week-1 deliverable is §4.11 rows 1–3
-— grid and hex math, the §4.8 tables, movement and pathfinding — and
-week 1 closed two of the three: rows 1 and 3 passed their full
-acceptance sets at that commit (T-HEX-01..07, 7/7; T-MOVE-01..06, 6/6)
-and flip in the table below. Row 2 does not flip. Its headless half is
-green — T-DATA-01..04 and 06, 5/5 — but T-DATA-05, the in-editor Unreal
-Automation parity pass, has not run, and Q29 requires the full
-acceptance set at one commit, so the row records a partial pass and
-stays unverified; the editor pass is not yet due, so that is the
-ordinary schedule and not §4.7’s cut line firing. What week 1 did not
-close is everything after it: rows 4–8 held no code then, and rows 4, 5
-and 6 have since landed — all three recorded at the end of this
-paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
+§4.4). This draft stands at 2026-08-05, at commit 737f666 in the crew
+repo and at 9dec48c in the Stratocracy UE project repo. In the crew
+repo, d837fc8 is an ancestor of 737f666, measured with
+git merge-base --is-ancestor rather than read off a branch, and every
+crew-repo commit this GDD cites is reachable from 737f666, measured the
+same way per sha. 9dec48c is cited as a commit, and this line makes no
+claim about how it stands to any branch. This line previously said that
+both commits had been verified with git ls-remote to be the head of
+their own repo’s default branch. That was true when it was gated and
+false within the hour, a concurrent human push having moved one of them
+— a head expires and a sha does not — so the defect is recorded here
+rather than quietly overwritten. The landing this ledger records before
+them is b23823f in the crew repo, whose parent is e06c44b and whose
+grandparent is 41a1452, with the UE project’s half at 99fcb84, the first
+commit in that repo since its Git LFS migration. §4.4’s week-1
+deliverable is §4.11 rows 1–3 — grid and hex math, the §4.8 tables,
+movement and pathfinding — and week 1 closed two of the three: rows 1
+and 3 passed their full acceptance sets at that commit (T-HEX-01..07,
+7/7; T-MOVE-01..06, 6/6) and flip in the table below. Row 2 does not
+flip. Its headless half is green — T-DATA-01..04 and 06, 5/5 — but
+T-DATA-05, the in-editor Unreal Automation parity pass, has not run, and
+Q29 requires the full acceptance set at one commit, so the row records a
+partial pass and stays unverified; the editor pass is not yet due, so
+that is the ordinary schedule and not §4.7’s cut line firing. What week
+1 did not close is everything after it: rows 4–8 held no code then, and
+rows 4, 5 and 6 have since landed — all three recorded at the end of
+this paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
 critical path runs 1 → 3 → 4 → 5 → 6/8, every row on that path has since
 landed, row 8 last and on a partial pass that leaves its ledger row
 unflipped — per acceptance ID as well as per row: T-TURN-10 closed at
@@ -3344,81 +3351,81 @@ comment claimed to render the view model and had stopped doing so once
 the snapshot widened. The stateHash in cpp_reference/Driver.h and
 cpp_reference/Driver.good.cpp is the driver’s own debug digest, gated by
 GATE-DRV-06, and is a different thing from §4.10’s canonical state hash,
-which is not implemented at this commit: row 10 holds no code. How this
-commit was authored differs from every row above it and is not reported
-in their words. The Director wrote the code, in the main session; it was
-not authored by an agent crew and it is not the two-pass agent pipeline
-that produced the earlier rows. The pass-1/pass-2 split was performed by
-hand: cpp_reference/Ui.buggy.cpp was rebased on the finished Ui.good.cpp
-and the two original row-8 defects re-injected, rather than preserved in
-place from 7c36303. The gate runner was then repaired, at e06c44b, whose
-parent is 41a1452. Before it, python run.py --week1 did not compile past
-§4.11 row 5: row 6 failed with
-.\Driver.h:18:10: fatal error: 'Ui.h' file not found, and rows 6, 7, 8
-and the debug driver never ran. The cause was in the runner and in no
-module: 7c36303 added #include "Ui.h" to cpp_reference/Driver.h, and the
-string Ui occurred zero times in crew/tools.py, so the runner’s registry
-never gained Ui.h, Ui.cpp or test_ui.cpp; row 8’s and T-UI-05’s gates
-had been run by ad-hoc compiles, so nothing exercised the runner after
-that commit. The breakage was found by running the runner at 41a1452 —
-it was not reported by anyone and was visible in no record, and it is
-recorded here rather than repaired quietly. No module source, header,
-harness or invariant was touched by the repair; it is registry and
-record text only. After it, from a clean tree under clang++, the whole
-suite ran — row 1 7/7, row 2 6/6, row 3 6/6, row 4 9/9, row 5 11/11, row
-6 7/7, row 7 12/12, row 8 34/34, and the debug driver 12/12, with row
-8’s pass-1 fixture blocked at 21/34 on 13 FAIL lines over three distinct
-IDs — the same figures already recorded above, now produced by the
-runner rather than by hand. The three link lines the repair changed were
-also built and run under MSVC: row 8 34/34, row 6 7/7, and the driver
-12/12. No ledger row moves on a repair to the runner and no acceptance
-ID closed here. Build-order row 9’s headless half then landed, at
-b23823f, with the UE project’s half at 99fcb84. New in the crew repo:
-sync_stratrules.py, spec/integration_spec.md, run_integration_gate_fn in
-crew/tools.py, and python run.py --integration, which --week1 now also
-runs at its end; the vendored module itself is described in §4.9. The
-gate is T-INT-01 and T-INT-04, 2/2 under clang++, at rulesCommit b23823f
-over the vendored tree at 99fcb84. T-INT-02, T-INT-03 and T-INT-05 did
-not run — no in-editor Automation harness exists, and the runner prints
-that sentence by name before its tally. Row 9’s acceptance set therefore
-does not close, on the Q29 reading applied per acceptance ID as well as
-per row. It has no row in the table below to leave unflipped: §4.11
-calls it a proposed ledger row, and this landing creates none, since
-what landed is the vendoring step and not the bridge §4.9 part 2
-describes. Whether the ledger should gain the row was filed for the
-Director and has since been ruled, at the end of this paragraph. No
-acceptance ID was minted — this row wrote no invariant text — so §4.5’s
-written-ID count does not move at this landing, its green count moves 53
-→ 54 and its unclosed count moves 18 → 17. Compiler detection was
-measured rather than assumed: g++ is not installed on this machine,
-clang++ is found first, and cl is present but never reached. §4.9’s
-T-INT-04 states that any one of the four compiling clean satisfies it
-and that it does not require all four, so a single-compiler run is the
-invariant’s own terms and not a shortfall against them. The check was
-shown to fail before it was believed — known-bad inputs, each restored
-afterwards: a comment appended to a vendored source (T-INT-01 FAIL,
-T-INT-04 PASS); the same edit plus the manifest’s own recorded hash
-updated to match it (T-INT-01 still FAIL); a vendored header deleted
-(T-INT-01 FAIL and T-INT-04 FAIL, because Ai.good.cpp genuinely stops
-compiling); an extra Sneaky.good.cpp added (T-INT-01 FAIL, and T-INT-04
-compiled eleven files rather than ten); and #include "CoreMinimal.h"
-injected (T-INT-04 FAIL and T-INT-01 FAIL). Two of those results
-exceeded the prediction made before running them — the deleted header
-also broke T-INT-04, and the added file moved T-INT-04’s compile count —
-and both are the checks being right rather than the deliberate breaks
-being wrong. The manifest-hash control is the one that matters: the
-check does not trust the manifest’s own hashes and does not import the
-vendor script’s file list, taking only rulesCommit and re-deriving both
-the expected file set and every expected hash from the crew repo at that
-commit, so a manifest-versus-disk comparison would have passed that edit
-and this one does not. When the UE project is absent the gate SKIPS with
-its reason stated and asserts nothing; it does not pass, because a
-vacuous green T-INT-01 beside a vendoring that never happened is the
-failure this ledger exists to prevent. The module was first vendored at
-e06c44b and re-vendored at b23823f; cpp_reference/ is byte-identical
-between those two commits — git diff --stat over that path prints
-nothing — so only the manifest’s rulesCommit line changed. The
-.gitattributes rule is load-bearing rather than housekeeping: the UE
+which is not implemented at this commit: row 10 held no code then. How
+this commit was authored differs from every row above it and is not
+reported in their words. The Director wrote the code, in the main
+session; it was not authored by an agent crew and it is not the two-pass
+agent pipeline that produced the earlier rows. The pass-1/pass-2 split
+was performed by hand: cpp_reference/Ui.buggy.cpp was rebased on the
+finished Ui.good.cpp and the two original row-8 defects re-injected,
+rather than preserved in place from 7c36303. The gate runner was then
+repaired, at e06c44b, whose parent is 41a1452. Before it,
+python run.py --week1 did not compile past §4.11 row 5: row 6 failed
+with .\Driver.h:18:10: fatal error: 'Ui.h' file not found, and rows 6,
+7, 8 and the debug driver never ran. The cause was in the runner and in
+no module: 7c36303 added #include "Ui.h" to cpp_reference/Driver.h, and
+the string Ui occurred zero times in crew/tools.py, so the runner’s
+registry never gained Ui.h, Ui.cpp or test_ui.cpp; row 8’s and T-UI-05’s
+gates had been run by ad-hoc compiles, so nothing exercised the runner
+after that commit. The breakage was found by running the runner at
+41a1452 — it was not reported by anyone and was visible in no record,
+and it is recorded here rather than repaired quietly. No module source,
+header, harness or invariant was touched by the repair; it is registry
+and record text only. After it, from a clean tree under clang++, the
+whole suite ran — row 1 7/7, row 2 6/6, row 3 6/6, row 4 9/9, row 5
+11/11, row 6 7/7, row 7 12/12, row 8 34/34, and the debug driver 12/12,
+with row 8’s pass-1 fixture blocked at 21/34 on 13 FAIL lines over three
+distinct IDs — the same figures already recorded above, now produced by
+the runner rather than by hand. The three link lines the repair changed
+were also built and run under MSVC: row 8 34/34, row 6 7/7, and the
+driver 12/12. No ledger row moves on a repair to the runner and no
+acceptance ID closed here. Build-order row 9’s headless half then
+landed, at b23823f, with the UE project’s half at 99fcb84. New in the
+crew repo: sync_stratrules.py, spec/integration_spec.md,
+run_integration_gate_fn in crew/tools.py, and
+python run.py --integration, which --week1 now also runs at its end; the
+vendored module itself is described in §4.9. The gate is T-INT-01 and
+T-INT-04, 2/2 under clang++, at rulesCommit b23823f over the vendored
+tree at 99fcb84. T-INT-02, T-INT-03 and T-INT-05 did not run — no
+in-editor Automation harness exists, and the runner prints that sentence
+by name before its tally. Row 9’s acceptance set therefore does not
+close, on the Q29 reading applied per acceptance ID as well as per row.
+It has no row in the table below to leave unflipped: §4.11 calls it a
+proposed ledger row, and this landing creates none, since what landed is
+the vendoring step and not the bridge §4.9 part 2 describes. Whether the
+ledger should gain the row was filed for the Director and has since been
+ruled, at the end of this paragraph. No acceptance ID was minted — this
+row wrote no invariant text — so §4.5’s written-ID count does not move
+at this landing, its green count moves 53 → 54 and its unclosed count
+moves 18 → 17. Compiler detection was measured rather than assumed: g++
+is not installed on this machine, clang++ is found first, and cl is
+present but never reached. §4.9’s T-INT-04 states that any one of the
+four compiling clean satisfies it and that it does not require all four,
+so a single-compiler run is the invariant’s own terms and not a
+shortfall against them. The check was shown to fail before it was
+believed — known-bad inputs, each restored afterwards: a comment
+appended to a vendored source (T-INT-01 FAIL, T-INT-04 PASS); the same
+edit plus the manifest’s own recorded hash updated to match it (T-INT-01
+still FAIL); a vendored header deleted (T-INT-01 FAIL and T-INT-04 FAIL,
+because Ai.good.cpp genuinely stops compiling); an extra Sneaky.good.cpp
+added (T-INT-01 FAIL, and T-INT-04 compiled eleven files rather than
+ten); and #include "CoreMinimal.h" injected (T-INT-04 FAIL and T-INT-01
+FAIL). Two of those results exceeded the prediction made before running
+them — the deleted header also broke T-INT-04, and the added file moved
+T-INT-04’s compile count — and both are the checks being right rather
+than the deliberate breaks being wrong. The manifest-hash control is the
+one that matters: the check does not trust the manifest’s own hashes and
+does not import the vendor script’s file list, taking only rulesCommit
+and re-deriving both the expected file set and every expected hash from
+the crew repo at that commit, so a manifest-versus-disk comparison would
+have passed that edit and this one does not. When the UE project is
+absent the gate SKIPS with its reason stated and asserts nothing; it
+does not pass, because a vacuous green T-INT-01 beside a vendoring that
+never happened is the failure this ledger exists to prevent. The module
+was first vendored at e06c44b and re-vendored at b23823f; cpp_reference/
+is byte-identical between those two commits — git diff --stat over that
+path prints nothing — so only the manifest’s rulesCommit line changed.
+The .gitattributes rule is load-bearing rather than housekeeping: the UE
 repo runs with core.autocrlf=true and that path carried no text
 attribute, so a fresh clone would have rewritten the vendored files to
 CRLF while the crew blob stayed LF, failing a byte-for-byte check on
@@ -3465,22 +3472,22 @@ vendored source together with its recorded hash in the manifest still
 FAILs. T-INT-01’s green re-dates to this commit, over the vendored tree
 at 9dec48c, and is recorded here rather than left at b23823f:
 ue_module/manifest_fields.json did not exist at b23823f, so the amended
-text cannot have been satisfied there, and an ID whose written text
-widens closes at the commit at which the widened text is met. T-INT-04
-is unaffected — its text did not change, it is green at b23823f and
-green again here. No acceptance ID was minted here — the amendment
-widened an ID that already existed — so §4.5’s written-ID count does not
-move at this landing, its green count moves 54 → 55 and its unclosed
-count moves 17 → 16, which is the second half of the movement whose
-first half the b23823f landing above records. The whole crew gate is
-green at d837fc8 under clang++ — row 1 7/7, row 2 6/6, row 3 6/6, row 4
-9/9, row 5 11/11, row 6 7/7, row 7 12/12, row 8 34/34, the debug driver
-12/12 and the integration gate 2/2 — the same figures already recorded
-above, and no rules code changed: cpp_reference/ is byte-identical
-between b23823f and d837fc8, git diff --stat over that path printing
-nothing. spec/integration_spec.md was updated at d837fc8 to describe the
-widened check, having described the old one. T-INT-02, T-INT-03 and
-T-INT-05 still did not run — no in-editor Automation harness exists — so
+text cannot have been satisfied there, and the closure convention §4.5
+states governs where the green lands. T-INT-04 is unaffected — its text
+did not change, it is green at b23823f and green again here. No
+acceptance ID was minted here — the amendment widened an ID that already
+existed — so §4.5’s written-ID count does not move at this landing, its
+green count moves 54 → 55 and its unclosed count moves 17 → 16, which is
+the second half of the movement whose first half the b23823f landing
+above records. The whole crew gate is green at d837fc8 under clang++ —
+row 1 7/7, row 2 6/6, row 3 6/6, row 4 9/9, row 5 11/11, row 6 7/7, row
+7 12/12, row 8 34/34, the debug driver 12/12 and the integration gate
+2/2 — the same figures already recorded above, and no rules code
+changed: cpp_reference/ is byte-identical between b23823f and d837fc8,
+git diff --stat over that path printing nothing.
+spec/integration_spec.md was updated at d837fc8 to describe the widened
+check, having described the old one. T-INT-02, T-INT-03 and T-INT-05
+still did not run — no in-editor Automation harness exists — so
 build-order row 9’s acceptance set still does not close, on the Q29
 reading applied per acceptance ID as well as per row; the vendored
 module is still not registered in Stratocracy.uproject, and no UBT build
@@ -3492,12 +3499,68 @@ identity check, while the bridge §4.9 part 2 describes is unbuilt, so a
 row written now would either name a system that half-exists or start a
 practice of one row per half. The row is deferred until the bridge is
 built, so the ledger later gains a row describing a whole system. The
-text-versus-check question this landing settled is registered as Q33
-(§4.7), written already marked RULED. How d837fc8 was authored is
-deliberately not stated: no harness claim is made for it, because none
-was established.* Legend: Author ∈ {agent, agent+human, human};
-Agent-verified ∈ {✓, —}; Evidence cites the git commit + passing test
-IDs so any row is independently checkable.
+Director has since named that row without creating it (ruled
+2026-08-05): it is Headless → Unreal integration, its acceptance set is
+T-INT-01..05, and it is created as one row when §4.9 part 2 lands —
+which is this deferral’s own reason stated forward rather than a second
+decision. The text-versus-check question this landing settled is
+registered as Q33 (§4.7), written already marked RULED. How d837fc8 was
+authored is deliberately not stated: no harness claim is made for it,
+because none was established. Build-order row 10’s part (a) then landed,
+at 737f666, with the UE project repo unmoved at 9dec48c. New in the crew
+repo: spec/save_spec.md, cpp_reference/Save.h,
+cpp_reference/Save.good.cpp, cpp_reference/Save.buggy.cpp and
+cpp_reference/test_save.cpp, registered as row save in crew/tools.py, so
+this row runs under the python run.py gate T-INT-04 names rather than by
+an ad-hoc compile. The last of those sources is an eleventh harness, so
+thirteen tracked sources define main() at 737f666 — eleven test
+harnesses, one combat duel simulator, and one debug REPL — a figure
+taken by enumerating them at that commit and diffing that list against
+the twelve at 7c36303 rather than by adding one to a count above: the
+difference is exactly cpp_reference/test_save.cpp, and nothing was
+removed. The gate is T-SAVE-04 plus GATE-SAVE-PARSE, 25/25 under clang++
+and MSVC both — g++ is still not installed on this machine. Pass-1
+cpp_reference/Save.buggy.cpp is blocked at 18/25 under both compilers —
+seven FAIL lines over two distinct IDs, identical under each, and
+predicted in full before the run. Its three defects are mechanical edits
+of Save.good.cpp: loadSave parses into the caller’s object and then
+validates; checkHeader compares only formatVersion and rulesCommit;
+onlyKeys tolerates an unknown key. Against them T-SAVE-04 (a), (b) and
+(f) fail the state untouched clause alone, (c), (d) and (g) are not
+refused at all, and GATE-SAVE-PARSE’s unknown-key check is tolerated.
+GATE-SAVE-PARSE mints no acceptance ID, on the GATE-SCN-PARSE,
+GATE-AI-SMOKE and GATE-CAP-PARTIAL precedent. No acceptance ID was
+written, so §4.5’s written-ID count does not move at this landing, its
+green count moves 55 → 56 and its unclosed count moves 16 → 15. Every
+other row’s tally is unchanged from the pre-change baseline, under both
+compilers — row 1 7/7, row 2 6/6, row 3 6/6, row 4 9/9, row 5 11/11, row
+6 7/7, row 7 12/12, row 8 34/34 and the debug driver 12/12 — and
+T-INT-01 and T-INT-04 still pass 2/2 at rulesCommit d837fc8 after this
+module landed, which is what makes the no-vendoring decision recorded in
+§4.9 safe rather than merely convenient. Six of row 10’s seven IDs did
+not run, and each is named in the runner with its reason rather than
+absorbed: T-SAVE-01, T-SAVE-02, T-SAVE-03 and T-SAVE-05 need the
+headless replayer of part (b); T-SAVE-06 is the only † of the seven, is
+asserted jointly with T-INT-02, and has neither an in-editor harness nor
+a built subject; T-SAVE-07 needs row 6’s self-play, which part (c)
+reaches. Row 10’s acceptance set therefore does not close, on the Q29
+reading applied per acceptance ID as well as per row. It has no row in
+the table below to leave unflipped: §4.11 calls row 10 a proposed ledger
+row, and this landing creates none. That is row 9’s posture and
+deliberately not the partial-pass posture of rows 2, 7 and 8, each of
+which has a ledger row that a partial pass leaves standing unflipped; a
+row that does not exist has nothing to leave. What part (a) deliberately
+does not do is stated so it is not inferred. No command is applied, so
+§4.10’s canonical state hash is not defined here — that is part (b)’s,
+and part (a) carries stateHash as an opaque required string. dataHash
+and scenarioHash are compared as opaque strings and never recomputed,
+which is what keeps this part’s dependency set empty; its link set is
+Save.cpp, Hex.cpp and test_save.cpp and nothing else. No in-editor
+harness is among the thirteen main() definitions above. How 737f666 was
+authored is deliberately not stated: no harness claim is made for it,
+because none was established.* Legend: Author ∈ {agent, agent+human,
+human}; Agent-verified ∈ {✓, —}; Evidence cites the git commit + passing
+test IDs so any row is independently checkable.
 
   -------------------------------------------------------------------------------------------------------
   System               Author            Agent-verified?   Evidence (commit · tests)
@@ -3786,28 +3849,31 @@ the game” claim holds.
                                       close here, the rest do not (§4.11
                                       rows 9–10) — and T-INT-04 is green
                                       at b23823f and T-INT-01 at d837fc8,
-                                      over the vendored tree at 9dec48c
-                                      (§3), both ahead of this cell
-                                      rather than behind it, since
-                                      neither runs on a command log or
-                                      needs a rules row, and the
-                                      vendoring they assert over has
-                                      landed. That is a real gate rather
-                                      than a placeholder: T-INT-02
-                                      replays a fixed log, so its
-                                      divergence surface is the
-                                      state-mutating math only, and every
-                                      field of the §4.10 hash is an
-                                      integer except the transients
-                                      inside resolveDamage — which Attack
-                                      already reaches. What it cannot
-                                      cover is code that does not exist
-                                      yet, which is exactly why rows 4–5
-                                      re-open it. No save button, slot,
-                                      or USaveGame wrapper here; those
-                                      are week 5. Move + attack only — no
-                                      capture, no production, no AI
-                                      opponent.
+                                      over the vendored tree at 9dec48c,
+                                      and T-SAVE-04 at 737f666, on row
+                                      10’s part (a) (§3) — all three
+                                      ahead of this cell rather than
+                                      behind it, since none of them runs
+                                      on a command log or needs a rules
+                                      row: the vendoring the two T-INT
+                                      IDs assert over has landed, and
+                                      T-SAVE-04 refuses on the header
+                                      alone and never applies a command.
+                                      That is a real gate rather than a
+                                      placeholder: T-INT-02 replays a
+                                      fixed log, so its divergence
+                                      surface is the state-mutating math
+                                      only, and every field of the §4.10
+                                      hash is an integer except the
+                                      transients inside resolveDamage —
+                                      which Attack already reaches. What
+                                      it cannot cover is code that does
+                                      not exist yet, which is exactly why
+                                      rows 4–5 re-open it. No save
+                                      button, slot, or USaveGame wrapper
+                                      here; those are week 5. Move +
+                                      attack only — no capture, no
+                                      production, no AI opponent.
 
   3                                   Capture + production (§4.11 rows
                                       4–5), then the baseline
@@ -3958,7 +4024,7 @@ system, no §3 ledger row flips on a partial pass (Q29).
   presentation block and the snapshot 
   fields ruled beside T-UI-05 on the  
   same day, which mint no ID at all.  
-  55 of the 71 are green: 18 at       
+  56 of the 71 are green: 18 at       
   c224825, where rows 1 and 3 closed  
   their full acceptance sets and row  
   2’s headless half passed, 9 at      
@@ -3980,18 +4046,24 @@ system, no §3 ledger row flips on a partial pass (Q29).
   acceptance set, and 1 at d837fc8,   
   where the widened T-INT-01 closed   
   over the vendored tree at 9dec48c   
-  without closing it either — an ID   
+  without closing it either — under   
+  the closure convention this         
+  document states once, here: an ID   
   whose written text widens closes at 
   the commit at which the widened     
-  text is met, and T-INT-04’s text    
-  did not change (§3) — so every row  
-  on the critical path has now        
-  landed, row 8 last and on a partial 
-  pass, per acceptance ID as well as  
-  per row. 16 IDs remain unclosed:    
-  T-DATA-05, which leaves row 2       
-  unflipped; T-SCN-08, T-SCN-09 and   
-  T-SCN-11, which are written,        
+  text is met, T-INT-04’s text not    
+  having changed (§3) — and 1 at      
+  737f666, where T-SAVE-04 closed on  
+  row 10’s part (a) without closing   
+  row 10’s acceptance set, that row   
+  having no ledger row to close (§3)  
+  — so every row on the critical path 
+  has now landed, row 8 last and on a 
+  partial pass, per acceptance ID as  
+  well as per row. 15 IDs remain      
+  unclosed: T-DATA-05, which leaves   
+  row 2 unflipped; T-SCN-08, T-SCN-09 
+  and T-SCN-11, which are written,    
   unblocked and asserting, but ran    
   only part of their fixture sets,    
   and which leave row 7 unflipped;    
@@ -4009,8 +4081,13 @@ system, no §3 ledger row flips on a partial pass (Q29).
   having closed — T-INT-04 at         
   b23823f, and T-INT-01 at d837fc8 on 
   the widening of its own text (§3);  
-  and the 7 in row 10, which holds no 
-  code                                
+  and the 6 left in row 10, whose     
+  part (a) has since landed and which 
+  therefore holds code — T-SAVE-04    
+  closed at 737f666, and the six left 
+  wait on the replayer of part (b),   
+  on the editor pass, or on row 6’s   
+  self-play (§3)                      
   -----------------------------------------------------------------------
 
 4.6 Token budget
@@ -6184,12 +6261,10 @@ reading, its gate stays blocked until the Director answers.
                                                                                                           account — what moves is
                                                                                                           the commit T-INT-01’s
                                                                                                           green is credited to,
-                                                                                                          since an ID whose text
-                                                                                                          widens closes where the
-                                                                                                          widened text is met
-                                                                                                          (§4.5, §4.11). The
-                                                                                                          general rule the row
-                                                                                                          settles: where an
+                                                                                                          under the closure
+                                                                                                          convention §4.5 states.
+                                                                                                          The general rule the
+                                                                                                          row settles: where an
                                                                                                           invariant’s text and
                                                                                                           its running check
                                                                                                           disagree, the check
@@ -6366,11 +6441,18 @@ path-for-path with no rename map. Driver is in the set and is not
 optional: Ai.good.cpp links against it. Nothing else is vendored — a UBT
 module cannot hold a second main(), which excludes every test_*.cpp,
 driver_main.cpp and selfplay.cpp, and the *.buggy.cpp files are pass-1
-fixtures, not shippable code. StratRules contains no engine headers, no
-UObject, no third-party includes — pure C++17 in namespace strat,
-exactly the base-spec constraint. The standalone gate keeps compiling
-the identical files, so “the engine build works” never substitutes for
-“the gate passed.”
+fixtures, not shippable code. An eleventh crew module exists and is
+deliberately not vendored. Save landed at 737f666 (§3) and stays out of
+Source/StratRules/ until part (b) gives it a bridge consumer — a
+decision rather than an omission, and nothing re-dates on its account:
+T-INT-01 stays green at d837fc8 and T-INT-04 at b23823f, and no UE
+project commit was made when it landed. The enumeration above is correct
+as it stands and gains only the statement that an eleventh module was
+left out on purpose. StratRules contains no engine headers, no UObject,
+no third-party includes — pure C++17 in namespace strat, exactly the
+base-spec constraint. The standalone gate keeps compiling the identical
+files, so “the engine build works” never substitutes for “the gate
+passed.”
 
 2. Bridge — the only code that knows both worlds. The game module
 (Stratocracy) owns: - Load: FUnitRow/FTerrainRow/FEffectivenessRow →
@@ -6398,6 +6480,15 @@ in-editor Automation test through the UBT-compiled module, and both must
 land on the same canonical state hash. This is what catches the one
 genuinely engine-shaped risk — a compiler/CRT divergence in the damage
 formula’s round — mechanically instead of by playtest anecdote.
+
+No further spec-stub pass is owed for part 2 (ruled 2026-08-05). The
+stub below is already full: its invariants carry the bridge’s own —
+T-INT-02, T-INT-03 and T-INT-05 — beside a Determinism line and an
+Acceptance line, so what part 2 waits on is not specification. It waits
+on two named things: §4.10’s canonical state hash, which is build-order
+row 10’s part (b) and is T-INT-02’s and T-INT-03’s subject, and an
+in-editor Automation harness. Both are recorded here as blockers and
+neither is scheduled here.
 
     SPEC STUB: Integration parity              (Director → Systems Engineer / UI Scaffolder)
     Inputs:  vendored StratRules sources + recorded source commit; a §4.10 replay
@@ -6518,9 +6609,10 @@ hash carries and the terrain the scenario file fixes, whose own
 scenarioHash is a header field above. That is a narrower test than
 “derived”, and deliberately so — the Policies below call a waiting build
 and capture-in-progress derived pending state because they are a
-function of the log, and both are hashed. Row 10 holds no code and no
-save file exists, so widening the hash costs nothing at this revision
-and would not stay free.
+function of the log, and both are hashed. This hash is still unbuilt:
+row 10’s part (a) has landed and defines none of it, carrying stateHash
+as an opaque required string (§3), so widening the hash still costs
+nothing at this revision and would not stay free.
 
 Policies (prototype): - Single slot — one file (slot0), stored via a
 thin USaveGame wrapper holding the JSON so platform save paths are
@@ -6589,23 +6681,24 @@ is green there, under clang++, which is what this row’s cell means by
 closing as soon as vendoring lands. T-INT-01 is green at d837fc8, over
 the vendored tree at 9dec48c, and not at the earlier landing: its
 written text was widened there, over an input that did not exist before
-it, so the widened text is first met at that commit (§3). The landing
-stands as the landing it was; what moves is where the widened ID closes
-— the treatment row 5 already has, whose T-TURN-01..10 closes at its
-rebuild while T-TURN-01..09 first closed at ad77b13. Row 9’s acceptance
-set does not close, on the Q29 reading rows 2, 7 and 8 stand on:
-T-INT-02, T-INT-03 and T-INT-05 did not run, no in-editor Automation
-harness existing. Row 2 is not green: T-DATA-01..04 and 06 pass at
-c224825 and T-DATA-05 has not run, which is exactly the flip cost its †
-bullet below already priced — reached by the ordinary schedule, since
-the editor pass is not yet due, and not by the cut line firing. Note row
-10’s format spec must exist by the row-9 integration pass, because
-T-INT-02’s input file is a §4.10 save. Rows 9 and 10 therefore state
-their dependencies in two parts — what each gate needs in order to run,
-and what it needs in order to close — because both are scoped to the
-command set of the log they replay, and week 2’s log carries only
-{Move, Attack} (§4.4). Reading either row’s requirement as a single set
-is what put a gate in a week this table could not supply it.
+it, so it closes there under the closure convention §4.5 states (§3).
+The landing stands as the landing it was; what moves is where the
+widened ID closes — the treatment row 5 already has, whose T-TURN-01..10
+closes at its rebuild while T-TURN-01..09 first closed at ad77b13. Row
+9’s acceptance set does not close, on the Q29 reading rows 2, 7 and 8
+stand on: T-INT-02, T-INT-03 and T-INT-05 did not run, no in-editor
+Automation harness existing. Row 2 is not green: T-DATA-01..04 and 06
+pass at c224825 and T-DATA-05 has not run, which is exactly the flip
+cost its † bullet below already priced — reached by the ordinary
+schedule, since the editor pass is not yet due, and not by the cut line
+firing. Note row 10’s format spec must exist by the row-9 integration
+pass, because T-INT-02’s input file is a §4.10 save. Rows 9 and 10
+therefore state their dependencies in two parts — what each gate needs
+in order to run, and what it needs in order to close — because both are
+scoped to the command set of the log they replay, and week 2’s log
+carries only {Move, Attack} (§4.4). Reading either row’s requirement as
+a single set is what put a gate in a week this table could not supply
+it.
 
   ----------------------------------------------------------------------------------------------------
   #              System (ledger row)   Depends on                Headless?        Acceptance test IDs
@@ -6690,10 +6783,19 @@ is what put a gate in a week this table could not supply it.
                                        (refusal on any header                     
                                        mismatch) closes on it                     
                                        alone, since it never                      
-                                       applies a command. (b)                     
-                                       Headless replayer — rows                   
-                                       1–3, plus row 7’s                          
-                                       structural half for the                    
+                                       applies a command. Part                    
+                                       (a) has since landed, at                   
+                                       737f666: T-SAVE-04 is                      
+                                       green there under clang++                  
+                                       and MSVC both, beside                      
+                                       GATE-SAVE-PARSE, which                     
+                                       mints no acceptance ID,                    
+                                       so this row holds code                     
+                                       without closing its set                    
+                                       (§3). (b) Headless                         
+                                       replayer — rows 1–3, plus                  
+                                       row 7’s structural half                    
+                                       for the                                    
                                        scenarioId/scenarioHash                    
                                        it loads; it runs                          
                                        T-SAVE-01/02/03/05/06                      
