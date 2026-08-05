@@ -2853,10 +2853,12 @@ asserted.
 Status: live tracker — first rows populated 2026-07-26 from the
 Assignment-3 agent crew; Repair and Type-effectiveness added and
 gate-verified 2026-07-29; the rest land as each system is built (wk 1–3,
-§4.4). This draft stands at 2026-08-04, at commit 41a1452 in the crew
-repo, whose parent is 7c36303. §4.4’s week-1 deliverable is §4.11 rows
-1–3 — grid and hex math, the §4.8 tables, movement and pathfinding — and
-week 1 closed two of the three: rows 1 and 3 passed their full
+§4.4). This draft stands at 2026-08-04, at commit b23823f in the crew
+repo, whose parent is e06c44b and whose grandparent is 41a1452, and at
+99fcb84 in the Stratocracy UE project repo, the first commit in that
+repo since its Git LFS migration. §4.4’s week-1 deliverable is §4.11
+rows 1–3 — grid and hex math, the §4.8 tables, movement and pathfinding
+— and week 1 closed two of the three: rows 1 and 3 passed their full
 acceptance sets at that commit (T-HEX-01..07, 7/7; T-MOVE-01..06, 6/6)
 and flip in the table below. Row 2 does not flip. Its headless half is
 green — T-DATA-01..04 and 06, 5/5 — but T-DATA-05, the in-editor Unreal
@@ -3345,9 +3347,93 @@ not authored by an agent crew and it is not the two-pass agent pipeline
 that produced the earlier rows. The pass-1/pass-2 split was performed by
 hand: cpp_reference/Ui.buggy.cpp was rebased on the finished Ui.good.cpp
 and the two original row-8 defects re-injected, rather than preserved in
-place from 7c36303.* Legend: Author ∈ {agent, agent+human, human};
-Agent-verified ∈ {✓, —}; Evidence cites the git commit + passing test
-IDs so any row is independently checkable.
+place from 7c36303. The gate runner was then repaired, at e06c44b, whose
+parent is 41a1452. Before it, python run.py --week1 did not compile past
+§4.11 row 5: row 6 failed with
+.\Driver.h:18:10: fatal error: 'Ui.h' file not found, and rows 6, 7, 8
+and the debug driver never ran. The cause was in the runner and in no
+module: 7c36303 added #include "Ui.h" to cpp_reference/Driver.h, and the
+string Ui occurred zero times in crew/tools.py, so the runner’s registry
+never gained Ui.h, Ui.cpp or test_ui.cpp; row 8’s and T-UI-05’s gates
+had been run by ad-hoc compiles, so nothing exercised the runner after
+that commit. The breakage was found by running the runner at 41a1452 —
+it was not reported by anyone and was visible in no record, and it is
+recorded here rather than repaired quietly. No module source, header,
+harness or invariant was touched by the repair; it is registry and
+record text only. After it, from a clean tree under clang++, the whole
+suite ran — row 1 7/7, row 2 6/6, row 3 6/6, row 4 9/9, row 5 11/11, row
+6 7/7, row 7 12/12, row 8 34/34, and the debug driver 12/12, with row
+8’s pass-1 fixture blocked at 21/34 on 13 FAIL lines over three distinct
+IDs — the same figures already recorded above, now produced by the
+runner rather than by hand. The three link lines the repair changed were
+also built and run under MSVC: row 8 34/34, row 6 7/7, and the driver
+12/12. No ledger row moves on a repair to the runner and no acceptance
+ID closed here. Build-order row 9’s headless half then landed, at
+b23823f, with the UE project’s half at 99fcb84. New in the crew repo:
+sync_stratrules.py, spec/integration_spec.md, run_integration_gate_fn in
+crew/tools.py, and python run.py --integration, which --week1 now also
+runs at its end; the vendored module itself is described in §4.9. The
+gate is T-INT-01 and T-INT-04, 2/2 under clang++, at rulesCommit b23823f
+over the vendored tree at 99fcb84. T-INT-02, T-INT-03 and T-INT-05 did
+not run — no in-editor Automation harness exists, and the runner prints
+that sentence by name before its tally. Row 9’s acceptance set therefore
+does not close, on the Q29 reading applied per acceptance ID as well as
+per row. It has no row in the table below to leave unflipped: §4.11
+calls it a proposed ledger row, and this landing creates none, since
+what landed is the vendoring step and not the bridge §4.9 part 2
+describes. Whether the ledger should gain the row is filed for the
+Director. No acceptance ID was minted — this row wrote no invariant text
+— so §4.5’s written-ID count does not move at this landing, its green
+count moves 53 → 55 and its unclosed count moves 18 → 16. Compiler
+detection was measured rather than assumed: g++ is not installed on this
+machine, clang++ is found first, and cl is present but never reached.
+§4.9’s T-INT-04 states that any one of the four compiling clean
+satisfies it and that it does not require all four, so a single-compiler
+run is the invariant’s own terms and not a shortfall against them. The
+check was shown to fail before it was believed — known-bad inputs, each
+restored afterwards: a comment appended to a vendored source (T-INT-01
+FAIL, T-INT-04 PASS); the same edit plus the manifest’s own recorded
+hash updated to match it (T-INT-01 still FAIL); a vendored header
+deleted (T-INT-01 FAIL and T-INT-04 FAIL, because Ai.good.cpp genuinely
+stops compiling); an extra Sneaky.good.cpp added (T-INT-01 FAIL, and
+T-INT-04 compiled eleven files rather than ten); and
+#include "CoreMinimal.h" injected (T-INT-04 FAIL and T-INT-01 FAIL). Two
+of those results exceeded the prediction made before running them — the
+deleted header also broke T-INT-04, and the added file moved T-INT-04’s
+compile count — and both are the checks being right rather than the
+deliberate breaks being wrong. The manifest-hash control is the one that
+matters: the check does not trust the manifest’s own hashes and does not
+import the vendor script’s file list, taking only rulesCommit and
+re-deriving both the expected file set and every expected hash from the
+crew repo at that commit, so a manifest-versus-disk comparison would
+have passed that edit and this one does not. When the UE project is
+absent the gate SKIPS with its reason stated and asserts nothing; it
+does not pass, because a vacuous green T-INT-01 beside a vendoring that
+never happened is the failure this ledger exists to prevent. The module
+was first vendored at e06c44b and re-vendored at b23823f; cpp_reference/
+is byte-identical between those two commits — git diff --stat over that
+path prints nothing — so only the manifest’s rulesCommit line changed.
+The .gitattributes rule is load-bearing rather than housekeeping: the UE
+repo runs with core.autocrlf=true and that path carried no text
+attribute, so a fresh clone would have rewritten the vendored files to
+CRLF while the crew blob stayed LF, failing a byte-for-byte check on
+another machine; working-tree bytes, staged index blob and crew blob
+were verified to hash identically for every vendored file. What this
+landing did not build is stated so it is not inferred. The module is
+defined by StratRules.Build.cs and is not wired into any build target —
+Stratocracy.uproject does not list it, nothing depends on it, and no UBT
+build was run — the Director’s decision this session, on the ground that
+registering it would claim an in-engine build this round cannot verify.
+No bridge exists: no load mapping, no command surface, no event list, no
+actor and no widget, so §4.9 part 2 is unbuilt. T-INT-03’s subject is
+§4.10’s canonical state hash, which build-order row 10 has not built;
+the stateHash in cpp_reference/Driver.h remains the driver’s own debug
+digest under GATE-DRV-06 and is a different thing, as recorded above.
+How e06c44b and b23823f were authored is deliberately not stated: no
+harness claim is made for either, because none was established.* Legend:
+Author ∈ {agent, agent+human, human}; Agent-verified ∈ {✓, —}; Evidence
+cites the git commit + passing test IDs so any row is independently
+checkable.
 
   -------------------------------------------------------------------------------------------------------
   System               Author            Agent-verified?   Evidence (commit · tests)
@@ -3508,20 +3594,27 @@ requires the full acceptance set at one commit, so that row records a
 partial pass and stays unverified — the three T-SCN- IDs are why Content
 / scenario does the same at 9086d6a, Q29 there being read per ID, and
 T-UI-03 and T-UI-04 are why UI does the same at 41a1452, for want of an
-in-editor pass at that commit and at 7c36303 before it. (Every commit
-this section cites — d8284f1, row 6’s, included — is reachable from the
-head of main in the crew repo, so every commit link above resolves. The
-file paths resolve too, which they previously did not: four evidence
-cells carried five bare citations between them — Combat.cpp three times
-and test_combat.cpp twice — and neither bare name has ever existed in
-this repository at any commit. Those five citations resolve to two
-tracked files, cpp_reference/Combat.good.cpp and
-cpp_reference/test_combat.cpp, which the cells now name in full; every
-path this table cites was probed at the commit its own row names. The
-build/ directory is not tracked at all. That correction is what the
-“independently checkable” claim required, not a cosmetic one.) The
-remaining rows fill in the same format — commit + passing test IDs — as
-each system clears the gate.
+in-editor pass at that commit and at 7c36303 before it. (Every crew-repo
+commit this section cites — d8284f1, row 6’s, included — is reachable
+from the head of main there, so every commit link above resolves. One
+cited commit is in a different repository: 99fcb84 is not an object in
+the crew repo at all, and is reachable from the head of master in the
+Stratocracy UE project repo, whose tree it pins. That is the first
+citation this ledger makes outside the crew repo, and the split is
+structural rather than incidental — the T-INT-01 gate check lives in the
+crew repo while the vendored tree it asserts over lives in the UE
+project, so the evidence chain spans both and each commit is cited
+against the repo it is in. The file paths resolve too, which they
+previously did not: four evidence cells carried five bare citations
+between them — Combat.cpp three times and test_combat.cpp twice — and
+neither bare name has ever existed in this repository at any commit.
+Those five citations resolve to two tracked files,
+cpp_reference/Combat.good.cpp and cpp_reference/test_combat.cpp, which
+the cells now name in full; every path this table cites was probed at
+the commit its own row names. The build/ directory is not tracked at
+all. That correction is what the “independently checkable” claim
+required, not a cosmetic one.) The remaining rows fill in the same
+format — commit + passing test IDs — as each system clears the gate.
 
 Rules that keep the ledger honest: - Scope = the game’s own source only.
 The UE engine, the MCP/AllToolsets plugins, and the bought reference
@@ -3627,8 +3720,14 @@ the game” claim holds.
                                       that subset and re-open when it
                                       widens — T-INT-01/04 and T-SAVE-04
                                       close here, the rest do not (§4.11
-                                      rows 9–10). That is a real gate
-                                      rather than a placeholder: T-INT-02
+                                      rows 9–10) — and T-INT-01/04 are
+                                      green at b23823f (§3), ahead of
+                                      this cell rather than behind it,
+                                      since neither runs on a command log
+                                      or needs a rules row, and the
+                                      vendoring they assert over has
+                                      landed. That is a real gate rather
+                                      than a placeholder: T-INT-02
                                       replays a fixed log, so its
                                       divergence surface is the
                                       state-mutating math only, and every
@@ -3793,7 +3892,7 @@ system, no §3 ledger row flips on a partial pass (Q29).
   presentation block and the snapshot 
   fields ruled beside T-UI-05 on the  
   same day, which mint no ID at all.  
-  53 of the 71 are green: 18 at       
+  55 of the 71 are green: 18 at       
   c224825, where rows 1 and 3 closed  
   their full acceptance sets and row  
   2’s headless half passed, 9 at      
@@ -3808,11 +3907,15 @@ system, no §3 ledger row flips on a partial pass (Q29).
   at 7c36303, where T-UI-01 and       
   T-UI-02 closed without closing row  
   8, and 1 at 41a1452, where T-UI-05  
-  closed without closing it either —  
-  so every row on the critical path   
-  has now landed, row 8 last and on a 
+  closed without closing it either,   
+  and 2 at b23823f, where T-INT-01    
+  and T-INT-04 closed over the        
+  vendored tree at 99fcb84 without    
+  closing row 9’s acceptance set — so 
+  every row on the critical path has  
+  now landed, row 8 last and on a     
   partial pass, per acceptance ID as  
-  well as per row. 18 IDs remain      
+  well as per row. 16 IDs remain      
   unclosed: T-DATA-05, which leaves   
   row 2 unflipped; T-SCN-08, T-SCN-09 
   and T-SCN-11, which are written,    
@@ -3825,8 +3928,14 @@ system, no §3 ledger row flips on a partial pass (Q29).
   exists at either of row 8’s two     
   commits — they are now the whole of 
   what row 8 lacks, so its flip waits 
-  on the editor pass alone; and the   
-  12 in rows 9–10, which hold no code 
+  on the editor pass alone; the 3     
+  left in row 9 — T-INT-02, T-INT-03  
+  and T-INT-05, the editor pass, for  
+  which no in-editor Automation       
+  harness exists — its other two      
+  having closed at b23823f (§3); and  
+  the 7 in row 10, which holds no     
+  code                                
   -----------------------------------------------------------------------
 
 4.6 Token budget
@@ -6105,12 +6214,24 @@ sources live canonically in the crew repo, and each §4.7 stub joins them
 as it lands — where the python run.py gate runs (§3 ledger), under the
 single compiler that gate detects: the first of g++, clang++, c++ or cl
 found on PATH. The UE project vendors them verbatim into a UBT runtime
-module, Source/StratRules/, via a sync script that records the source
-commit hash. StratRules contains no engine headers, no UObject, no
-third-party includes — pure C++17 in namespace strat, exactly the
-base-spec constraint. The standalone gate keeps compiling the identical
-files, so “the engine build works” never substitutes for “the gate
-passed.”
+module, Source/StratRules/, via sync_stratrules.py, which reads each
+source from the git object store rather than the working tree — so
+identity is true by construction at the moment the script finishes — and
+records the source commit as rulesCommit in StratRules.manifest.json.
+That module now exists, at 99fcb84 in the UE project repo against
+rulesCommit b23823f (§3): the ten modules Combat, Hex, Data, Move,
+Economy, Turn, Ai, Scenario, Ui and Driver, each as X.h and X.good.cpp,
+beside two UE-owned files that have no counterpart in the crew repo —
+StratRules.Build.cs and the manifest. Vendored names are unchanged from
+the crew repo, so the comparison is path-for-path with no rename map.
+Driver is in the set and is not optional: Ai.good.cpp links against it.
+Nothing else is vendored — a UBT module cannot hold a second main(),
+which excludes every test_*.cpp, driver_main.cpp and selfplay.cpp, and
+the *.buggy.cpp files are pass-1 fixtures, not shippable code.
+StratRules contains no engine headers, no UObject, no third-party
+includes — pure C++17 in namespace strat, exactly the base-spec
+constraint. The standalone gate keeps compiling the identical files, so
+“the engine build works” never substitutes for “the gate passed.”
 
 2. Bridge — the only code that knows both worlds. The game module
 (Stratocracy) owns: - Load: FUnitRow/FTerrainRow/FEffectivenessRow →
@@ -6315,7 +6436,13 @@ was then headless and unimplemented — minted 2026-08-04, after that
 commit. T-UI-05 is green at 41a1452 (§3), the rebuild at which the
 snapshot additions ruled beside it were built, so the in-editor pass is
 now the whole of what this row still lacks and the row stays unflipped
-on it. Row 2 is not green: T-DATA-01..04 and 06 pass at that commit and
+on it. Row 9’s headless half has since landed, at b23823f in the crew
+repo with the vendored tree at 99fcb84 in the UE project repo: T-INT-01
+and T-INT-04 are green there, under clang++, which is what this row’s
+cell means by closing as soon as vendoring lands. Row 9’s acceptance set
+does not close, on the Q29 reading rows 2, 7 and 8 stand on: T-INT-02,
+T-INT-03 and T-INT-05 did not run, no in-editor Automation harness
+existing. Row 2 is not green: T-DATA-01..04 and 06 pass at c224825 and
 T-DATA-05 has not run, which is exactly the flip cost its † bullet below
 already priced — reached by the ordinary schedule, since the editor pass
 is not yet due, and not by the cut line firing. Note row 10’s format
@@ -6382,7 +6509,10 @@ week this table could not supply it.
                                        sync script and the       statelessness    
                                        standalone gate run are   in-editor        
                                        the assert — and close as                  
-                                       soon as vendoring lands.                   
+                                       soon as vendoring lands,                   
+                                       which they did at b23823f                  
+                                       over the vendored tree at                  
+                                       99fcb84 (§3).                              
                                        T-INT-02/03/05 need only                   
                                        the rows behind the log                    
                                        they replay: rows 1–3 for                  
