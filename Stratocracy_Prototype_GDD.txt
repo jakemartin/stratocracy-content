@@ -2853,44 +2853,45 @@ asserted.
 Status: live tracker — first rows populated 2026-07-26 from the
 Assignment-3 agent crew; Repair and Type-effectiveness added and
 gate-verified 2026-07-29; the rest land as each system is built (wk 1–3,
-§4.4). This draft stands at 2026-08-05, at commit 737f666 in the crew
+§4.4). This draft stands at 2026-08-05, at commit ec15be6 in the crew
 repo and at 9dec48c in the Stratocracy UE project repo. In the crew
-repo, d837fc8 is an ancestor of 737f666, measured with
-git merge-base --is-ancestor rather than read off a branch, and every
-crew-repo commit this GDD cites is reachable from 737f666, measured the
-same way per sha. 9dec48c is cited as a commit, and this line makes no
-claim about how it stands to any branch. This line previously said that
-both commits had been verified with git ls-remote to be the head of
-their own repo’s default branch. That was true when it was gated and
-false within the hour, a concurrent human push having moved one of them
-— a head expires and a sha does not — so the defect is recorded here
-rather than quietly overwritten. The landing this ledger records before
-them is b23823f in the crew repo, whose parent is e06c44b and whose
-grandparent is 41a1452, with the UE project’s half at 99fcb84, the first
-commit in that repo since its Git LFS migration. §4.4’s week-1
-deliverable is §4.11 rows 1–3 — grid and hex math, the §4.8 tables,
-movement and pathfinding — and week 1 closed two of the three: rows 1
-and 3 passed their full acceptance sets at that commit (T-HEX-01..07,
-7/7; T-MOVE-01..06, 6/6) and flip in the table below. Row 2 does not
-flip. Its headless half is green — T-DATA-01..04 and 06, 5/5 — but
-T-DATA-05, the in-editor Unreal Automation parity pass, has not run, and
-Q29 requires the full acceptance set at one commit, so the row records a
-partial pass and stays unverified; the editor pass is not yet due, so
-that is the ordinary schedule and not §4.7’s cut line firing. What week
-1 did not close is everything after it: rows 4–8 held no code then, and
-rows 4, 5 and 6 have since landed — all three recorded at the end of
-this paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
-critical path runs 1 → 3 → 4 → 5 → 6/8, every row on that path has since
-landed, row 8 last and on a partial pass that leaves its ledger row
-unflipped — per acceptance ID as well as per row: T-TURN-10 closed at
-6ccd40b, and the path IDs still written and asserting without being
-green are T-UI-03 and T-UI-04, T-UI-05 having since closed at 41a1452 as
-recorded at the end of this paragraph, and row 8’s other dependency is
-row 7, which has since landed at 9086d6a on a partial pass, recorded at
-the end of this paragraph. §4.5’s Specification outruns the build* risk
-is therefore reduced and re-scoped rather than retired, and that row now
-states the arithmetic. What landed after week 1 is a debug driver, at
-9f87ecd: cpp_reference/driver_main.cpp builds a command REPL,
+repo, 737f666, 41a1452 and d837fc8 are each an ancestor of ec15be6,
+measured with git merge-base --is-ancestor per sha rather than read off
+a branch, and every crew-repo commit this GDD cites is an ancestor of
+ec15be6, measured the same way per sha. 9dec48c is cited as a commit,
+and this line makes no claim about how it stands to any branch. This
+line previously said that both commits had been verified with
+git ls-remote to be the head of their own repo’s default branch. That
+was true when it was gated and false within the hour, a concurrent human
+push having moved one of them — a head expires and a sha does not — so
+the defect is recorded here rather than quietly overwritten. The landing
+this ledger records before them is b23823f in the crew repo, whose
+parent is e06c44b and whose grandparent is 41a1452, with the UE
+project’s half at 99fcb84, the first commit in that repo since its Git
+LFS migration. §4.4’s week-1 deliverable is §4.11 rows 1–3 — grid and
+hex math, the §4.8 tables, movement and pathfinding — and week 1 closed
+two of the three: rows 1 and 3 passed their full acceptance sets at that
+commit (T-HEX-01..07, 7/7; T-MOVE-01..06, 6/6) and flip in the table
+below. Row 2 does not flip. Its headless half is green — T-DATA-01..04
+and 06, 5/5 — but T-DATA-05, the in-editor Unreal Automation parity
+pass, has not run, and Q29 requires the full acceptance set at one
+commit, so the row records a partial pass and stays unverified; the
+editor pass is not yet due, so that is the ordinary schedule and not
+§4.7’s cut line firing. What week 1 did not close is everything after
+it: rows 4–8 held no code then, and rows 4, 5 and 6 have since landed —
+all three recorded at the end of this paragraph — so at d8284f1 only
+rows 7–8 hold none; since §4.11’s critical path runs 1 → 3 → 4 → 5 →
+6/8, every row on that path has since landed, row 8 last and on a
+partial pass that leaves its ledger row unflipped — per acceptance ID as
+well as per row: T-TURN-10 closed at 6ccd40b, and the path IDs still
+written and asserting without being green are T-UI-03 and T-UI-04,
+T-UI-05 having since closed at 41a1452 as recorded at the end of this
+paragraph, and row 8’s other dependency is row 7, which has since landed
+at 9086d6a on a partial pass, recorded at the end of this paragraph.
+§4.5’s Specification outruns the build* risk is therefore reduced and
+re-scoped rather than retired, and that row now states the arithmetic.
+What landed after week 1 is a debug driver, at 9f87ecd:
+cpp_reference/driver_main.cpp builds a command REPL,
 build/stratocracy_debug, over the built modules. The binary is not
 citable — build/ is untracked, as the paragraph below the table already
 records — so what is cited is its five tracked sources, each probed
@@ -3438,19 +3439,19 @@ build was run — the Director’s decision this session, on the ground that
 registering it would claim an in-engine build this round cannot verify.
 No bridge exists: no load mapping, no command surface, no event list, no
 actor and no widget, so §4.9 part 2 is unbuilt. T-INT-03’s subject is
-§4.10’s canonical state hash, which build-order row 10 has not built;
-the stateHash in cpp_reference/Driver.h remains the driver’s own debug
-digest under GATE-DRV-06 and is a different thing, as recorded above.
-How e06c44b and b23823f were authored is deliberately not stated: no
-harness claim is made for either, because none was established.
-T-INT-01’s running check was then widened, at d837fc8 in the crew repo
-with the UE project repo at 9dec48c. Its PASS line reads, verbatim:
-T-INT-01 source identity: all 22 files in Source/StratRules/ are
-accounted for at d837fc8 — 20 sources and StratRules.Build.cs hash-match
-tracked blobs, and StratRules.manifest.json recomputes byte-for-byte.
-Nothing in that directory is exempt from it, and what it must satisfy is
-stated in §4.9’s invariant text, amended with it. Two files became
-tracked in the crew repo to make that possible —
+§4.10’s canonical state hash, which build-order row 10 had not built at
+that commit; the stateHash in cpp_reference/Driver.h remains the
+driver’s own debug digest under GATE-DRV-06 and is a different thing, as
+recorded above. How e06c44b and b23823f were authored is deliberately
+not stated: no harness claim is made for either, because none was
+established. T-INT-01’s running check was then widened, at d837fc8 in
+the crew repo with the UE project repo at 9dec48c. Its PASS line reads,
+verbatim: T-INT-01 source identity: all 22 files in Source/StratRules/
+are accounted for at d837fc8 — 20 sources and StratRules.Build.cs
+hash-match tracked blobs, and StratRules.manifest.json recomputes
+byte-for-byte. Nothing in that directory is exempt from it, and what it
+must satisfy is stated in §4.9’s invariant text, amended with it. Two
+files became tracked in the crew repo to make that possible —
 ue_module/StratRules.Build.cs and ue_module/manifest_fields.json.
 StratRules.Build.cs was previously a string literal inside
 sync_stratrules.py and is now vendored from the git object store exactly
@@ -3539,26 +3540,163 @@ T-INT-01 and T-INT-04 still pass 2/2 at rulesCommit d837fc8 after this
 module landed, which is what makes the no-vendoring decision recorded in
 §4.9 safe rather than merely convenient. Six of row 10’s seven IDs did
 not run, and each is named in the runner with its reason rather than
-absorbed: T-SAVE-01, T-SAVE-02, T-SAVE-03 and T-SAVE-05 need the
-headless replayer of part (b); T-SAVE-06 is the only † of the seven, is
-asserted jointly with T-INT-02, and has neither an in-editor harness nor
-a built subject; T-SAVE-07 needs row 6’s self-play, which part (c)
-reaches. Row 10’s acceptance set therefore does not close, on the Q29
-reading applied per acceptance ID as well as per row. It has no row in
-the table below to leave unflipped: §4.11 calls row 10 a proposed ledger
-row, and this landing creates none. That is row 9’s posture and
-deliberately not the partial-pass posture of rows 2, 7 and 8, each of
-which has a ledger row that a partial pass leaves standing unflipped; a
-row that does not exist has nothing to leave. What part (a) deliberately
-does not do is stated so it is not inferred. No command is applied, so
-§4.10’s canonical state hash is not defined here — that is part (b)’s,
-and part (a) carries stateHash as an opaque required string. dataHash
-and scenarioHash are compared as opaque strings and never recomputed,
-which is what keeps this part’s dependency set empty; its link set is
-Save.cpp, Hex.cpp and test_save.cpp and nothing else. No in-editor
-harness is among the thirteen main() definitions above. How 737f666 was
-authored is deliberately not stated: no harness claim is made for it,
-because none was established.* Legend: Author ∈ {agent, agent+human,
+absorbed: T-SAVE-01, T-SAVE-02, T-SAVE-03 and T-SAVE-05 needed the
+headless replayer of part (b), which was unbuilt at that commit;
+T-SAVE-06 is the only † of the seven, is asserted jointly with T-INT-02,
+and had at that commit neither an in-editor harness nor a built subject;
+T-SAVE-07 needs row 6’s self-play, which part (c) reaches. Row 10’s
+acceptance set therefore does not close, on the Q29 reading applied per
+acceptance ID as well as per row. It has no row in the table below to
+leave unflipped: §4.11 calls row 10 a proposed ledger row, and this
+landing creates none. That is row 9’s posture and deliberately not the
+partial-pass posture of rows 2, 7 and 8, each of which has a ledger row
+that a partial pass leaves standing unflipped; a row that does not exist
+has nothing to leave. What part (a) deliberately does not do is stated
+so it is not inferred. No command is applied, so §4.10’s canonical state
+hash is not defined here — that is part (b)’s, and part (a) carries
+stateHash as an opaque required string. dataHash and scenarioHash are
+compared as opaque strings and never recomputed, which is what keeps
+this part’s dependency set empty; its link set is Save.cpp, Hex.cpp and
+test_save.cpp and nothing else. No in-editor harness is among the
+thirteen main() definitions above. How 737f666 was authored is
+deliberately not stated: no harness claim is made for it, because none
+was established. Build-order row 10’s part (b) then landed, at ec15be6,
+with the UE project repo unmoved at 9dec48c. New in the crew repo:
+spec/replay_spec.md, cpp_reference/Replay.h,
+cpp_reference/Replay.good.cpp, cpp_reference/Replay.buggy.cpp and
+cpp_reference/test_replay.cpp; modified: cpp_reference/Save.h,
+cpp_reference/Turn.h, cpp_reference/test_save.cpp, crew/tools.py,
+crew/offline.py, spec/save_spec.md, spec/integration_spec.md and
+spec/turn_spec.md. Part (b) was run against part (c)’s closure
+conditions rather than after them, on a ruling (2026-08-05). §4.11
+splits row 10’s dependencies because week 2’s log carried only
+{Move, Attack}, and puts closure in part (c) on rows 4 and 5 completing
+the command set, row 6 completing T-SAVE-02’s determinism composition,
+and T-SAVE-07 needing row 6’s self-play besides; rows 4, 5 and 6 are
+green at 647d4df, 6ccd40b and d8284f1, so the calendar reason for the
+split is gone and the gate’s log carries the complete §4.9 command set —
+Move, Attack, Build, Capture and EndTurn — which is what Q29 requires
+before an acceptance ID may close. Part (c) is not complete at this
+commit, T-SAVE-06 and T-SAVE-07 not having closed, for the two reasons
+recorded below. A segment of the gate’s log is generated by row 6’s AI
+rather than hand-written: at this commit the AI emits a move, an attack
+on the opposing flag Tank and an end of turn, so the log crosses a turn
+boundary under both sides and T-AI-06 sits inside T-SAVE-02’s
+composition rather than beside it. The new module is registered as
+registry row replay in crew/tools.py, so it runs under the python run.py
+gate rather than by an ad-hoc compile, and it is a second registry row
+rather than a widening of the save row: §4.11 says part (a) has no deps
+at all, which is encoded as that row’s link set — Save.cpp, Hex.cpp and
+test_save.cpp — so widening it would have falsified §4.11’s part-(a)
+dependency cell silently. The replay row’s own link set is Replay.cpp,
+Save.cpp, Hex.cpp, Data.cpp, Move.cpp, Economy.cpp, Turn.cpp,
+Combat.cpp, Ai.cpp and test_replay.cpp; Scenario.cpp is in neither link
+set, scenarioHash being compared as an opaque string and never
+recomputed. cpp_reference/test_replay.cpp is a twelfth harness, so
+fourteen tracked sources define main() at ec15be6 — a figure taken by
+enumerating them at that commit with git grep -l and diffing that list
+against the thirteen at 737f666 rather than by adding one to a count
+above: the difference is exactly cpp_reference/test_replay.cpp, and
+nothing was removed. The gate is T-SAVE-01, T-SAVE-02, T-SAVE-03 and
+T-SAVE-05 plus GATE-REPLAY-*, 29/29 under clang++ and MSVC both — g++ is
+still not installed on this machine. Pass-1
+cpp_reference/Replay.buggy.cpp is blocked at 21/29 under both compilers
+— eight FAIL lines over four distinct IDs, identical under each, and
+predicted in full before the run. Its three defects are mechanical edits
+of Replay.good.cpp: replayLog applies to the caller’s state in place
+rather than to a copy; the hash walks units in storage order rather than
+in canonical hex order; and it omits the two per-unit turn flags.
+Against them T-SAVE-05 fails clauses (e), (f) and (g) alone — (a)
+through (d) PASS, because applied is a reported field rather than the
+state — and GATE-REPLAY-BYTES, GATE-REPLAY-ORDER and all three
+GATE-REPLAY-FLAGS clauses fail, while T-SAVE-01, T-SAVE-02 and T-SAVE-03
+all PASS against the defective module, every clause they carry comparing
+two runs that share the defect on both sides. GATE-REPLAY-* mint no
+acceptance ID, on the GATE-SAVE-PARSE, GATE-AI-SMOKE and
+GATE-CAP-PARTIAL precedent. No acceptance ID was written, so §4.5’s
+written-ID count does not move at this landing, its green count moves 56
+→ 60 and its unclosed count moves 15 → 11. Every other row’s tally is
+unchanged from the pre-change baseline, under both compilers — row 1
+7/7, row 2 6/6, row 3 6/6, row 4 9/9, row 5 11/11, row 6 7/7, row 7
+12/12, row 8 34/34, row 10’s part (a) 25/25, the debug driver 12/12 and
+the integration gate 2/2. strat::GameState is declared here (ruled
+2026-08-05), in cpp_reference/Replay.h, and the type’s NAME was already
+this document’s: §4.9 calls it the authoritative strat::GameState, §4.10
+defines the canonical state hash over it, and T-UI-05’s own invariant
+text names it. At 737f666 the string GameState occurred in the crew repo
+only inside comments citing this GDD, in cpp_reference/Save.h,
+cpp_reference/Ui.h and spec/turn_spec.md. No invariant’s text is amended
+by this landing, so no closure re-dates and no green attribution moves:
+T-UI-05 is green at 41a1452 before this commit and after it. The type
+holds the mutable state the rules modules own — board, units, economy,
+turn — and not the §4.8 tables or the Stub-7 scenario, which arrive as
+arguments; it is a fourth composition beside row 6’s AiState, row 8’s
+UiWorld and the debug driver’s Session, and none of the four owns a
+rule. The flag designation lives on it as flagUnit[side] rather than as
+a bool on the unit, because a dead flag is absent from the unit list and
+a per-unit bool cannot then separate “the flag died” from “this side
+designates none”. §4.10’s canonical state hash is implemented here, and
+its field list was restated into the groups the modules hold (ruled
+2026-08-05): two groups moved — cpp_reference/Economy.h holds capture
+progress on the tile, as CaptureProgress {hex, unitId, turnsHeld}, on
+the stated ground that progress can never transfer (Q4, T-FAME-05), and
+keys PendingBuild {factoryHex, side, defIndex} by the factory hex — and
+of §4.10’s three per-factory names, hex survives as a field,
+hasBuiltThisTurn stops being a field without ceasing to be carried — the
+build-allowance group is walked over the turn module’s built-this-turn
+set, so an entry exists for a factory that has taken its build this turn
+and none exists for one that has not, which is a change of encoding and
+not of coverage — and buildWaiting alone stops being carried, on §4.10’s
+own stated omission rule, since it is recomputable from the
+pending-build group. §4.10 carries the implemented grouping.
+canonicalStateBytes is exposed beside the digest, so a check can assert
+the serialisation and not only the digest. Replay.h::openTurn runs
+beginTurn, then start-of-turn repair, then income, then the capture tick
+— the order the Director ruled on 2026-08-03, the tick after income —
+and cpp_reference/Driver.good.cpp’s openActiveTurn performs that same
+sequence over the driver’s Session. That is a duplication of a ruled
+order and not of a rule a module owns, and it is filed as a change
+request in spec/replay_spec.md. Two things this landing found in its own
+instruments are recorded rather than smoothed over. The gate’s first
+fixture board carried a single factory: §2.8’s domination backstop
+(T-TURN-03) ends a match the moment one side holds every factory, and
+row 5 checks it at beginTurn, so that board’s match ended before its
+first command and every later command was refused; the shipped fixture
+carries a factory per side. And the T-SAVE-05 check was written so that
+it could not fail — its bad log replayed from a state in which the log’s
+first entry had already been spent, so entry 0 was refused as a repeat
+and nothing was applied under any implementation, and it passed against
+the very defect it exists to catch; running the defective module is what
+exposed it. It now replays from the initial state, so entries 0 and 1
+apply before the refusal at index 2, and it asserts that index by value.
+Stale claims in the crew repo were repaired in the same commit, found
+with a whitespace-collapsed, case-insensitive sweep:
+cpp_reference/Save.h, cpp_reference/Turn.h, cpp_reference/test_save.cpp,
+crew/tools.py, spec/save_spec.md, spec/integration_spec.md and
+spec/turn_spec.md each stated either that §4.10’s canonical state hash
+had no implementation or that T-SAVE-01/02/03/05 still awaited a
+replayer. spec/integration_spec.md’s is the load-bearing one: it said
+T-INT-02 and T-INT-03 “have no subject even in an editor pass”, which
+this landing makes false. T-SAVE-06 did not close. It is the only † of
+row 10’s seven, it is asserted jointly with T-INT-02, and no in-editor
+Automation harness exists; its other blocker — §4.10’s canonical state
+hash having no implementation — is removed here, so the in-editor
+Automation harness is now the whole of what it waits on. T-SAVE-07 did
+not close: cpp_reference/selfplay.cpp is a combat-only 1v1 duel harness
+that prints a table of duel outcomes, and it writes no §4.10 command
+log. Row 10’s acceptance set therefore does not close, on the Q29
+reading applied per acceptance ID as well as per row, and its unclosed
+count moves 6 → 2. No ledger row is created, flipped or removed by this
+landing: §4.11 calls row 10 a proposed ledger row, which is row 9’s
+posture and deliberately not the partial-pass posture of rows 2, 7 and
+8. The Director has since named that row without creating it (ruled
+2026-08-05), on Ruling K’s precedent for row 9: it is Save & replay, its
+acceptance set is T-SAVE-01..07, and it is created as one row when that
+full set closes — which under Q29 is the same condition as its flipping
+— so parts (a), (b) and (c) resolve to one ledger row rather than to
+several, and what it waits on is T-SAVE-06 and T-SAVE-07. How ec15be6
+was authored is deliberately not stated: no harness claim is made for
+it, because none was established.* Legend: Author ∈ {agent, agent+human,
 human}; Agent-verified ∈ {✓, —}; Evidence cites the git commit + passing
 test IDs so any row is independently checkable.
 
@@ -3722,26 +3860,31 @@ partial pass and stays unverified — the three T-SCN- IDs are why Content
 / scenario does the same at 9086d6a, Q29 there being read per ID, and
 T-UI-03 and T-UI-04 are why UI does the same at 41a1452, for want of an
 in-editor pass at that commit and at 7c36303 before it. (Every crew-repo
-commit this section cites — d8284f1, row 6’s, included — is reachable
-from the head of main there, so every commit link above resolves. Not
-every cited commit is an object in the crew repo: 99fcb84 and 9dec48c
-are not objects in it at all, and each is reachable from the head of
-master in the Stratocracy UE project repo, whose tree it pins. 99fcb84
-was the first citation this ledger made outside the crew repo, and the
-split is structural rather than incidental — the T-INT-01 gate check
-lives in the crew repo while the vendored tree it asserts over lives in
-the UE project, so the evidence chain spans both and each commit is
-cited against the repo it is in. The file paths resolve too, which they
-previously did not: four evidence cells carried five bare citations
-between them — Combat.cpp three times and test_combat.cpp twice — and
-neither bare name has ever existed in this repository at any commit.
-Those five citations resolve to two tracked files,
-cpp_reference/Combat.good.cpp and cpp_reference/test_combat.cpp, which
-the cells now name in full; every path this table cites was probed at
-the commit its own row names. The build/ directory is not tracked at
-all. That correction is what the “independently checkable” claim
-required, not a cosmetic one.) The remaining rows fill in the same
-format — commit + passing test IDs — as each system clears the gate.
+commit this section cites — d8284f1, row 6’s, included — is an ancestor
+of ec15be6, measured with git merge-base --is-ancestor per sha, so every
+commit link above resolves. That form was ruled on 2026-08-05, and the
+ruling is confined to this sentence: it matches the §3 status line
+above, whose substance is unchanged, and restating every reachability
+claim in this document against a named commit was considered in the same
+ruling and declined. Not every cited commit is an object in the crew
+repo: 99fcb84 and 9dec48c are not objects in it at all, and each is
+reachable from the head of master in the Stratocracy UE project repo,
+whose tree it pins. 99fcb84 was the first citation this ledger made
+outside the crew repo, and the split is structural rather than
+incidental — the T-INT-01 gate check lives in the crew repo while the
+vendored tree it asserts over lives in the UE project, so the evidence
+chain spans both and each commit is cited against the repo it is in. The
+file paths resolve too, which they previously did not: four evidence
+cells carried five bare citations between them — Combat.cpp three times
+and test_combat.cpp twice — and neither bare name has ever existed in
+this repository at any commit. Those five citations resolve to two
+tracked files, cpp_reference/Combat.good.cpp and
+cpp_reference/test_combat.cpp, which the cells now name in full; every
+path this table cites was probed at the commit its own row names. The
+build/ directory is not tracked at all. That correction is what the
+“independently checkable” claim required, not a cosmetic one.) The
+remaining rows fill in the same format — commit + passing test IDs — as
+each system clears the gate.
 
 Rules that keep the ledger honest: - Scope = the game’s own source only.
 The UE engine, the MCP/AllToolsets plugins, and the bought reference
@@ -3886,26 +4029,36 @@ the game” claim holds.
                                       T-SAVE-01/03/05/06 on rows 4–5, and
                                       T-SAVE-02 on row 6, whose
                                       determinism gate (T-AI-06) it
-                                      composes. Only T-SAVE-07 still
-                                      waits — for wk 4’s self-play logs.
-                                      T-UI-05 was scheduled here too
-                                      (ruled 2026-08-04), and not as one
-                                      of those re-runs: it is headless,
-                                      and it asserts over the per-factory
-                                      build record, which Build reaches
-                                      and which rows 4–5 supply — the
-                                      piece landing in the week the thing
-                                      that consumes it runs, the
-                                      principle stated below this table.
-                                      It is green at 41a1452 (§3), so it
-                                      is ahead of this cell rather than
-                                      behind it; the rows that supply
-                                      what it asserts over had already
-                                      landed. AI second pass (utility +
-                                      threat map) and the custom MCP
-                                      scenario toolset follow only if the
-                                      slice lands early; both are off the
-                                      critical path (§4.2, §4.11).
+                                      composes. T-SAVE-01, T-SAVE-02,
+                                      T-SAVE-03 and T-SAVE-05 are green
+                                      at ec15be6 (§3), where row 10’s
+                                      part (b) ran over the complete
+                                      command set rows 4–5 supply. Two
+                                      still wait: T-SAVE-06 on the
+                                      in-editor Automation harness it is
+                                      asserted jointly with T-INT-02 on,
+                                      and T-SAVE-07 on a self-play log
+                                      written in the §4.10 format, which
+                                      wk 4’s self-play is scheduled to
+                                      produce. T-UI-05 was scheduled here
+                                      too (ruled 2026-08-04), and not as
+                                      one of those re-runs: it is
+                                      headless, and it asserts over the
+                                      per-factory build record, which
+                                      Build reaches and which rows 4–5
+                                      supply — the piece landing in the
+                                      week the thing that consumes it
+                                      runs, the principle stated below
+                                      this table. It is green at 41a1452
+                                      (§3), so it is ahead of this cell
+                                      rather than behind it; the rows
+                                      that supply what it asserts over
+                                      had already landed. AI second pass
+                                      (utility + threat map) and the
+                                      custom MCP scenario toolset follow
+                                      only if the slice lands early; both
+                                      are off the critical path (§4.2,
+                                      §4.11).
 
   4                                   Self-play balance sims and tuning —
                                       every match emitted in the wk-2
@@ -4024,7 +4177,7 @@ system, no §3 ledger row flips on a partial pass (Q29).
   presentation block and the snapshot 
   fields ruled beside T-UI-05 on the  
   same day, which mint no ID at all.  
-  56 of the 71 are green: 18 at       
+  60 of the 71 are green: 18 at       
   c224825, where rows 1 and 3 closed  
   their full acceptance sets and row  
   2’s headless half passed, 9 at      
@@ -4056,11 +4209,17 @@ system, no §3 ledger row flips on a partial pass (Q29).
   737f666, where T-SAVE-04 closed on  
   row 10’s part (a) without closing   
   row 10’s acceptance set, that row   
-  having no ledger row to close (§3)  
-  — so every row on the critical path 
-  has now landed, row 8 last and on a 
+  having no ledger row to close (§3), 
+  and 4 at ec15be6, where T-SAVE-01,  
+  T-SAVE-02, T-SAVE-03 and T-SAVE-05  
+  closed on row 10’s part (b), run    
+  over the command set part (c)       
+  requires, without closing that      
+  row’s acceptance set either — so    
+  every row on the critical path has  
+  now landed, row 8 last and on a     
   partial pass, per acceptance ID as  
-  well as per row. 15 IDs remain      
+  well as per row. 11 IDs remain      
   unclosed: T-DATA-05, which leaves   
   row 2 unflipped; T-SCN-08, T-SCN-09 
   and T-SCN-11, which are written,    
@@ -4081,13 +4240,17 @@ system, no §3 ledger row flips on a partial pass (Q29).
   having closed — T-INT-04 at         
   b23823f, and T-INT-01 at d837fc8 on 
   the widening of its own text (§3);  
-  and the 6 left in row 10, whose     
-  part (a) has since landed and which 
-  therefore holds code — T-SAVE-04    
-  closed at 737f666, and the six left 
-  wait on the replayer of part (b),   
-  on the editor pass, or on row 6’s   
-  self-play (§3)                      
+  and the 2 left in row 10, whose     
+  parts (a) and (b) have since landed 
+  — T-SAVE-04 closed at 737f666 and   
+  T-SAVE-01, T-SAVE-02, T-SAVE-03 and 
+  T-SAVE-05 at ec15be6, part (b)      
+  having run over the command set     
+  part (c) requires — leaving         
+  T-SAVE-06 on the in-editor          
+  Automation harness and T-SAVE-07 on 
+  a self-play log written in the      
+  §4.10 format (§3)                   
   -----------------------------------------------------------------------
 
 4.6 Token budget
@@ -6441,18 +6604,23 @@ path-for-path with no rename map. Driver is in the set and is not
 optional: Ai.good.cpp links against it. Nothing else is vendored — a UBT
 module cannot hold a second main(), which excludes every test_*.cpp,
 driver_main.cpp and selfplay.cpp, and the *.buggy.cpp files are pass-1
-fixtures, not shippable code. An eleventh crew module exists and is
-deliberately not vendored. Save landed at 737f666 (§3) and stays out of
-Source/StratRules/ until part (b) gives it a bridge consumer — a
-decision rather than an omission, and nothing re-dates on its account:
-T-INT-01 stays green at d837fc8 and T-INT-04 at b23823f, and no UE
-project commit was made when it landed. The enumeration above is correct
-as it stands and gains only the statement that an eleventh module was
-left out on purpose. StratRules contains no engine headers, no UObject,
-no third-party includes — pure C++17 in namespace strat, exactly the
-base-spec constraint. The standalone gate keeps compiling the identical
-files, so “the engine build works” never substitutes for “the gate
-passed.”
+fixtures, not shippable code. Two crew modules exist and are
+deliberately not vendored (ruled 2026-08-05). Save landed at 737f666 and
+Replay at ec15be6 (§3), and both stay out of Source/StratRules/, where
+they would be an eleventh and a twelfth module beside the ten enumerated
+above. §3 records that no bridge exists — no load mapping, no command
+surface, no event list, no actor and no widget — so §4.9 part 2 is
+unbuilt and the bridge consumer that would read them is still
+hypothetical, while vendoring now would re-date T-INT-01’s and
+T-INT-04’s closures. That is a decision rather than an omission, and
+nothing re-dates on their account: T-INT-01 stays green at d837fc8 and
+T-INT-04 at b23823f, and no UE project commit was made at either
+landing. The enumeration above is correct as it stands and gains only
+the statement that two modules were left out on purpose. StratRules
+contains no engine headers, no UObject, no third-party includes — pure
+C++17 in namespace strat, exactly the base-spec constraint. The
+standalone gate keeps compiling the identical files, so “the engine
+build works” never substitutes for “the gate passed.”
 
 2. Bridge — the only code that knows both worlds. The game module
 (Stratocracy) owns: - Load: FUnitRow/FTerrainRow/FEffectivenessRow →
@@ -6485,10 +6653,10 @@ No further spec-stub pass is owed for part 2 (ruled 2026-08-05). The
 stub below is already full: its invariants carry the bridge’s own —
 T-INT-02, T-INT-03 and T-INT-05 — beside a Determinism line and an
 Acceptance line, so what part 2 waits on is not specification. It waits
-on two named things: §4.10’s canonical state hash, which is build-order
-row 10’s part (b) and is T-INT-02’s and T-INT-03’s subject, and an
-in-editor Automation harness. Both are recorded here as blockers and
-neither is scheduled here.
+on an in-editor Automation harness. The other blocker recorded here was
+§4.10’s canonical state hash, T-INT-02’s and T-INT-03’s subject, which
+build-order row 10’s part (b) built at ec15be6 (§3). The harness is
+recorded here as the remaining blocker and is not scheduled here.
 
     SPEC STUB: Integration parity              (Director → Systems Engineer / UI Scaffolder)
     Inputs:  vendored StratRules sources + recorded source commit; a §4.10 replay
@@ -6588,31 +6756,50 @@ File layout — versioned JSON, one file:
 
 Canonical state hash. Defined once, in the headless module: serialize
 the GameState in a fixed field order — turn counter, side to move,
-per-side fameTotal/fameCombat, objective ownership, per-unit
-{id, side, hex, hp, isFlag, hasMoved, hasActed, captureProgress, pendingBuilds}
-sorted by the canonical hex order (§4.7 conventions, T-HEX-07), then the
-per-factory build record {hex, hasBuiltThisTurn, buildWaiting}
-(T-TURN-10) in that same canonical hex order — then hash the bytes.
-Every field is an integer, the four turn and build flags written as 0 or
-1 (eff and the HP ratio exist only transiently inside resolveDamage), so
-the hash is platform-stable by construction; T-INT-02 proves it across
-compilers. The flags are hashed because a save is accepted mid-turn
-(Policies below): at hash time a unit may have spent one of its two
-flags and a factory may have taken its build for the turn, so a hash
-without them is identical across states the rules distinguish, and
-T-INT-02 and T-SAVE-06 would both agree over that difference rather than
-catch it. What the hash omits is anything recomputable from the fields
-it already carries, since such a value can add no distinction and only
-one more way for two builds of one state to disagree: §4.7 Stub 8’s
-spawnBlocked is that case, being a function of the unit positions this
-hash carries and the terrain the scenario file fixes, whose own
-scenarioHash is a header field above. That is a narrower test than
-“derived”, and deliberately so — the Policies below call a waiting build
-and capture-in-progress derived pending state because they are a
-function of the log, and both are hashed. This hash is still unbuilt:
-row 10’s part (a) has landed and defines none of it, carrying stateHash
-as an opaque required string (§3), so widening the hash still costs
-nothing at this revision and would not stay free.
+per-side fameTotal and fameCombat, objective ownership {hex, owner},
+per-unit {id, side, hex, hp, isFlag, hasMoved, hasActed}, the per-tile
+capture record {hex, unitId, turnsHeld}, the per-factory build allowance
+{hex} (T-TURN-10) and the pending builds {factoryHex, side, defIndex} —
+objective ownership, the per-unit group, the per-tile capture record,
+the build allowance and the pending builds each walked in the canonical
+hex order (§4.7 conventions, T-HEX-07), keyed on the hex that group
+carries, ties within one hex broken by id — then hash the bytes. The
+build allowance carries hasBuiltThisTurn as membership rather than as a
+field: the group is walked over the turn module’s built-this-turn set,
+so an entry exists for a factory that has taken its build this turn and
+none exists for one that has not, each entry emitting a constant marker
+that carries no information its presence does not. Every emitted value
+is an integer (eff and the HP ratio exist only transiently inside
+resolveDamage), so the hash is platform-stable by construction; T-INT-02
+proves it across compilers. The module exposes canonicalStateBytes
+beside the digest, so a check can assert the serialisation and not only
+the digest. The per-unit turn flags and the per-factory build allowance
+are carried because a save is accepted mid-turn (Policies below): at
+hash time a unit may have spent one of its two flags and a factory may
+have taken its build for the turn, so a hash without them is identical
+across states the rules distinguish, and T-INT-02 and T-SAVE-06 would
+both agree over that difference rather than catch it. The list above was
+restated into the groups the modules hold (ruled 2026-08-05), when row
+10’s part (b) implemented it: captureProgress and pendingBuilds were
+previously written as members of the per-unit group, while
+cpp_reference/Economy.h holds the first on the tile — progress can never
+transfer (Q4, T-FAME-05) — and keys the second by the factory hex. What
+the hash omits is anything recomputable from the fields it already
+carries, since such a value can add no distinction and only one more way
+for two builds of one state to disagree: §4.7 Stub 8’s spawnBlocked is
+that case, being a function of the unit positions this hash carries and
+the terrain the scenario file fixes, whose own scenarioHash is a header
+field above. buildWaiting (T-TURN-10) is the same case, being
+recomputable from the pending-build group, so the hash carries the
+pending build and not the flag. That is a narrower test than “derived”,
+and deliberately so — the Policies below call a waiting build and
+capture-in-progress derived pending state because they are a function of
+the log, and both are hashed, the waiting build as a pending-build
+entry. This hash is built, at ec15be6 on row 10’s part (b), where
+T-SAVE-01, T-SAVE-02, T-SAVE-03 and T-SAVE-05 closed over it (§3); part
+(a), which landed before it, defines none of it and carries stateHash as
+an opaque required string. Widening the hash now moves a digest a landed
+module computes — the cost the sentence this replaces said would arrive.
 
 Policies (prototype): - Single slot — one file (slot0), stored via a
 thin USaveGame wrapper holding the JSON so platform save paths are
@@ -6808,6 +6995,26 @@ it.
                                        determinism composition,                   
                                        and T-SAVE-07 needs row                    
                                        6’s self-play besides.                     
+                                       Part (b) has since                         
+                                       landed, at ec15be6, and                    
+                                       was run against these                      
+                                       closure conditions rather                  
+                                       than after them (ruled                     
+                                       2026-08-05, rows 4, 5 and                  
+                                       6 all being green):                        
+                                       T-SAVE-01, T-SAVE-02,                      
+                                       T-SAVE-03 and T-SAVE-05                    
+                                       are green there under                      
+                                       clang++ and MSVC both,                     
+                                       beside GATE-REPLAY-*,                      
+                                       which mint no acceptance                   
+                                       ID. T-SAVE-06 waits on                     
+                                       the in-editor Automation                   
+                                       harness and T-SAVE-07 on                   
+                                       a self-play log written                    
+                                       in this format, so this                    
+                                       row holds code without                     
+                                       closing its set (§3).                      
                                        Slot I/O is week 5 and no                  
                                        headless gate waits on it                  
   ----------------------------------------------------------------------------------------------------
