@@ -3693,26 +3693,26 @@ hash having no implementation — is removed here, and among what it still
 waits on are the in-editor Automation harness and a vendored replayer:
 it is asserted jointly with T-INT-02, whose replay runs in-engine and so
 needs the replayer compiled into the engine and therefore vendored, and
-Replay is ruled out of vendoring until a bridge consumer exists. Whether
-the editor pass is meant to carry those subjects is not ruled here.
-T-SAVE-07 did not close: cpp_reference/selfplay.cpp is a combat-only 1v1
-duel harness that prints a table of duel outcomes, and it writes no
-§4.10 command log. Row 10’s acceptance set therefore does not close, on
-the Q29 reading applied per acceptance ID as well as per row, and its
-unclosed count moves 6 → 2. No ledger row is created, flipped or removed
-by this landing: §4.11 calls row 10 a proposed ledger row, which is row
-9’s posture and deliberately not the partial-pass posture of rows 2, 7
-and 8. The Director has since named that row without creating it (ruled
-2026-08-05), on Ruling K’s precedent for row 9: it is Save & replay, its
-acceptance set is T-SAVE-01..07, and it is created as one row when that
-full set closes — which under Q29 is the same condition as its flipping
-— so parts (a), (b) and (c) resolve to one ledger row rather than to
-several, and what it waits on is T-SAVE-06 alone, T-SAVE-07 having since
-closed at 1ee890e on part (c). How ec15be6 was authored is deliberately
-not stated: no harness claim is made for it, because none was
-established. Build-order row 10’s part (c) then landed, at 1ee890e, with
-the UE project repo unmoved at 9dec48c. New in the crew repo:
-spec/balance_spec.md, cpp_reference/Balance.h,
+Replay is ruled out of vendoring until a bridge consumer exists. Both
+what the editor pass denotes and what running it does not supply are
+stated at §4.9. T-SAVE-07 did not close: cpp_reference/selfplay.cpp is a
+combat-only 1v1 duel harness that prints a table of duel outcomes, and
+it writes no §4.10 command log. Row 10’s acceptance set therefore does
+not close, on the Q29 reading applied per acceptance ID as well as per
+row, and its unclosed count moves 6 → 2. No ledger row is created,
+flipped or removed by this landing: §4.11 calls row 10 a proposed ledger
+row, which is row 9’s posture and deliberately not the partial-pass
+posture of rows 2, 7 and 8. The Director has since named that row
+without creating it (ruled 2026-08-05), on Ruling K’s precedent for row
+9: it is Save & replay, its acceptance set is T-SAVE-01..07, and it is
+created as one row when that full set closes — which under Q29 is the
+same condition as its flipping — so parts (a), (b) and (c) resolve to
+one ledger row rather than to several, and what it waits on is T-SAVE-06
+alone, T-SAVE-07 having since closed at 1ee890e on part (c). How ec15be6
+was authored is deliberately not stated: no harness claim is made for
+it, because none was established. Build-order row 10’s part (c) then
+landed, at 1ee890e, with the UE project repo unmoved at 9dec48c. New in
+the crew repo: spec/balance_spec.md, cpp_reference/Balance.h,
 cpp_reference/Balance.good.cpp, cpp_reference/Balance.buggy.cpp and
 cpp_reference/test_balance.cpp; modified: crew/tools.py and
 crew/offline.py. What landed is a producer of §4.10 command logs, and
@@ -3894,8 +3894,8 @@ T-SAVE-06 remains the only † of row 10’s seven, and among what it waits
 on are the in-editor Automation harness and a vendored replayer: it is
 asserted jointly with T-INT-02, whose replay runs in-engine and so needs
 the replayer compiled into the engine, and Replay is ruled out of
-vendoring until a bridge consumer exists. Whether the editor pass is
-meant to carry those subjects is not ruled here.
+vendoring until a bridge consumer exists. Both what the editor pass
+denotes and what running it does not supply are stated at §4.9.
 cpp_reference/selfplay.cpp is untouched. Save, Replay and Balance remain
 unvendored, and the ruling that keeps them out is now stated in the
 declaration rather than implied by a glob. Two further rulings are
@@ -4254,8 +4254,10 @@ the game” claim holds.
                                       working vertical slice. Rows 4–5
                                       add precisely the three commands
                                       week 2 lacked, so the wk-2 gates
-                                      re-run over the complete set and
-                                      close here: T-INT-02/03/05 and
+                                      re-run over the complete set, and
+                                      this week is where the schedule
+                                      places their closure:
+                                      T-INT-02/03/05 and
                                       T-SAVE-01/03/05/06 on rows 4–5, and
                                       T-SAVE-02 on row 6, whose
                                       determinism gate (T-AI-06) it
@@ -4269,28 +4271,42 @@ the game” claim holds.
                                       a self-play match in the §4.10
                                       format — ahead of the wk-4 cell
                                       that scheduled it rather than
-                                      behind it. One still waits:
-                                      T-SAVE-06, on the in-editor
-                                      Automation harness it is asserted
-                                      jointly with T-INT-02 on. T-UI-05
-                                      was scheduled here too (ruled
-                                      2026-08-04), and not as one of
-                                      those re-runs: it is headless, and
-                                      it asserts over the per-factory
-                                      build record, which Build reaches
-                                      and which rows 4–5 supply — the
-                                      piece landing in the week the thing
-                                      that consumes it runs, the
-                                      principle stated below this table.
-                                      It is green at 41a1452 (§3), so it
-                                      is ahead of this cell rather than
-                                      behind it; the rows that supply
-                                      what it asserts over had already
-                                      landed. AI second pass (utility +
-                                      threat map) and the custom MCP
-                                      scenario toolset follow only if the
-                                      slice lands early; both are off the
-                                      critical path (§4.2, §4.11).
+                                      behind it. T-SAVE-06 did not close
+                                      here: among what it waits on are
+                                      the in-editor Automation harness
+                                      and a vendored replayer, it being
+                                      asserted jointly with T-INT-02
+                                      (§4.9). T-INT-02 did not close here
+                                      either: among what it waits on are
+                                      that harness and that replayer,
+                                      Replay being ruled out of vendoring
+                                      until a bridge consumer exists
+                                      (§4.9). Nor did T-INT-03: among
+                                      what it waits on is the bridge’s
+                                      command surface, which is unbuilt
+                                      (§4.9). Nor did T-INT-05: among
+                                      what it waits on are the real
+                                      Stratocracy widgets it asserts
+                                      against, measured absent at a13626f
+                                      (§4.9). T-UI-05 was scheduled here
+                                      too (ruled 2026-08-04), and not as
+                                      one of those re-runs: it is
+                                      headless, and it asserts over the
+                                      per-factory build record, which
+                                      Build reaches and which rows 4–5
+                                      supply — the piece landing in the
+                                      week the thing that consumes it
+                                      runs, the principle stated below
+                                      this table. It is green at 41a1452
+                                      (§3), so it is ahead of this cell
+                                      rather than behind it; the rows
+                                      that supply what it asserts over
+                                      had already landed. AI second pass
+                                      (utility + threat map) and the
+                                      custom MCP scenario toolset follow
+                                      only if the slice lands early; both
+                                      are off the critical path (§4.2,
+                                      §4.11).
 
   4                                   Self-play balance sims and tuning —
                                       every match emitted in the wk-2
@@ -4493,35 +4509,35 @@ system, no §3 ledger row flips on a partial pass (Q29).
   T-UI-04 assert against, which are   
   measured absent at a13626f (§4.9);  
   the 3 left in row 9 — T-INT-02,     
-  T-INT-03 and T-INT-05, the editor   
-  pass, for which no in-editor        
-  Automation harness exists — its     
-  other two having closed and both    
-  now credited at e19605e — T-INT-01  
-  because it asserts identity at      
-  rulesCommit, which moved there, and 
-  T-INT-04 because it compiles the    
-  vendored copy, whose Turn.h bytes   
-  changed; T-INT-04 first passed at   
-  b23823f, and T-INT-01 first closed  
-  at d837fc8 on the widening of its   
-  own text (§3); and the 1 left in    
-  row 10, whose parts (a), (b) and    
-  (c) have all since landed —         
-  T-SAVE-04 closed at 737f666,        
-  T-SAVE-01, T-SAVE-02, T-SAVE-03 and 
-  T-SAVE-05 at ec15be6, part (b)      
-  having run over the command set     
-  part (c) requires, and T-SAVE-07 at 
-  1ee890e over a self-play log        
-  written in the §4.10 format —       
-  leaving T-SAVE-06, among what it    
-  waits on being the in-editor        
-  Automation harness and a vendored   
-  replayer — it is asserted jointly   
-  with T-INT-02, whose replay runs    
-  in-engine, and Replay is ruled out  
-  of vendoring until a bridge         
+  T-INT-03 and T-INT-05, which are    
+  scheduled into the editor pass      
+  (§4.9), and no in-editor Automation 
+  harness exists — its other two      
+  having closed and both now credited 
+  at e19605e — T-INT-01 because it    
+  asserts identity at rulesCommit,    
+  which moved there, and T-INT-04     
+  because it compiles the vendored    
+  copy, whose Turn.h bytes changed;   
+  T-INT-04 first passed at b23823f,   
+  and T-INT-01 first closed at        
+  d837fc8 on the widening of its own  
+  text (§3); and the 1 left in row    
+  10, whose parts (a), (b) and (c)    
+  have all since landed — T-SAVE-04   
+  closed at 737f666, T-SAVE-01,       
+  T-SAVE-02, T-SAVE-03 and T-SAVE-05  
+  at ec15be6, part (b) having run     
+  over the command set part (c)       
+  requires, and T-SAVE-07 at 1ee890e  
+  over a self-play log written in the 
+  §4.10 format — leaving T-SAVE-06,   
+  among what it waits on being the    
+  in-editor Automation harness and a  
+  vendored replayer — it is asserted  
+  jointly with T-INT-02, whose replay 
+  runs in-engine, and Replay is ruled 
+  out of vendoring until a bridge     
   consumer exists (§3)                
   -----------------------------------------------------------------------
 
@@ -4663,12 +4679,18 @@ namespace strat, pure C++17, zero engine dependencies, compiled by the
 same python run.py gate that certified Combat (§3 ledger). That gate
 detects one compiler per run — the first of g++, clang++, c++ or cl
 found on PATH — so a green run is green under whichever one it found,
-not under all four. Where a stub needs a rule the GDD does not state,
-the gate is parameterized on a numbered open question — the Director
-rules, the gate then pins the ruling. The register below is the single
-place their extent is stated; nothing else in this document names a
-range of them, because every range named elsewhere has gone stale within
-a revision.
+not under all four. “Pure C++17” constrains the sources; it does not
+name a setting they are compiled under. That standalone gate at 031ee20
+compiles at -std=c++17 for GCC/Clang and /std:c++17 for MSVC, while the
+UBT build that produced UnrealEditor-StratRules.dll compiled the same
+certified bytes at /std:c++20 — the value carried by every compiler
+response file that build left beside a vendored .good.cpp. That
+divergence is what §4.9 exists to track. Where a stub needs a rule the
+GDD does not state, the gate is parameterized on a numbered open
+question — the Director rules, the gate then pins the ruling. The
+register below is the single place their extent is stated; nothing else
+in this document names a range of them, because every range named
+elsewhere has gone stale within a revision.
 
 The cut line, read before adding a suite. Every acceptance ID in
 §4.7–§4.11 is either unmarked — the §4.5 MVP line needs it and no human
@@ -6906,9 +6928,15 @@ three and is excluded for the different reason stated above — a UBT
 module cannot hold a second main() — and it stays in that exclusion list
 unchanged. StratRules contains no engine headers, no UObject, no
 third-party includes — pure C++17 in namespace strat, exactly the
-base-spec constraint. The standalone gate keeps compiling the identical
-files, so “the engine build works” never substitutes for “the gate
-passed.”
+base-spec constraint. That constrains the sources and not the setting
+they are built under: the standalone gate at 031ee20 compiles at
+-std=c++17 for GCC/Clang and /std:c++17 for MSVC, while the UBT build
+that produced UnrealEditor-StratRules.dll compiled the same certified
+bytes at /std:c++20 — the value carried by every compiler response file
+that build left beside a vendored .good.cpp. That is the divergence
+surface this section exists to track. The standalone gate keeps
+compiling the identical files, so “the engine build works” never
+substitutes for “the gate passed.”
 
 The UBT module is registered, and it builds. Stratocracy.uproject lists
 StratRules at a13626f, and building the StratocracyEditor target
@@ -6973,28 +7001,33 @@ on an in-editor Automation harness. The other blocker recorded here was
 §4.10’s canonical state hash, T-INT-02’s and T-INT-03’s subject, which
 build-order row 10’s part (b) built at ec15be6 (§3). The harness is
 recorded here among what part 2 is blocked on, and is not scheduled
-here. It is also not sufficient, and among what the remaining
-editor-pass IDs need besides it are the subjects named here rather than
-left to be discovered at the pass: T-INT-02 needs a vendored replayer,
-and Replay is ruled out of vendoring until a bridge consumer exists;
-T-INT-03 needs the command surface, which is part of the unbuilt bridge;
-T-INT-05, T-UI-03 and T-UI-04 need real Stratocracy widgets; T-DATA-05
-needs imported DataTables and a UENUM mirror of the unit type; and
-T-SAVE-06 is asserted jointly with T-INT-02. None of those subjects
-exists at a13626f, measured in the UE project repo there: the identifier
-EUnitType occurs zero times case-sensitively in the tracked tree; UENUM
-occurs zero times anywhere under Source/, a zero controlled against
-UCLASS, which does occur there; and every tracked DataTable and widget
-asset belongs to the AdvancedTurnBasedTileToolkit marketplace content or
-to the UE template. The stub below carries its own Inputs line — a §4.10
-replay file and the §4.8 tables imported in-editor — which lists what
-that stub draws on; the imported tables are not among the DataTable
-assets measured above. Registering the UBT module closes no acceptance
-ID, and neither does the harness by itself. One constraint the harness
-inherits: T-INT-01 asserts that no file in Source/StratRules/ is
-unaccounted for, so the harness may not live in that directory — a test
-file there fails a green ID, confirmed against the running check, where
-an extra Sneaky.good.cpp in that directory FAILs (§3).
+here. What “the editor pass” denotes, stated once here and cited
+elsewhere (ruled 2026-08-05): the in-editor Automation harness this
+paragraph names. It is a runner and nothing more, and running it
+supplies none of the subjects the IDs scheduled into it assert against —
+those are separate requirements. The harness is also not sufficient, and
+among what the remaining editor-pass IDs need besides it are the
+subjects named here rather than left to be discovered at the pass:
+T-INT-02 needs a vendored replayer, and Replay is ruled out of vendoring
+until a bridge consumer exists; T-INT-03 needs the command surface,
+which is part of the unbuilt bridge; T-INT-05, T-UI-03 and T-UI-04 need
+real Stratocracy widgets; T-DATA-05 needs imported DataTables and a
+UENUM mirror of the unit type; and T-SAVE-06 is asserted jointly with
+T-INT-02. None of those subjects exists at a13626f, measured in the UE
+project repo there: the identifier EUnitType occurs zero times
+case-sensitively in the tracked tree; UENUM occurs zero times anywhere
+under Source/, a zero controlled against UCLASS, which does occur there;
+and every tracked DataTable and widget asset belongs to the
+AdvancedTurnBasedTileToolkit marketplace content or to the UE template.
+The stub below carries its own Inputs line — a §4.10 replay file and the
+§4.8 tables imported in-editor — which lists what that stub draws on;
+the imported tables are not among the DataTable assets measured above.
+Registering the UBT module closes no acceptance ID, and neither does the
+harness by itself. One constraint the harness inherits: T-INT-01 asserts
+that no file in Source/StratRules/ is unaccounted for, so the harness
+may not live in that directory — a test file there fails a green ID,
+confirmed against the running check, where an extra Sneaky.good.cpp in
+that directory FAILs (§3).
 
     SPEC STUB: Integration parity              (Director → Systems Engineer / UI Scaffolder)
     Inputs:  vendored StratRules sources + recorded source commit; a §4.10 replay
@@ -7401,11 +7434,11 @@ it.
                                        and Replay is ruled out                    
                                        of vendoring until a                       
                                        bridge consumer exists.                    
-                                       Whether the editor pass                    
-                                       is meant to carry those                    
-                                       subjects is not ruled                      
-                                       here (§3). Slot I/O is                     
-                                       week 5 and no headless                     
+                                       Both what the editor pass                  
+                                       denotes and what running                   
+                                       it does not supply are                     
+                                       stated at §4.9. Slot I/O                   
+                                       is week 5 and no headless                  
                                        gate waits on it                           
   ----------------------------------------------------------------------------------------------------
 
