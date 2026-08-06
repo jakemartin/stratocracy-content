@@ -4378,6 +4378,30 @@ time. Neither week number moved to fix it; the gate’s scope was named.
 And because a gate that runs green over a subset is not a verified
 system, no §3 ledger row flips on a partial pass (Q29).
 
+The in-editor Automation harness is deliberately not on this calendar
+(ruled 2026-08-06). No cell above gives it a week — wk 3 names it among
+what T-SAVE-06 and T-INT-02 wait on, which is a blocker record rather
+than a goal cell — and §4.9 records it among what part 2 is blocked on
+and states that it is not scheduled there either. Both sections now
+decline it in the open, so the absence reads as a decision and not as an
+oversight. Among what stands between it and a cell: the harness by
+itself closes no acceptance ID (§4.9), so a week that added the runner
+and nothing else would close none, and the subjects the editor-pass IDs
+assert against besides it sit differently against this table. The widget
+work is scheduled here — wk 1’s UMG widget skeletons, wk 2’s
+select/move/attack wiring onto them. The wiring that submits commands is
+scheduled here too, in wk 2’s {Move, Attack} and in the Capture, Build
+and EndTurn the wk-2 cell places in wk 3. An in-editor import step for
+the §4.8 tables has no cell; wk 1 names those tables inside the headless
+core. A UENUM mirror of the unit type is named in no cell. And a
+vendored replayer is held out rather than merely uncelled: §4.9 rules
+Replay out of vendoring until a bridge consumer exists, a condition no
+cell here dates — the headless replayer wk 2 schedules is a different
+artifact. None of those subjects exists at a13626f (§4.9), which is a
+claim about what is built and not about where this table puts it. When
+the harness does take a cell it takes it on the principle stated above:
+the week the thing that consumes it runs.
+
 4.5 Risks & mitigations
 
   -----------------------------------------------------------------------
@@ -7027,11 +7051,31 @@ harness by itself. One constraint the harness inherits: T-INT-01 asserts
 that no file in Source/StratRules/ is unaccounted for, so the harness
 may not live in that directory — a test file there fails a green ID,
 confirmed against the running check, where an extra Sneaky.good.cpp in
-that directory FAILs (§3).
+that directory FAILs (§3). Its names vary across this document, and that
+variance is tracked here rather than being drift (ruled 2026-08-06).
+Among the forms this document uses for it are the editor pass, an
+in-editor Automation pass and an in-editor pass, and §3 records forms
+from the gate runner’s printed output at named commits — at b23823f,
+where the runner prints by name that no in-editor Automation harness
+exists, and at 41a1452, where the lines for the IDs that did not run
+state that no in-editor pass exists at that commit. The denotation is
+settled by the ruling above and does not turn on which form a section
+reaches for. A rename would have to reconcile with those commit-pinned
+§3 records and is deferred to its own round. No name is changed in this
+revision.
 
     SPEC STUB: Integration parity              (Director → Systems Engineer / UI Scaffolder)
     Inputs:  vendored StratRules sources + recorded source commit; a §4.10 replay
-             file; the §4.8 tables imported in-editor.
+             file; the §4.8 tables imported in-editor — among this stub's
+             invariants, T-INT-02 requires them (ruled 2026-08-06): it replays a
+             command log in-engine to a canonical state hash, and the commands it
+             applies resolve against the unit definitions the bridge maps from
+             FUnitRow (part 2 above), the same stats the compiler-rounding
+             tripwire in this invariant's own text runs through. T-INT-01 and
+             T-INT-04 do not require them: a source-identity check, by whichever
+             mechanism T-INT-01 puts on a given file, and a standalone compile
+             load no unit definition. What T-INT-03 and T-INT-05 still need is
+             assigned per ID above, and those are different subjects.
     Invariants:
       T-INT-01  source identity: every file in Source/StratRules/ is accounted for
                 against the recorded crew commit, and none is unaccounted for. A

@@ -1572,6 +1572,8 @@ Author the **core in C++ with the agent** (the on-thesis path — hex math, path
 
 **On weeks 2–3 (Q23, ruled).** The vertical slice sits in week 3, not week 2, because §4.11's critical path is `1 → 3 → 4 → 5 → 6/8`: the baseline AI (row 6) needs the turn loop (row 5), which needs Capture & Fame (row 4). A week-2 slice *with* an AI opponent would have required building rows 4–6 a week before §2.10 says capture and production land — the document previously asserted both and could not have delivered either. Week 2 therefore delivers move + attack against a static board, which is the honest subset of the slice that rows 1–3 actually support, and §2.10's *"these land wk 3, not wk 1–2"* now describes the schedule rather than contradicting it. **The save/replay half of the same question (Q20) is now ruled — and split rather than moved.** The §4.10 *format and headless replayer* go to **week 2**, where T-INT-02 needs a save file as its input, and are therefore in hand by **week 4** for the self-play logs T-SAVE-07 validates; only the **save-slot UI and slot I/O** stay in week 5. The two rulings run on one principle in opposite directions: each piece lands in the week the thing that consumes it runs, so a milestone that outran its dependencies moved *later* (Q23) and an instrument its own gates outran moved *earlier* (Q20). Stated once, so the table stops drifting: **a format is a test instrument; slot I/O is a feature.** One consequence of that principle needed stating too, because the first application of it promised a week-2 gate this document's own build order could not support: **an integration or replay gate is scoped to the command set of the log it runs on.** It *runs* as soon as that log can be produced and it *closes* only when the log carries every §4.9 command — so week 2's `{Move, Attack}` pass is a run, not a closure, and §4.11 rows 9–10 now state those two dependency sets separately instead of one. The seam that repairs: row 9 required "rows 1–5 built" while Q23 had just limited week 2 to rows 1–3, so §4.4 and §4.11 described two schedules for the third time. Neither week number moved to fix it; the gate's scope was named. And because a gate that runs green over a subset is not a verified system, **no §3 ledger row flips on a partial pass** (Q29).
 
+**The in-editor Automation harness is deliberately not on this calendar (ruled 2026-08-06).** No cell above gives it a week — wk 3 names it among what `T-SAVE-06` and `T-INT-02` wait on, which is a blocker record rather than a goal cell — and §4.9 records it among what part 2 is blocked on and states that it is not scheduled there either. Both sections now decline it in the open, so the absence reads as a decision and not as an oversight. Among what stands between it and a cell: the harness by itself closes no acceptance ID (§4.9), so a week that added the runner and nothing else would close none, and the subjects the editor-pass IDs assert against besides it sit differently against this table. The widget work is scheduled here — wk 1's UMG widget skeletons, wk 2's select/move/attack wiring onto them. The wiring that submits commands is scheduled here too, in wk 2's `{Move, Attack}` and in the `Capture`, `Build` and `EndTurn` the wk-2 cell places in wk 3. An in-editor import step for the §4.8 tables has no cell; wk 1 names those tables inside the headless core. A `UENUM` mirror of the unit type is named in no cell. And a **vendored** replayer is held out rather than merely uncelled: §4.9 rules `Replay` out of vendoring until a bridge consumer exists, a condition no cell here dates — the *headless* replayer wk 2 schedules is a different artifact. None of those subjects exists at `a13626f` (§4.9), which is a claim about what is built and not about where this table puts it. When the harness does take a cell it takes it on the principle stated above: the week the thing that consumes it runs.
+
 ### 4.5 Risks & mitigations
 
 | Risk | Mitigation |
@@ -2894,12 +2896,32 @@ no acceptance ID, and neither does the harness by itself.** One constraint the
 harness inherits: `T-INT-01` asserts that no file in `Source/StratRules/` is
 unaccounted for, so **the harness may not live in that directory** — a test
 file there fails a green ID, confirmed against the running check, where an
-extra `Sneaky.good.cpp` in that directory FAILs (§3).
+extra `Sneaky.good.cpp` in that directory FAILs (§3). **Its names vary
+across this document, and that variance is tracked here rather than being
+drift (ruled 2026-08-06).** Among the forms this document uses for it are
+*the editor pass*, *an in-editor Automation pass* and *an in-editor pass*,
+and §3 records forms from the gate runner's printed output at named
+commits — at `b23823f`, where the runner prints by name that no in-editor
+Automation harness exists, and at `41a1452`, where the lines for the IDs
+that did not run state that no in-editor pass exists at that commit. The
+denotation is settled by the ruling above and does not turn on which form
+a section reaches for. A rename would have to reconcile with those
+commit-pinned §3 records and is deferred to its own round. **No name is
+changed in this revision.**
 
 ```
 SPEC STUB: Integration parity              (Director → Systems Engineer / UI Scaffolder)
 Inputs:  vendored StratRules sources + recorded source commit; a §4.10 replay
-         file; the §4.8 tables imported in-editor.
+         file; the §4.8 tables imported in-editor — among this stub's
+         invariants, T-INT-02 requires them (ruled 2026-08-06): it replays a
+         command log in-engine to a canonical state hash, and the commands it
+         applies resolve against the unit definitions the bridge maps from
+         FUnitRow (part 2 above), the same stats the compiler-rounding
+         tripwire in this invariant's own text runs through. T-INT-01 and
+         T-INT-04 do not require them: a source-identity check, by whichever
+         mechanism T-INT-01 puts on a given file, and a standalone compile
+         load no unit definition. What T-INT-03 and T-INT-05 still need is
+         assigned per ID above, and those are different subjects.
 Invariants:
   T-INT-01  source identity: every file in Source/StratRules/ is accounted for
             against the recorded crew commit, and none is unaccounted for. A
