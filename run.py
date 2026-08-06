@@ -63,8 +63,7 @@ def main() -> int:
 
     units = [produce("unit", u, rules) for u in ("infantry", "tank", "artillery", "recon")]
     terrain = [produce("terrain", t, rules)
-               for t in ("plains", "woods", "mountains", "water", "town",
-                         "bridge", "factory")]
+               for t in ("plains", "woods", "mountains", "water", "town")]
     results = [produce("result", {"outcome": o, "faction": f}, rules)
                for o in ("decisive", "marginal", "draw", "defeat")
                for f in ("Directorate", "Vanguard")]

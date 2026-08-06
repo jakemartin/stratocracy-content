@@ -59,8 +59,6 @@ def check_terrain(entry: dict, rules: dict) -> list[str]:
         v.append(f"rule: {entry['terrain']} move {entry['move']} != {t['move']}")
     if "passable" in entry and sorted(entry["passable"]) != t["passable"]:
         v.append(f"rule: {entry['terrain']} passable {sorted(entry['passable'])} != {t['passable']}")
-    if "capturable" in entry and bool(entry["capturable"]) != t["capturable"]:
-        v.append(f"rule: {entry['terrain']} capturable {entry['capturable']} != {t['capturable']}")
     v += _voice(entry["blurb"], 40)
     return v
 

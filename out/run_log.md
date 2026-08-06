@@ -39,67 +39,51 @@ Knowledge base: kb/rules.md (4 units, 7 terrains, 4 outcomes) + kb/setting.md
   RETRIEVED [kb/rules.md]: | Plains | 1 | 0 | land,air | no |
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
   CRITIC:   PASS (draft 0)
-  OUTPUT:   {"terrain": "Plains", "move": 1, "defense": 0, "passable": ["land", "air"], "capturable": false, "blurb": "Open ground. One move to cross and nothing to hide behind — every hit lands clean, for you and against you."}
+  OUTPUT:   {"terrain": "Plains", "move": 1, "defense": 0, "passable": ["land", "air"], "blurb": "Open ground. One move to cross and nothing to hide behind — every hit lands clean, for you and against you."}
 
 --- terrain: woods ---
   QUERY:    terrain codex entry for 'woods' — need its stats and the field-manual voice
   RETRIEVED [kb/rules.md]: | Woods | 2 | +20 | land,air | no |
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
   CRITIC:   PASS (draft 0)
-  OUTPUT:   {"terrain": "Woods", "move": 2, "defense": 20, "passable": ["land", "air"], "capturable": false, "blurb": "Cover at a price. Two move to enter, but anything standing in it is twenty percent harder to kill."}
+  OUTPUT:   {"terrain": "Woods", "move": 2, "defense": 20, "passable": ["land", "air"], "blurb": "Cover at a price. Two move to enter, but anything standing in it is twenty percent harder to kill."}
 
 --- terrain: mountains ---
   QUERY:    terrain codex entry for 'mountains' — need its stats and the field-manual voice
   RETRIEVED [kb/rules.md]: | Mountains | 3 | +40 | land (slow),air | no |
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
   CRITIC:   BLOCK (draft 0) — rule: Mountains passable ['air', 'land'] != ['air', 'land (slow)']
-  ACTION:   regenerate from corrected draft 1
-  CRITIC:   PASS (draft 1)
-  OUTPUT:   {"terrain": "Mountains", "move": 3, "defense": 40, "passable": ["land (slow)", "air"], "capturable": false, "blurb": "The wall. Three move to climb and forty percent defense at the top. Land units grind across it — slow ground you pay to hold."}
+  CRITIC:   STILL FAILING after all drafts — flagged, not shipped clean
 
 --- terrain: water ---
   QUERY:    terrain codex entry for 'water' — need its stats and the field-manual voice
   RETRIEVED [kb/rules.md]: | Water | - | 0 | sea,air | no |
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
   CRITIC:   PASS (draft 0)
-  OUTPUT:   {"terrain": "Water", "move": "-", "defense": 0, "passable": ["air", "sea"], "capturable": false, "blurb": "A moat. Land units cannot cross it; only sea and air move through. Use it to anchor a flank."}
+  OUTPUT:   {"terrain": "Water", "move": "-", "defense": 0, "passable": ["air", "sea"], "blurb": "A moat. Land units cannot cross it; only sea and air move through. Use it to anchor a flank."}
 
 --- terrain: town ---
   QUERY:    terrain codex entry for 'town' — need its stats and the field-manual voice
   RETRIEVED [kb/rules.md]: | Town | 1 | +10 | land,air | yes |
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
   CRITIC:   PASS (draft 0)
-  OUTPUT:   {"terrain": "Town", "move": 1, "defense": 10, "passable": ["land", "air"], "capturable": true, "blurb": "Held ground. Light cover, and the one tile infantry can take for a small stream of Fame."}
-
---- terrain: bridge ---
-  QUERY:    terrain codex entry for 'bridge' — need its stats and the field-manual voice
-  RETRIEVED [kb/rules.md]: | Bridge | 1 | -10 | land,air | no |
-  RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
-  CRITIC:   PASS (draft 0)
-  OUTPUT:   {"terrain": "Bridge", "move": 1, "defense": -10, "passable": ["land", "air"], "capturable": false, "blurb": "The only hex armor crosses Water on. One move, and ten percent off your defense while you stand on it. Contest it, do not park on it."}
-
---- terrain: factory ---
-  QUERY:    terrain codex entry for 'factory' — need its stats and the field-manual voice
-  RETRIEVED [kb/rules.md]: | Factory | 1 | +15 | land,air | yes |
-  RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
-  CRITIC:   PASS (draft 0)
-  OUTPUT:   {"terrain": "Factory", "move": 1, "defense": 15, "passable": ["land", "air"], "capturable": true, "blurb": "Builds units and repairs them. Fifteen percent cover, and infantry can take it — hold one and it pays a hundred Fame a turn."}
+  OUTPUT:   {"terrain": "Town", "move": 1, "defense": 10, "passable": ["land", "air"], "blurb": "Held ground. Light cover, and the one tile infantry can take for a small stream of Fame."}
 
 --- result: decisive/Directorate ---
   QUERY:    result-screen line for a 'decisive' outcome in the Directorate voice — need the outcome trigger, the faction voice, and the tone bible
   RETRIEVED [kb/rules.md]: | decisive | enemy flag unit destroyed | flag |
   RETRIEVED [kb/setting.md :: Faction A]: ## Faction A — The Directorate
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
-  CRITIC:   PASS (draft 0)
-  OUTPUT:   {"outcome": "decisive", "faction": "Directorate", "line": "Enemy flag destroyed. Order is restored. The Directorate endures."}
+  CRITIC:   BLOCK (draft 0) — rule: decisive line references none of its triggers ['domination', 'factories', 'backstop']
+  CRITIC:   STILL FAILING after all drafts — flagged, not shipped clean
 
 --- result: decisive/Vanguard ---
   QUERY:    result-screen line for a 'decisive' outcome in the Vanguard voice — need the outcome trigger, the faction voice, and the tone bible
   RETRIEVED [kb/rules.md]: | decisive | enemy flag unit destroyed | flag |
   RETRIEVED [kb/setting.md :: Faction B]: ## Faction B — The Vanguard
   RETRIEVED [kb/setting.md :: Tone bible]: ## Tone bible (applies to ALL generated content)
-  CRITIC:   PASS (draft 0)
-  OUTPUT:   {"outcome": "decisive", "faction": "Vanguard", "line": "Their flag is down. We didn't ask permission — we took the field."}
+  CRITIC:   BLOCK (draft 0) — rule: decisive line references none of its triggers ['domination', 'factories', 'backstop']
+  CRITIC:   STILL FAILING after all drafts — flagged, not shipped clean
 
 --- result: marginal/Directorate ---
   QUERY:    result-screen line for a 'marginal' outcome in the Directorate voice — need the outcome trigger, the faction voice, and the tone bible
@@ -149,7 +133,7 @@ Knowledge base: kb/rules.md (4 units, 7 terrains, 4 outcomes) + kb/setting.md
   CRITIC:   PASS (draft 0)
   OUTPUT:   {"outcome": "defeat", "faction": "Vanguard", "line": "Flag's gone. We scatter, we regroup, we come back."}
 
-Done. 4 units, 7 terrains, 8 result lines emitted.
-Critic caught and corrected 2 consistency break(s) during the run.
+Done. 4 units, 5 terrains, 8 result lines emitted.
+Critic caught and corrected 4 consistency break(s) during the run.
 Outputs in out/: unit_codex.json, terrain_codex.json, result_screen.json
 ```

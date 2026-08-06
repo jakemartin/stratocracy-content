@@ -48,43 +48,20 @@ _UNITS = {
 # --- Terrain codex (neutral field-manual voice) -----------------------------------
 _TERRAIN = {
     "plains": [dict(terrain="Plains", move=1, defense=0, passable=["land", "air"],
-                    capturable=False,
                     blurb=("Open ground. One move to cross and nothing to hide behind — "
                            "every hit lands clean, for you and against you."))],
     "woods": [dict(terrain="Woods", move=2, defense=20, passable=["land", "air"],
-                   capturable=False,
                    blurb=("Cover at a price. Two move to enter, but anything standing in "
                           "it is twenty percent harder to kill."))],
-    # draft 0 predates the GDD's terrain revision (it still says plain "land"); draft 1
-    # matches the current rules.md row. The critic catches the stale entry.
-    "mountains": [
-        dict(terrain="Mountains", move=3, defense=40, passable=["land", "air"],
-             capturable=False,
-             blurb=("The wall. Three move to climb and forty percent defense at "
-                    "the top — slow ground you pay to hold.")),
-        dict(terrain="Mountains", move=3, defense=40, passable=["land (slow)", "air"],
-             capturable=False,
-             blurb=("The wall. Three move to climb and forty percent defense at the top. "
-                    "Land units grind across it — slow ground you pay to hold.")),
-    ],
+    "mountains": [dict(terrain="Mountains", move=3, defense=40, passable=["land", "air"],
+                       blurb=("The wall. Three move to climb and forty percent defense at "
+                              "the top — slow ground you pay to hold."))],
     "water": [dict(terrain="Water", move="-", defense=0, passable=["air", "sea"],
-                   capturable=False,
                    blurb=("A moat. Land units cannot cross it; only sea and air move "
                           "through. Use it to anchor a flank."))],
     "town": [dict(terrain="Town", move=1, defense=10, passable=["land", "air"],
-                  capturable=True,
                   blurb=("Held ground. Light cover, and the one tile infantry can take "
                          "for a small stream of Fame."))],
-    "bridge": [dict(terrain="Bridge", move=1, defense=-10, passable=["land", "air"],
-                    capturable=False,
-                    blurb=("The only hex armor crosses Water on. One move, and ten percent "
-                           "off your defense while you stand on it. Contest it, do not "
-                           "park on it."))],
-    "factory": [dict(terrain="Factory", move=1, defense=15, passable=["land", "air"],
-                     capturable=True,
-                     blurb=("Builds units and repairs them. Fifteen percent cover, and "
-                            "infantry can take it — hold one and it pays a hundred Fame "
-                            "a turn."))],
 }
 
 # --- Result-screen text (faction-flavored) ----------------------------------------

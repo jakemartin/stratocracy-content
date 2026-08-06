@@ -20,8 +20,7 @@ grounded in the real rules so the flavor never fights the mechanics.
 Everything is retrieved from `kb/`, derived straight from the GDD:
 
 - **`kb/rules.md`** — the ground truth: unit table (stats, Fame cost, who captures),
-  terrain table (move/defense/passability/capturable), and the victory outcomes. Kept in
-  sync with the GDD — the 29 Jul terrain and economy pass is folded in. This is both the RAG
+  terrain table (move/defense/passability), and the victory outcomes. This is both the RAG
   source *and* the critic's reference — one source of truth, so flavor can't drift from rules.
 - **`kb/setting.md`** — the thin fiction: a tone bible (terse tactical-briefing voice) and
   two factions, **The Directorate** (cold, doctrinal) and **The Vanguard** (terse, defiant),
@@ -30,8 +29,7 @@ Everything is retrieved from `kb/`, derived straight from the GDD:
 ## The three outputs (in `out/`)
 
 - **`unit_codex.json`** — 4 units: role + field-manual blurb + the real stats.
-- **`terrain_codex.json`** — 7 terrains: move + defense + passability + capturable + blurb.
-  Includes **Bridge** and **Factory**, the two tiles the GDD added in the 29 Jul terrain pass.
+- **`terrain_codex.json`** — 5 terrains: move + defense + passability + blurb.
 - **`result_screen.json`** — 8 lines: Decisive / Marginal / Draw / Defeat × both factions.
 
 ## How it works
@@ -82,23 +80,7 @@ DRAFT 1 (shipped):  cost 300, captures: false,
 ```
 
 Three real contradictions — a mispriced unit and a rule-breaking ability claim — caught and
-corrected automatically before shipping.
-
-The critic also caught a **live drift**, not a seeded one. The GDD's 29 Jul terrain pass
-changed Mountains from `land` to `land (slow)` and added the Bridge and Factory tiles. When
-`kb/rules.md` was re-synced to the new GDD, the existing Mountains codex entry went stale and
-the gate fired on the next run:
-
-```
-CRITIC:  BLOCK (draft 0) — rule: Mountains passable ['air', 'land'] != ['air', 'land (slow)']
-ACTION:  regenerate from corrected draft
-DRAFT 1 (shipped):  passable ["land (slow)", "air"],
-    blurb: "... Land units grind across it — slow ground you pay to hold."   →  PASS
-```
-
-That is the point of a deterministic critic: the source doc moved, and the content that no
-longer matched it could not ship. Both breaks are in the run log; the run ends
-**2 caught and corrected, 0 shipped flagged**. The full trace is in `out/run_log.md`.
+corrected automatically before shipping. The full trace is in `out/run_log.md`.
 
 ## Voice judgment (self-assessment)
 
@@ -108,18 +90,11 @@ speaks from the mud). The critic also enforces the tone bible mechanically: a 40
 blurbs, a 30-word cap on result lines, and a banned list of melodrama words (*glory, destiny,
 honor…*) so nothing drifts into generic fantasy.
 
-**Concrete tweaks made to improve game-fit:** the first run's retrieval was pulling the *entire*
+**Concrete tweak made to improve game-fit:** the first run's retrieval was pulling the *entire*
 `setting.md` for the tone chunk, because the file's H1 title also contained the words "Tone
 Bible" and the section matcher latched onto it — imprecise grounding. Renaming the H1 to
 "Setting and Voice Guide" made retrieval return only the `## Tone bible` section, so each
 generation now gets the tight, relevant context instead of the whole document.
-
-The second tweak came from the same GDD re-sync: `rules.md` now lists **two triggers for a
-decisive win** (flag kill *and* territorial domination) on two table rows. The parser kept
-only the last row, so the flag-kill result lines were being judged against the domination
-keywords and blocked for a grounding failure that was the parser's, not the content's.
-Merging repeated outcome rows — union the keywords, keep both triggers — fixed the
-grounding, and the flag lines ship as written.
 
 ## Layout
 

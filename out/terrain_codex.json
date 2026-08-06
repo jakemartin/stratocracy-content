@@ -7,7 +7,6 @@
       "land",
       "air"
     ],
-    "capturable": false,
     "blurb": "Open ground. One move to cross and nothing to hide behind — every hit lands clean, for you and against you."
   },
   {
@@ -18,7 +17,6 @@
       "land",
       "air"
     ],
-    "capturable": false,
     "blurb": "Cover at a price. Two move to enter, but anything standing in it is twenty percent harder to kill."
   },
   {
@@ -26,11 +24,14 @@
     "move": 3,
     "defense": 40,
     "passable": [
-      "land (slow)",
+      "land",
       "air"
     ],
-    "capturable": false,
-    "blurb": "The wall. Three move to climb and forty percent defense at the top. Land units grind across it — slow ground you pay to hold."
+    "blurb": "The wall. Three move to climb and forty percent defense at the top — slow ground you pay to hold.",
+    "_critic": "FAILED",
+    "_violations": [
+      "rule: Mountains passable ['air', 'land'] != ['air', 'land (slow)']"
+    ]
   },
   {
     "terrain": "Water",
@@ -40,7 +41,6 @@
       "air",
       "sea"
     ],
-    "capturable": false,
     "blurb": "A moat. Land units cannot cross it; only sea and air move through. Use it to anchor a flank."
   },
   {
@@ -51,29 +51,6 @@
       "land",
       "air"
     ],
-    "capturable": true,
     "blurb": "Held ground. Light cover, and the one tile infantry can take for a small stream of Fame."
-  },
-  {
-    "terrain": "Bridge",
-    "move": 1,
-    "defense": -10,
-    "passable": [
-      "land",
-      "air"
-    ],
-    "capturable": false,
-    "blurb": "The only hex armor crosses Water on. One move, and ten percent off your defense while you stand on it. Contest it, do not park on it."
-  },
-  {
-    "terrain": "Factory",
-    "move": 1,
-    "defense": 15,
-    "passable": [
-      "land",
-      "air"
-    ],
-    "capturable": true,
-    "blurb": "Builds units and repairs them. Fifteen percent cover, and infantry can take it — hold one and it pays a hundred Fame a turn."
   }
 ]
