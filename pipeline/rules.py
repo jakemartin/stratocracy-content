@@ -57,8 +57,13 @@ def load_rules(kb_dir: Path = KB) -> dict:
                 }
         elif "Outcome" in headers and "Trigger" in headers:
             for r in rows:
-                outcomes[r["Outcome"].lower()] = {
-                    "trigger": r["Trigger"],
-                    "keywords": [k.strip().lower() for k in r["Keywords"].split(",")],
-                }
+                # An outcome may be listed on SEVERAL rows (the GDD gives "decisive" two
+                # triggers: a flag kill and territorial domination). Merge them instead of
+                # letting the last row win, or content grounded in the first trigger would
+                # be judged against the second one's keywords.
+                name = r["Outcome"].lower()
+                kws = [k.strip().lower() for k in r["Keywords"].split(",")]
+                slot = outcomes.setdefault(name, {"trigger": "", "keywords": []})
+                slot["trigger"] = (slot["trigger"] + "; " + r["Trigger"]).strip("; ")
+                slot["keywords"] += [k for k in kws if k not in slot["keywords"]]
     return {"units": units, "terrain": terrain, "outcomes": outcomes}
