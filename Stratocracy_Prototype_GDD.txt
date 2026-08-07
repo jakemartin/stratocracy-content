@@ -2886,13 +2886,13 @@ movement and pathfinding — and week 1 closed two of the three: rows 1
 and 3 passed their full acceptance sets at that commit (T-HEX-01..07,
 7/7; T-MOVE-01..06, 6/6) and flip in the table below. Row 2 does not
 flip. Its headless half is green — T-DATA-01..04 and 06, 5/5 — but
-T-DATA-05, the in-editor Unreal Automation parity pass, has not run, and
-Q29 requires the full acceptance set at one commit, so the row records a
-partial pass and stays unverified; the editor pass is not yet due, so
-that is the ordinary schedule and not §4.7’s cut line firing. What week
-1 did not close is everything after it: rows 4–8 held no code then, and
-rows 4, 5 and 6 have since landed — all three recorded at the end of
-this paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
+T-DATA-05, the editor-pass parity check, has not run, and Q29 requires
+the full acceptance set at one commit, so the row records a partial pass
+and stays unverified; the editor pass is not yet due, so that is the
+ordinary schedule and not §4.7’s cut line firing. What week 1 did not
+close is everything after it: rows 4–8 held no code then, and rows 4, 5
+and 6 have since landed — all three recorded at the end of this
+paragraph — so at d8284f1 only rows 7–8 hold none; since §4.11’s
 critical path runs 1 → 3 → 4 → 5 → 6/8, every row on that path has since
 landed, row 8 last and on a partial pass that leaves its ledger row
 unflipped — per acceptance ID as well as per row: T-TURN-10 closed at
@@ -2963,7 +2963,7 @@ cpp_reference/test_economy.cpp. The last of those is a sixth harness, so
 eight tracked sources define main() at 647d4df — the seven listed above
 plus cpp_reference/test_economy.cpp — six test harnesses, one combat
 duel simulator, and one debug REPL. No ID is left uncovered: unlike row
-2 there is no in-editor half, so the full acceptance set closes at one
+2 there is no editor-pass half, so the full acceptance set closes at one
 commit, Q29 is satisfied, and the row flips in the table below. No new
 acceptance ID was written, so §4.5’s written-ID count does not move at
 this landing and its green count moves 18 → 27. §4.4 schedules rows 4–5
@@ -2999,7 +2999,7 @@ cpp_reference/Turn.buggy.cpp, cpp_reference/test_turn.cpp. The last of
 those is a seventh harness, so nine tracked sources define main() at
 ad77b13 — the eight named above plus cpp_reference/test_turn.cpp — seven
 test harnesses, one combat duel simulator, and one debug REPL. No ID is
-left uncovered: row 5 has no in-editor half and no reserved-unwritten
+left uncovered: row 5 has no editor-pass half and no reserved-unwritten
 ID, so its full acceptance set closes at one commit — but that commit is
 no longer this one. The set was widened to T-TURN-01..10 this revision,
 and it closes at the 6ccd40b rebuild recorded at the end of this
@@ -3060,10 +3060,10 @@ cpp_reference/Ai.buggy.cpp, cpp_reference/test_ai.cpp. The last of those
 is an eighth harness, so ten tracked sources define main() at d8284f1 —
 the nine named above plus cpp_reference/test_ai.cpp — eight test
 harnesses, one combat duel simulator, and one debug REPL. No ID is left
-uncovered: row 6 has no in-editor half and no reserved-unwritten ID, so
-its full acceptance set closes at one commit, Q29 is satisfied, and the
-row flips in the table below. GATE-AI-SMOKE mints no acceptance ID. The
-self-play smoke run is acceptance and §4.11 row 6 names it, but it
+uncovered: row 6 has no editor-pass half and no reserved-unwritten ID,
+so its full acceptance set closes at one commit, Q29 is satisfied, and
+the row flips in the table below. GATE-AI-SMOKE mints no acceptance ID.
+The self-play smoke run is acceptance and §4.11 row 6 names it, but it
 carries no numbered ID in this document and spec/ai_spec.md declines to
 mint one, since a T-AI-07 would move §4.5’s count. The gate is therefore
 7/7 while six IDs close: §4.5’s written-ID count does not move at this
@@ -3239,12 +3239,12 @@ is a tenth harness, so twelve tracked sources define main() at 7c36303 —
 ten test harnesses, one combat duel simulator, and one debug REPL — a
 figure taken by enumerating them at that commit rather than by adding
 one to the count above. This row does not flip. T-UI-03 and T-UI-04 have
-not run: they are in-editor Unreal Automation over widget bindings,
-marked † in §4.11, and no in-editor pass exists at this commit. Both are
-printed by name with that reason before the tally and recorded in the
-acceptance record. Q29 requires the full acceptance set at one commit
-and is applied per acceptance ID as well as per row, so the row records
-a partial pass and stays unverified, which is the posture rows 2 and 7
+not run: they are editor-pass Automation over widget bindings, marked †
+in §4.11, and no editor pass exists at this commit. Both are printed by
+name with that reason before the tally and recorded in the acceptance
+record. Q29 requires the full acceptance set at one commit and is
+applied per acceptance ID as well as per row, so the row records a
+partial pass and stays unverified, which is the posture rows 2 and 7
 hold. Both are written, unblocked and asserting; what they lack is a
 harness, not a rule — a different state from T-SCN-10, which is reserved
 and unwritten on Q26, and from T-MOVE-07, which cannot be written until
@@ -3269,10 +3269,10 @@ block, which the rules module does not produce and which is the second
 half of the view-model beside the snapshot. No code implemented any of
 the three at this commit, and the same rulings minted T-UI-05, a
 headless snapshot-fidelity check no code implemented either, so what row
-8 lacked after this commit was no longer the in-editor pass alone. The
-two snapshot fields and T-UI-05 were built at 41a1452, recorded at the
-end of this paragraph; the presentation block is declared there rather
-than filled. The debug driver’s snapshot command now prints the snapshot
+8 lacked after this commit was no longer the editor pass alone. The two
+snapshot fields and T-UI-05 were built at 41a1452, recorded at the end
+of this paragraph; the presentation block is declared there rather than
+filled. The debug driver’s snapshot command now prints the snapshot
 rather than refusing on row 8’s account — the snapshot and not the whole
 view-model, whose other half, §4.7 Stub 8’s presentation block, is
 produced by no rules field and was implemented by no code at that
@@ -3285,46 +3285,45 @@ session also authored spec/ui_spec.md, as an elaboration of §4.7 Spec
 Stub 8. Each of rows 5, 6 and 7 names a Director-written stub in spec/
 that predated its build; §4.7 Stub 8 is Director-written, and the
 crew-repo spec derived from it is not. Row 8 was the last unbuilt link
-on §4.11’s critical path. No in-editor harness is among the twelve
-main() definitions above. Row 8 was then rebuilt, at 41a1452, whose
-parent is 7c36303, against the snapshot additions ruled on 2026-08-04
-and the T-UI-05 minted with them — the GDD half of all of them having
-merged before any code satisfied them, as row 5’s rebuild did. The
-commit changes nine files: cpp_reference/Ui.h,
-cpp_reference/Ui.good.cpp, cpp_reference/Ui.buggy.cpp,
-cpp_reference/test_ui.cpp, cpp_reference/Driver.h,
-cpp_reference/Driver.good.cpp, cpp_reference/test_driver.cpp,
-spec/ui_spec.md and README.md; no other file in the repo changed. The
-gate is T-UI-01, T-UI-02, T-UI-05 and GATE-CAP-PARTIAL, 34/34 under
-clang++ and MSVC both — g++ is still not installed on this machine — and
-the 34 counts printed checks, not IDs. Pass-1 cpp_reference/Ui.buggy.cpp
-is blocked at 21/34 under both compilers — 13 FAIL lines over three
-distinct IDs, T-UI-02, T-UI-05 and GATE-CAP-PARTIAL — while T-UI-01 is
-green in both passes. The other eight harnesses are unchanged under both
-compilers — hex 7/7, data 6/6, move 6/6, combat 17/17, economy 9/9, turn
-11/11, scenario 12/12, ai 7/7 — their sources being byte-identical to
-7c36303. T-UI-05 closes here and the row still does not flip. It is
-headless, has no in-editor half and no unrun fixture, so Q29 is
-satisfied for it; T-UI-03 and T-UI-04 did not run, being in-editor
-Unreal Automation marked † in §4.11, and no editor pass exists at this
-commit. Both are printed by name with that reason before the tally, and
-that is measured at this commit rather than inherited —
-cpp_reference/test_ui.cpp is one of the nine files this commit changes,
-so the earlier run’s behaviour would not establish it. Rebuilt from
-Ui.good.cpp at 41a1452, the two NOT RUN lines are output lines 76 and 82
-and the 34/34 passed tally is line 101; each names its ID, states that
-it is in-editor Unreal Automation marked †, and states that no in-editor
-pass exists at this commit. That is the clang++ run; the MSVC run was
-verified at 34/34 with zero FAIL lines. What changed about row 8 is
-which IDs it lacks, not whether it flips: before this commit the IDs the
-row lacked included T-UI-05, which was headless and unimplemented, and
-after it the IDs it lacks are the in-editor T-UI-03 and T-UI-04 — the
-row keeps the partial-pass posture rows 2 and 7 hold. No acceptance ID
-is minted by this commit, so §4.5’s written-ID count does not move at
-this landing, its green count moves 52 → 53 and its unclosed count moves
-19 → 18. §4.4 scheduled T-UI-05 for week 3, so this closure is ahead of
-the milestone table, not behind it. What was built is the snapshot’s
-ruled additions: isGuidedMarked, the per-factory group
+on §4.11’s critical path. No editor pass is among the twelve main()
+definitions above. Row 8 was then rebuilt, at 41a1452, whose parent is
+7c36303, against the snapshot additions ruled on 2026-08-04 and the
+T-UI-05 minted with them — the GDD half of all of them having merged
+before any code satisfied them, as row 5’s rebuild did. The commit
+changes nine files: cpp_reference/Ui.h, cpp_reference/Ui.good.cpp,
+cpp_reference/Ui.buggy.cpp, cpp_reference/test_ui.cpp,
+cpp_reference/Driver.h, cpp_reference/Driver.good.cpp,
+cpp_reference/test_driver.cpp, spec/ui_spec.md and README.md; no other
+file in the repo changed. The gate is T-UI-01, T-UI-02, T-UI-05 and
+GATE-CAP-PARTIAL, 34/34 under clang++ and MSVC both — g++ is still not
+installed on this machine — and the 34 counts printed checks, not IDs.
+Pass-1 cpp_reference/Ui.buggy.cpp is blocked at 21/34 under both
+compilers — 13 FAIL lines over three distinct IDs, T-UI-02, T-UI-05 and
+GATE-CAP-PARTIAL — while T-UI-01 is green in both passes. The other
+eight harnesses are unchanged under both compilers — hex 7/7, data 6/6,
+move 6/6, combat 17/17, economy 9/9, turn 11/11, scenario 12/12, ai 7/7
+— their sources being byte-identical to 7c36303. T-UI-05 closes here and
+the row still does not flip. It is headless, has no editor-pass half and
+no unrun fixture, so Q29 is satisfied for it; T-UI-03 and T-UI-04 did
+not run, being editor-pass Automation marked † in §4.11, and no editor
+pass exists at this commit. Both are printed by name with that reason
+before the tally, and that is measured at this commit rather than
+inherited — cpp_reference/test_ui.cpp is one of the nine files this
+commit changes, so the earlier run’s behaviour would not establish it.
+Rebuilt from Ui.good.cpp at 41a1452, the two NOT RUN lines are output
+lines 76 and 82 and the 34/34 passed tally is line 101; each names its
+ID, states that it is in-editor Unreal Automation marked †, and states
+that no in-editor pass exists at this commit. That is the clang++ run;
+the MSVC run was verified at 34/34 with zero FAIL lines. What changed
+about row 8 is which IDs it lacks, not whether it flips: before this
+commit the IDs the row lacked included T-UI-05, which was headless and
+unimplemented, and after it the IDs it lacks are the editor-pass T-UI-03
+and T-UI-04 — the row keeps the partial-pass posture rows 2 and 7 hold.
+No acceptance ID is minted by this commit, so §4.5’s written-ID count
+does not move at this landing, its green count moves 52 → 53 and its
+unclosed count moves 19 → 18. §4.4 scheduled T-UI-05 for week 3, so this
+closure is ahead of the milestone table, not behind it. What was built
+is the snapshot’s ruled additions: isGuidedMarked, the per-factory group
 {hex, owner, hasBuiltThisTurn, buildWaiting, spawnBlocked} and the
 per-side incomePerTurn. The field contract T-UI-05 runs over is 27 rows
 — 22 mirrors and 5 DECLARED DERIVED. DriverUnit gained a placement
@@ -3502,28 +3501,28 @@ already recorded above, and no rules code changed: cpp_reference/ is
 byte-identical between b23823f and d837fc8, git diff --stat over that
 path printing nothing. spec/integration_spec.md was updated at d837fc8
 to describe the widened check, having described the old one. T-INT-02,
-T-INT-03 and T-INT-05 still did not run — no in-editor Automation
-harness exists — so build-order row 9’s acceptance set still does not
-close, on the Q29 reading applied per acceptance ID as well as per row;
-the vendored module was still not registered in Stratocracy.uproject at
-that commit, and no UBT build had been run by it. The ledger table below
-deliberately gains no row for build-order row 9, and no row is added,
-removed or flipped by this landing. That is the ruling on the question
-filed above, and it turns on what a row would claim: what has landed is
-the vendoring step and its identity check, while the bridge §4.9 part 2
-describes is unbuilt, so a row written now would either name a system
-that half-exists or start a practice of one row per half. The row is
-deferred until the bridge is built, so the ledger later gains a row
-describing a whole system. The Director has since named that row without
-creating it (ruled 2026-08-05): it is Headless → Unreal integration, its
-acceptance set is T-INT-01..05, and it is created as one row when §4.9
-part 2 lands — which is this deferral’s own reason stated forward rather
-than a second decision. The text-versus-check question this landing
-settled is registered as Q33 (§4.7), written already marked RULED. How
-d837fc8 was authored is deliberately not stated: no harness claim is
-made for it, because none was established. Build-order row 10’s part (a)
-then landed, at 737f666, with the UE project repo unmoved at 9dec48c.
-New in the crew repo: spec/save_spec.md, cpp_reference/Save.h,
+T-INT-03 and T-INT-05 still did not run — no editor pass exists — so
+build-order row 9’s acceptance set still does not close, on the Q29
+reading applied per acceptance ID as well as per row; the vendored
+module was still not registered in Stratocracy.uproject at that commit,
+and no UBT build had been run by it. The ledger table below deliberately
+gains no row for build-order row 9, and no row is added, removed or
+flipped by this landing. That is the ruling on the question filed above,
+and it turns on what a row would claim: what has landed is the vendoring
+step and its identity check, while the bridge §4.9 part 2 describes is
+unbuilt, so a row written now would either name a system that
+half-exists or start a practice of one row per half. The row is deferred
+until the bridge is built, so the ledger later gains a row describing a
+whole system. The Director has since named that row without creating it
+(ruled 2026-08-05): it is Headless → Unreal integration, its acceptance
+set is T-INT-01..05, and it is created as one row when §4.9 part 2 lands
+— which is this deferral’s own reason stated forward rather than a
+second decision. The text-versus-check question this landing settled is
+registered as Q33 (§4.7), written already marked RULED. How d837fc8 was
+authored is deliberately not stated: no harness claim is made for it,
+because none was established. Build-order row 10’s part (a) then landed,
+at 737f666, with the UE project repo unmoved at 9dec48c. New in the crew
+repo: spec/save_spec.md, cpp_reference/Save.h,
 cpp_reference/Save.good.cpp, cpp_reference/Save.buggy.cpp and
 cpp_reference/test_save.cpp, registered as row save in crew/tools.py, so
 this row runs under the python run.py gate T-INT-04 names rather than by
@@ -3557,7 +3556,7 @@ not run, and each is named in the runner with its reason rather than
 absorbed: T-SAVE-01, T-SAVE-02, T-SAVE-03 and T-SAVE-05 needed the
 headless replayer of part (b), which was unbuilt at that commit;
 T-SAVE-06 is the only † of the seven, is asserted jointly with T-INT-02,
-and had at that commit neither an in-editor harness nor a built subject;
+and had at that commit neither an editor pass nor a built subject;
 T-SAVE-07 needed row 6’s self-play, which part (c) reached. Row 10’s
 acceptance set therefore does not close, on the Q29 reading applied per
 acceptance ID as well as per row. It has no row in the table below to
@@ -3571,11 +3570,11 @@ hash is not defined here — that is part (b)’s, and part (a) carries
 stateHash as an opaque required string. dataHash and scenarioHash are
 compared as opaque strings and never recomputed, which is what keeps
 this part’s dependency set empty; its link set is Save.cpp, Hex.cpp and
-test_save.cpp and nothing else. No in-editor harness is among the
-thirteen main() definitions above. How 737f666 was authored is
-deliberately not stated: no harness claim is made for it, because none
-was established. Build-order row 10’s part (b) then landed, at ec15be6,
-with the UE project repo unmoved at 9dec48c. New in the crew repo:
+test_save.cpp and nothing else. No editor pass is among the thirteen
+main() definitions above. How 737f666 was authored is deliberately not
+stated: no harness claim is made for it, because none was established.
+Build-order row 10’s part (b) then landed, at ec15be6, with the UE
+project repo unmoved at 9dec48c. New in the crew repo:
 spec/replay_spec.md, cpp_reference/Replay.h,
 cpp_reference/Replay.good.cpp, cpp_reference/Replay.buggy.cpp and
 cpp_reference/test_replay.cpp; modified: cpp_reference/Save.h,
@@ -3696,53 +3695,53 @@ had no implementation or that T-SAVE-01/02/03/05 still awaited a
 replayer. spec/integration_spec.md’s is the load-bearing one: it said
 T-INT-02 and T-INT-03 “have no subject even in an editor pass”, which
 this landing makes false. T-SAVE-06 did not close. It is the only † of
-row 10’s seven, it is asserted jointly with T-INT-02, and no in-editor
-Automation harness exists; its other blocker — §4.10’s canonical state
-hash having no implementation — is removed here, and among what it still
-waits on are the in-editor Automation harness and a vendored replayer:
-it is asserted jointly with T-INT-02, whose replay runs in-engine and so
-needs the replayer compiled into the engine and therefore vendored, and
-Replay is ruled out of vendoring until a bridge consumer exists. Both
-what the editor pass denotes and what running it does not supply are
-stated at §4.9. T-SAVE-07 did not close: cpp_reference/selfplay.cpp is a
-combat-only 1v1 duel harness that prints a table of duel outcomes, and
-it writes no §4.10 command log. Row 10’s acceptance set therefore does
-not close, on the Q29 reading applied per acceptance ID as well as per
-row, and its unclosed count moves 6 → 2. No ledger row is created,
-flipped or removed by this landing: §4.11 calls row 10 a proposed ledger
-row, which is row 9’s posture and deliberately not the partial-pass
-posture of rows 2, 7 and 8. The Director has since named that row
-without creating it (ruled 2026-08-05), on Ruling K’s precedent for row
-9: it is Save & replay, its acceptance set is T-SAVE-01..07, and it is
-created as one row when that full set closes — which under Q29 is the
-same condition as its flipping — so parts (a), (b) and (c) resolve to
-one ledger row rather than to several, and what it waits on is T-SAVE-06
-alone, T-SAVE-07 having since closed at 1ee890e on part (c). How ec15be6
-was authored is deliberately not stated: no harness claim is made for
-it, because none was established. Build-order row 10’s part (c) then
-landed, at 1ee890e, with the UE project repo unmoved at 9dec48c. New in
-the crew repo: spec/balance_spec.md, cpp_reference/Balance.h,
+row 10’s seven, it is asserted jointly with T-INT-02, and no editor pass
+exists; its other blocker — §4.10’s canonical state hash having no
+implementation — is removed here, and among what it still waits on are
+the editor pass and a vendored replayer: it is asserted jointly with
+T-INT-02, whose replay runs in-engine and so needs the replayer compiled
+into the engine and therefore vendored, and Replay is ruled out of
+vendoring until a bridge consumer exists. Both what the editor pass
+denotes and what running it does not supply are stated at §4.9.
+T-SAVE-07 did not close: cpp_reference/selfplay.cpp is a combat-only 1v1
+duel harness that prints a table of duel outcomes, and it writes no
+§4.10 command log. Row 10’s acceptance set therefore does not close, on
+the Q29 reading applied per acceptance ID as well as per row, and its
+unclosed count moves 6 → 2. No ledger row is created, flipped or removed
+by this landing: §4.11 calls row 10 a proposed ledger row, which is row
+9’s posture and deliberately not the partial-pass posture of rows 2, 7
+and 8. The Director has since named that row without creating it (ruled
+2026-08-05), on Ruling K’s precedent for row 9: it is Save & replay, its
+acceptance set is T-SAVE-01..07, and it is created as one row when that
+full set closes — which under Q29 is the same condition as its flipping
+— so parts (a), (b) and (c) resolve to one ledger row rather than to
+several, and what it waits on is T-SAVE-06 alone, T-SAVE-07 having since
+closed at 1ee890e on part (c). How ec15be6 was authored is deliberately
+not stated: no harness claim is made for it, because none was
+established. Build-order row 10’s part (c) then landed, at 1ee890e, with
+the UE project repo unmoved at 9dec48c. New in the crew repo:
+spec/balance_spec.md, cpp_reference/Balance.h,
 cpp_reference/Balance.good.cpp, cpp_reference/Balance.buggy.cpp and
 cpp_reference/test_balance.cpp; modified: crew/tools.py and
 crew/offline.py. What landed is a producer of §4.10 command logs, and
-the in-editor Automation harness T-SAVE-06 waits on is untouched by it.
-The new module is registered as registry row balance in crew/tools.py,
-so it runs under the python run.py gate rather than by an ad-hoc
-compile, and it is row 10’s third registry row beside save and replay:
-its link set encodes part (c)’s own dependency claim — rows 4, 5 and 6,
-the command set, the match that runs to a result, and the AI that plays
-it — while folding it into the replay row would have put row 6 inside
-part (b)’s stated claim. cpp_reference/test_balance.cpp is a thirteenth
-harness, so fifteen tracked sources define main() at 1ee890e — thirteen
-test harnesses, one combat duel simulator, and one debug REPL — a figure
-taken by enumerating them at that commit with git grep -l and diffing
-that list against the fourteen at ec15be6 rather than by adding one to a
-count above: the difference is exactly cpp_reference/test_balance.cpp,
-and nothing was removed. The gate is T-SAVE-07 plus GATE-BALANCE-*,
-12/12 under clang++ and MSVC both. Pass-1
-cpp_reference/Balance.buggy.cpp is blocked at 6/12 under both compilers
-— six FAIL lines, identical under each, and predicted in full at clause
-level before the run: GATE-BALANCE-TRANSLATE-ATTACK-IS-TARGET-HEX,
+the editor pass T-SAVE-06 waits on is untouched by it. The new module is
+registered as registry row balance in crew/tools.py, so it runs under
+the python run.py gate rather than by an ad-hoc compile, and it is row
+10’s third registry row beside save and replay: its link set encodes
+part (c)’s own dependency claim — rows 4, 5 and 6, the command set, the
+match that runs to a result, and the AI that plays it — while folding it
+into the replay row would have put row 6 inside part (b)’s stated claim.
+cpp_reference/test_balance.cpp is a thirteenth harness, so fifteen
+tracked sources define main() at 1ee890e — thirteen test harnesses, one
+combat duel simulator, and one debug REPL — a figure taken by
+enumerating them at that commit with git grep -l and diffing that list
+against the fourteen at ec15be6 rather than by adding one to a count
+above: the difference is exactly cpp_reference/test_balance.cpp, and
+nothing was removed. The gate is T-SAVE-07 plus GATE-BALANCE-*, 12/12
+under clang++ and MSVC both. Pass-1 cpp_reference/Balance.buggy.cpp is
+blocked at 6/12 under both compilers — six FAIL lines, identical under
+each, and predicted in full at clause level before the run:
+GATE-BALANCE-TRANSLATE-ATTACK-IS-TARGET-HEX,
 GATE-BALANCE-TRANSLATE-BUILD-NAMES-THE-UNIT-BUILT,
 GATE-BALANCE-RUN-ENDS-WITH-A-TIER,
 GATE-BALANCE-COMMAND-SET-IS-THE-AIS-FOUR,
@@ -3798,20 +3797,20 @@ unaffected — still 2/2 at rulesCommit d837fc8, run this session after
 the change. Nothing was compiled by UBT at this landing, no editor was
 launched, and no UE project file was touched. T-SAVE-07 closes here.
 T-SAVE-06 did not close: it is the only † of row 10’s seven, it is
-asserted jointly with T-INT-02, and no in-editor Automation harness
-exists. Row 10’s acceptance set therefore does not close, on the Q29
-reading applied per acceptance ID as well as per row, and its unclosed
-count moves 2 → 1, T-SAVE-06 alone. No ledger row is created, flipped or
-removed by this landing: §4.11 calls row 10 a proposed ledger row, which
-is row 9’s posture and deliberately not the partial-pass posture of rows
-2, 7 and 8, and the row the Director named without creating it is
-created as one row when its full acceptance set closes. How 1ee890e was
-authored is deliberately not stated: no harness claim is made for it,
-because none was established. The UBT landing then followed, at 031ee20
-in the crew repo — over 30a73f0, which added the Build.cs line and a
-spec repair, 188f966, which corrects a sentence 30a73f0 had written
-ahead of a landing that did not then happen, and e19605e — with the UE
-project repo at a13626f, where Stratocracy.uproject,
+asserted jointly with T-INT-02, and no editor pass exists. Row 10’s
+acceptance set therefore does not close, on the Q29 reading applied per
+acceptance ID as well as per row, and its unclosed count moves 2 → 1,
+T-SAVE-06 alone. No ledger row is created, flipped or removed by this
+landing: §4.11 calls row 10 a proposed ledger row, which is row 9’s
+posture and deliberately not the partial-pass posture of rows 2, 7 and
+8, and the row the Director named without creating it is created as one
+row when its full acceptance set closes. How 1ee890e was authored is
+deliberately not stated: no harness claim is made for it, because none
+was established. The UBT landing then followed, at 031ee20 in the crew
+repo — over 30a73f0, which added the Build.cs line and a spec repair,
+188f966, which corrects a sentence 30a73f0 had written ahead of a
+landing that did not then happen, and e19605e — with the UE project repo
+at a13626f, where Stratocracy.uproject,
 Source/StratRules/StratRules.Build.cs,
 Source/StratRules/StratRules.manifest.json and Source/StratRules/Turn.h
 changed. Stratocracy.uproject now lists StratRules, and building the
@@ -3900,11 +3899,11 @@ figures do not move; what moves is the by-commit attribution of two
 already-green IDs. No ledger row is created, flipped or removed by this
 landing, and the register of open questions gains no row and loses none.
 T-SAVE-06 remains the only † of row 10’s seven, and among what it waits
-on are the in-editor Automation harness and a vendored replayer: it is
-asserted jointly with T-INT-02, whose replay runs in-engine and so needs
-the replayer compiled into the engine, and Replay is ruled out of
-vendoring until a bridge consumer exists. Both what the editor pass
-denotes and what running it does not supply are stated at §4.9.
+on are the editor pass and a vendored replayer: it is asserted jointly
+with T-INT-02, whose replay runs in-engine and so needs the replayer
+compiled into the engine, and Replay is ruled out of vendoring until a
+bridge consumer exists. Both what the editor pass denotes and what
+running it does not supply are stated at §4.9.
 cpp_reference/selfplay.cpp is untouched. Save, Replay and Balance remain
 unvendored, and the ruling that keeps them out is now stated in the
 declaration rather than implied by a glob. Two further rulings are
@@ -3923,19 +3922,19 @@ survives a landing, and a rule that a “has since” sentence must carry a
 commit pin. Both are ways of phrasing claims, and a closed list of legal
 phrasings has been adopted and withdrawn here before. How 031ee20 was
 authored is deliberately not stated: no harness claim is made for it,
-because none was established. The in-editor Automation harness then
-landed, at c2edae0 in the crew repo — over b1ea992, which vendors the
-§4.8 CSVs into the UE project — with the Stratocracy UE project repo at
-fed8ae9. New in the UE project: EUnitType, a UENUM mirroring
-strat::UnitType with the enumerator order pinned; the row structs
-FUnitRow, FTerrainRow and FEffectivenessRow, each deriving
-FTableRowBase; an ImportStratData commandlet that imports the vendored
-CSVs into DT_Units (4 rows), DT_Terrain (7 rows) and DT_Effectiveness (4
-rows); and an in-editor Unreal Automation suite. All of it lives in the
-Stratocracy module and none of it in Source/StratRules/, which is the
-constraint §4.9 states: T-INT-01 accounts for every file in that
-directory, so a test file placed there would fail a green ID. The gate
-is T-DATA-05, 4/4, plus GATE-DATA-VENDOR, 5/5 in-editor at fed8ae9, and
+because none was established. The editor pass then landed, at c2edae0 in
+the crew repo — over b1ea992, which vendors the §4.8 CSVs into the UE
+project — with the Stratocracy UE project repo at fed8ae9. New in the UE
+project: EUnitType, a UENUM mirroring strat::UnitType with the
+enumerator order pinned; the row structs FUnitRow, FTerrainRow and
+FEffectivenessRow, each deriving FTableRowBase; an ImportStratData
+commandlet that imports the vendored CSVs into DT_Units (4 rows),
+DT_Terrain (7 rows) and DT_Effectiveness (4 rows); and an editor-pass
+Automation suite. All of it lives in the Stratocracy module and none of
+it in Source/StratRules/, which is the constraint §4.9 states: T-INT-01
+accounts for every file in that directory, so a test file placed there
+would fail a green ID. The gate is T-DATA-05, 4/4, plus
+GATE-DATA-VENDOR, 5/5 in the editor pass at fed8ae9, and
 T-DATA-01..04, 06 plus GATE-DATA-HARDFAIL, 6/6 headless at c2edae0,
 where python run.py --week1 prints WEEK-1 GATE PASS with every row at
 its full tally and INTEGRATION GATE PASS 2/2, under MSVC.
@@ -4053,10 +4052,10 @@ commit + passing test IDs so any row is independently checkable.
                                                            data/units.csv, data/terrain.csv,
                                                            data/effectiveness.csv · T-DATA-01..04, 06
                                                            (5/5) headless @ c224825, re-run green @
-                                                           b1ea992 · T-DATA-05 (in-editor) 4/4 over the
-                                                           imported DataTables and the EUnitType mirror @
-                                                           fed8ae9 in the Stratocracy UE project repo,
-                                                           beside GATE-DATA-VENDOR, which mints no
+                                                           b1ea992 · T-DATA-05 (in the editor pass) 4/4
+                                                           over the imported DataTables and the EUnitType
+                                                           mirror @ fed8ae9 in the Stratocracy UE project
+                                                           repo, beside GATE-DATA-VENDOR, which mints no
                                                            acceptance ID. The full set closes across that
                                                            repo pair, which is how Q29’s at one commit
                                                            reads for a two-repo acceptance set (Q34)
@@ -4094,9 +4093,9 @@ commit + passing test IDs so any row is independently checkable.
                                                            41a1452 is the commit at which T-UI-05 closes,
                                                            the snapshot additions ruled beside it having
                                                            been built there. T-UI-03 and T-UI-04 have not
-                                                           run: they are in-editor Unreal Automation over
-                                                           widget bindings and no in-editor pass exists
-                                                           at either commit. The acceptance set is
+                                                           run: they are editor-pass Automation over
+                                                           widget bindings and no editor pass exists at
+                                                           either commit. The acceptance set is
                                                            incomplete on that count and Q29, read per ID,
                                                            keeps the row unverified
   -------------------------------------------------------------------------------------------------------
@@ -4120,11 +4119,11 @@ author is an agent either way; the two sentences differ because the
 harness differed, and reporting a harness that did not run is the exact
 failure this ledger exists to prevent. Capture & Fame economy joined at
 647d4df — T-FAME-01..09, 9/9 under clang++ and MSVC both — and it leaves
-no ID uncovered: unlike row 2 it has no in-editor half, and unlike row 3
-no reserved ID, so its full acceptance set closes at one commit and Q29
-is satisfied rather than blocking. It belongs to the second of those two
-sentences and does not start a third: a Claude Code session authored it
-from the Director-written stub spec/economy_spec.md, again not a live
+no ID uncovered: unlike row 2 it has no editor-pass half, and unlike row
+3 no reserved ID, so its full acceptance set closes at one commit and
+Q29 is satisfied rather than blocking. It belongs to the second of those
+two sentences and does not start a third: a Claude Code session authored
+it from the Director-written stub spec/economy_spec.md, again not a live
 CrewAI run — crew/tasks.py is byte-unchanged from 5ffa8d6 to 647d4df, so
 the file the live crew runs from still describes the Combat spec alone.
 That check establishes that the file has not moved across those commits;
@@ -4133,9 +4132,9 @@ here because it is known and not because a diff proved it. Turn loop &
 win / tiebreak joined at ad77b13 — T-TURN-01..09, 9/9 under clang++ and
 MSVC both — and its acceptance set has since widened to T-TURN-01..10,
 green at the 6ccd40b rebuild under clang++ and MSVC both, on 11 printed
-checks over those ten IDs. It leaves no ID uncovered: no in-editor half
-and no reserved ID, so its full acceptance set closes at one commit —
-6ccd40b, not ad77b13 — and Q29, read per acceptance ID, is satisfied
+checks over those ten IDs. It leaves no ID uncovered: no editor-pass
+half and no reserved ID, so its full acceptance set closes at one commit
+— 6ccd40b, not ad77b13 — and Q29, read per acceptance ID, is satisfied
 rather than blocking. It belongs to that same second sentence and does
 not start a third: a Claude Code session authored it from the
 Director-written stub spec/turn_spec.md, again not a live CrewAI run —
@@ -4144,17 +4143,17 @@ live crew runs from still describes the Combat spec alone, and that
 check likewise establishes only that the file has not moved across those
 commits. Opponent AI joined at d8284f1 — T-AI-01..06 plus GATE-AI-SMOKE,
 7/7 under clang++ and MSVC both — and it leaves no ID uncovered either:
-no in-editor half and no reserved ID, so its full acceptance set closes
-at one commit and Q29 is satisfied rather than blocking. Six of those
-seven checks are numbered IDs; GATE-AI-SMOKE mints none, for the reason
-the paragraph above gives. It belongs to that same second sentence and
-does not start a third: a Claude Code session authored it from the
-Director-written stub spec/ai_spec.md, again not a live CrewAI run —
-crew/tasks.py is byte-unchanged from 5ffa8d6 to d8284f1, so the file the
-live crew runs from still describes the Combat spec alone, and that
-check carries the same extent as the two before it: the file has not
-moved. Data tables joined at b1ea992 with fed8ae9 in the Stratocracy UE
-project repo — T-DATA-01..04 and 06 headless, T-DATA-05 in the editor
+no editor-pass half and no reserved ID, so its full acceptance set
+closes at one commit and Q29 is satisfied rather than blocking. Six of
+those seven checks are numbered IDs; GATE-AI-SMOKE mints none, for the
+reason the paragraph above gives. It belongs to that same second
+sentence and does not start a third: a Claude Code session authored it
+from the Director-written stub spec/ai_spec.md, again not a live CrewAI
+run — crew/tasks.py is byte-unchanged from 5ffa8d6 to d8284f1, so the
+file the live crew runs from still describes the Combat spec alone, and
+that check carries the same extent as the two before it: the file has
+not moved. Data tables joined at b1ea992 with fed8ae9 in the Stratocracy
+UE project repo — T-DATA-01..04 and 06 headless, T-DATA-05 in the editor
 pass, 4/4 — and it is the first row whose acceptance set closes across a
 repo pair rather than at a single commit, which is what Q34 rules on.
 Seven IDs are still recorded as uncovered rather than omitted, in two
@@ -4163,55 +4162,55 @@ reserved on Q2, and T-SCN-10, reserved on Q26 — no invariant text exists
 for either, so neither asserts and neither is waiting on a run. Five are
 written and not green: T-SCN-08, T-SCN-09 and T-SCN-11, each written,
 unblocked and asserting, each having run only part of its fixture set;
-and T-UI-03 and T-UI-04, written, unblocked and asserting, in-editor
-Unreal Automation for which no in-editor pass exists at either of row
-8’s two commits — among what those two wait on are real Stratocracy
-widgets, the in-editor Automation harness they also lacked having landed
-at fed8ae9, and they are the IDs row 8 still lacks. T-DATA-05 was why
-Data tables carried evidence without a ✓; it has since run, 4/4 in the
-editor pass at fed8ae9, completing that row’s acceptance set across the
-repo pair Q34 rules on, and that row now carries one. Two rows still
-carry evidence without a ✓, each recording a partial pass and staying
-unverified on Q29: the three T-SCN- IDs are why Content / scenario does
-the same at 9086d6a, Q29 there being read per ID, and T-UI-03 and
-T-UI-04 are why UI does the same at 41a1452, for want of an in-editor
-pass at that commit and at 7c36303 before it. (Every crew-repo commit
-this section cited at ec15be6 — d8284f1, row 6’s, included — is an
-ancestor of ec15be6, measured with git merge-base --is-ancestor per sha,
-so every commit link this section carried then resolves; each commit
-cited since is pinned at the landing that cites it, and the §3 status
-line above carries that pinning. That form was ruled on 2026-08-05, and
-the ruling is confined to this sentence: it matches the §3 status line
-above, whose substance is unchanged, and restating every reachability
-claim in this document against a named commit was considered in the same
-ruling and declined. Not every cited commit is an object in the crew
-repo: 99fcb84, 9dec48c and a13626f are not objects in it at all,
-measured with git cat-file -e per sha and controlled against e19605e,
-which does resolve there: each is a commit in the Stratocracy UE project
-repo, whose tree it pins, and this parenthetical makes no claim about
-how any of them stands to any branch there (ruled 2026-08-05). The claim
-this replaces was that each is reachable from the head of master; a head
-expires and a sha does not, which is the defect the §3 status line above
-records, so the form goes rather than being re-measured. That is Ruling
-S’s move applied to the other half, and the ruling is confined to this
-parenthetical for the same reason Ruling S was: restating every
-reachability claim in this document against a named commit was
-considered when Ruling S was made and declined, and that declining
-stands. 99fcb84 was the first citation this ledger made outside the crew
-repo, and the split is structural rather than incidental — the T-INT-01
-gate check lives in the crew repo while the vendored tree it asserts
-over lives in the UE project, so the evidence chain spans both and each
-commit is cited against the repo it is in. The file paths resolve too,
-which they previously did not: four evidence cells carried five bare
-citations between them — Combat.cpp three times and test_combat.cpp
-twice — and neither bare name has ever existed in this repository at any
-commit. Those five citations resolve to two tracked files,
-cpp_reference/Combat.good.cpp and cpp_reference/test_combat.cpp, which
-the cells now name in full; every path this table cites was probed at
-the commit its own row names. The build/ directory is not tracked at
-all. That correction is what the “independently checkable” claim
-required, not a cosmetic one.) The remaining rows fill in the same
-format — commit + passing test IDs — as each system clears the gate.
+and T-UI-03 and T-UI-04, written, unblocked and asserting, editor-pass
+Automation for which no editor pass exists at either of row 8’s two
+commits — among what those two wait on are real Stratocracy widgets, the
+editor pass they also lacked having landed at fed8ae9, and they are the
+IDs row 8 still lacks. T-DATA-05 was why Data tables carried evidence
+without a ✓; it has since run, 4/4 in the editor pass at fed8ae9,
+completing that row’s acceptance set across the repo pair Q34 rules on,
+and that row now carries one. Two rows still carry evidence without a ✓,
+each recording a partial pass and staying unverified on Q29: the three
+T-SCN- IDs are why Content / scenario does the same at 9086d6a, Q29
+there being read per ID, and T-UI-03 and T-UI-04 are why UI does the
+same at 41a1452, for want of an editor pass at that commit and at
+7c36303 before it. (Every crew-repo commit this section cited at ec15be6
+— d8284f1, row 6’s, included — is an ancestor of ec15be6, measured with
+git merge-base --is-ancestor per sha, so every commit link this section
+carried then resolves; each commit cited since is pinned at the landing
+that cites it, and the §3 status line above carries that pinning. That
+form was ruled on 2026-08-05, and the ruling is confined to this
+sentence: it matches the §3 status line above, whose substance is
+unchanged, and restating every reachability claim in this document
+against a named commit was considered in the same ruling and declined.
+Not every cited commit is an object in the crew repo: 99fcb84, 9dec48c
+and a13626f are not objects in it at all, measured with git cat-file -e
+per sha and controlled against e19605e, which does resolve there: each
+is a commit in the Stratocracy UE project repo, whose tree it pins, and
+this parenthetical makes no claim about how any of them stands to any
+branch there (ruled 2026-08-05). The claim this replaces was that each
+is reachable from the head of master; a head expires and a sha does not,
+which is the defect the §3 status line above records, so the form goes
+rather than being re-measured. That is Ruling S’s move applied to the
+other half, and the ruling is confined to this parenthetical for the
+same reason Ruling S was: restating every reachability claim in this
+document against a named commit was considered when Ruling S was made
+and declined, and that declining stands. 99fcb84 was the first citation
+this ledger made outside the crew repo, and the split is structural
+rather than incidental — the T-INT-01 gate check lives in the crew repo
+while the vendored tree it asserts over lives in the UE project, so the
+evidence chain spans both and each commit is cited against the repo it
+is in. The file paths resolve too, which they previously did not: four
+evidence cells carried five bare citations between them — Combat.cpp
+three times and test_combat.cpp twice — and neither bare name has ever
+existed in this repository at any commit. Those five citations resolve
+to two tracked files, cpp_reference/Combat.good.cpp and
+cpp_reference/test_combat.cpp, which the cells now name in full; every
+path this table cites was probed at the commit its own row names. The
+build/ directory is not tracked at all. That correction is what the
+“independently checkable” claim required, not a cosmetic one.) The
+remaining rows fill in the same format — commit + passing test IDs — as
+each system clears the gate.
 
 Rules that keep the ledger honest: - Scope = the game’s own source only.
 The UE engine, the MCP/AllToolsets plugins, and the bought reference
@@ -4376,37 +4375,36 @@ the game” claim holds.
                                       either: among what it waits on is
                                       that replayer, Replay being ruled
                                       out of vendoring until a bridge
-                                      consumer exists (§4.9). The
-                                      in-editor Automation harness both
-                                      of them also lacked landed at
-                                      fed8ae9 in the Stratocracy UE
-                                      project repo (§3), in no week this
-                                      table names. Nor did T-INT-03:
-                                      among what it waits on is the
-                                      bridge’s command surface, which is
-                                      unbuilt (§4.9). Nor did T-INT-05:
-                                      among what it waits on are the real
-                                      Stratocracy widgets it asserts
-                                      against, measured absent at a13626f
-                                      (§4.9). T-UI-05 was scheduled here
-                                      too (ruled 2026-08-04), and not as
-                                      one of those re-runs: it is
-                                      headless, and it asserts over the
-                                      per-factory build record, which
-                                      Build reaches and which rows 4–5
-                                      supply — the piece landing in the
-                                      week the thing that consumes it
-                                      runs, the principle stated below
-                                      this table. It is green at 41a1452
-                                      (§3), so it is ahead of this cell
-                                      rather than behind it; the rows
-                                      that supply what it asserts over
-                                      had already landed. AI second pass
-                                      (utility + threat map) and the
-                                      custom MCP scenario toolset follow
-                                      only if the slice lands early; both
-                                      are off the critical path (§4.2,
-                                      §4.11).
+                                      consumer exists (§4.9). The editor
+                                      pass both of them also lacked
+                                      landed at fed8ae9 in the
+                                      Stratocracy UE project repo (§3),
+                                      in no week this table names. Nor
+                                      did T-INT-03: among what it waits
+                                      on is the bridge’s command surface,
+                                      which is unbuilt (§4.9). Nor did
+                                      T-INT-05: among what it waits on
+                                      are the real Stratocracy widgets it
+                                      asserts against, measured absent at
+                                      a13626f (§4.9). T-UI-05 was
+                                      scheduled here too (ruled
+                                      2026-08-04), and not as one of
+                                      those re-runs: it is headless, and
+                                      it asserts over the per-factory
+                                      build record, which Build reaches
+                                      and which rows 4–5 supply — the
+                                      piece landing in the week the thing
+                                      that consumes it runs, the
+                                      principle stated below this table.
+                                      It is green at 41a1452 (§3), so it
+                                      is ahead of this cell rather than
+                                      behind it; the rows that supply
+                                      what it asserts over had already
+                                      landed. AI second pass (utility +
+                                      threat map) and the custom MCP
+                                      scenario toolset follow only if the
+                                      slice lands early; both are off the
+                                      critical path (§4.2, §4.11).
 
   4                                   Self-play balance sims and tuning —
                                       every match emitted in the wk-2
@@ -4478,35 +4476,35 @@ time. Neither week number moved to fix it; the gate’s scope was named.
 And because a gate that runs green over a subset is not a verified
 system, no §3 ledger row flips on a partial pass (Q29).
 
-The in-editor Automation harness landed off this calendar (ruled
-2026-08-06). It landed at fed8ae9 in the Stratocracy UE project repo
-(§3), and no cell above gives it a week — wk 3 records that landing
-beside the two IDs that had waited on it, which is a record rather than
-a goal cell — and §4.9 records the landing where it recorded the
-blocker. Both sections declined it in the open, so the absence read as a
-decision and not as an oversight. What stood between it and a cell held
-at the landing: the harness by itself closes no acceptance ID (§4.9),
-and the landing closed T-DATA-05 because it carried that ID’s own
-subjects with it — the imported §4.8 DataTables and the UENUM mirror of
-the unit type — while the subjects the other editor-pass IDs assert
-against are unbuilt (§4.9). The widget work is scheduled here — wk 1’s
-UMG widget skeletons, wk 2’s select/move/attack wiring onto them. The
-wiring that submits commands is scheduled here too, in wk 2’s
-{Move, Attack} and in the Capture, Build and EndTurn the wk-2 cell
-places in wk 3. An in-editor import step for the §4.8 tables has no
-cell; wk 1 names those tables inside the headless core. A UENUM mirror
-of the unit type is named in no cell. And a vendored replayer is held
-out rather than merely uncelled: §4.9 rules Replay out of vendoring
-until a bridge consumer exists, a condition no cell here dates — the
-headless replayer wk 2 schedules is a different artifact. None of those
-subjects exists at a13626f (§4.9), which is a claim about what is built
-and not about where this table puts it. The harness took no cell and
-landed anyway, and so did the in-editor import step and the UENUM mirror
-named above, at fed8ae9 (§3). The principle stated above — the week the
-thing that consumes it runs — now governs what is still uncelled beside
-them: the vendored replayer T-INT-02 waits on, the command surface
-T-INT-03 waits on, and the real Stratocracy widgets T-INT-05, T-UI-03
-and T-UI-04 wait on (§4.9).
+The editor pass landed off this calendar (ruled 2026-08-06). It landed
+at fed8ae9 in the Stratocracy UE project repo (§3), and no cell above
+gives it a week — wk 3 records that landing beside the two IDs that had
+waited on it, which is a record rather than a goal cell — and §4.9
+records the landing where it recorded the blocker. Both sections
+declined it in the open, so the absence read as a decision and not as an
+oversight. What stood between it and a cell held at the landing: the
+harness by itself closes no acceptance ID (§4.9), and the landing closed
+T-DATA-05 because it carried that ID’s own subjects with it — the
+imported §4.8 DataTables and the UENUM mirror of the unit type — while
+the subjects the other editor-pass IDs assert against are unbuilt
+(§4.9). The widget work is scheduled here — wk 1’s UMG widget skeletons,
+wk 2’s select/move/attack wiring onto them. The wiring that submits
+commands is scheduled here too, in wk 2’s {Move, Attack} and in the
+Capture, Build and EndTurn the wk-2 cell places in wk 3. An editor-pass
+import step for the §4.8 tables has no cell; wk 1 names those tables
+inside the headless core. A UENUM mirror of the unit type is named in no
+cell. And a vendored replayer is held out rather than merely uncelled:
+§4.9 rules Replay out of vendoring until a bridge consumer exists, a
+condition no cell here dates — the headless replayer wk 2 schedules is a
+different artifact. None of those subjects exists at a13626f (§4.9),
+which is a claim about what is built and not about where this table puts
+it. The harness took no cell and landed anyway, and so did the
+editor-pass import step and the UENUM mirror named above, at fed8ae9
+(§3). The principle stated above — the week the thing that consumes it
+runs — now governs what is still uncelled beside them: the vendored
+replayer T-INT-02 waits on, the command surface T-INT-03 waits on, and
+the real Stratocracy widgets T-INT-05, T-UI-03 and T-UI-04 wait on
+(§4.9).
 
 4.5 Risks & mitigations
 
@@ -4633,30 +4631,29 @@ and T-UI-04 wait on (§4.9).
   and which leave row 7 unflipped;    
   T-UI-03 and T-UI-04, which are      
   written, unblocked and asserting,   
-  and for which no in-editor pass     
-  exists at either of row 8’s two     
-  commits — they are the IDs row 8    
-  still lacks, and among what its     
-  flip waits on are the real          
-  Stratocracy widgets T-UI-03 and     
-  T-UI-04 assert against, which are   
-  measured absent at a13626f (§4.9),  
-  the in-editor Automation pass those 
-  two also lacked having landed at    
-  fed8ae9 (§3); the 3 left in row 9 — 
-  T-INT-02, T-INT-03 and T-INT-05,    
-  which are scheduled into the editor 
-  pass (§4.9), T-INT-02 waiting on a  
-  vendored replayer, T-INT-03 on the  
-  bridge’s command surface and        
-  T-INT-05 on those same widgets —    
-  its other two having closed and     
-  both now credited at e19605e —      
-  T-INT-01 because it asserts         
-  identity at rulesCommit, which      
-  moved there, and T-INT-04 because   
-  it compiles the vendored copy,      
-  whose Turn.h bytes changed;         
+  and for which no editor pass exists 
+  at either of row 8’s two commits —  
+  they are the IDs row 8 still lacks, 
+  and among what its flip waits on    
+  are the real Stratocracy widgets    
+  T-UI-03 and T-UI-04 assert against, 
+  which are measured absent at        
+  a13626f (§4.9), the editor pass     
+  those two also lacked having landed 
+  at fed8ae9 (§3); the 3 left in row  
+  9 — T-INT-02, T-INT-03 and          
+  T-INT-05, which are scheduled into  
+  the editor pass (§4.9), T-INT-02    
+  waiting on a vendored replayer,     
+  T-INT-03 on the bridge’s command    
+  surface and T-INT-05 on those same  
+  widgets — its other two having      
+  closed and both now credited at     
+  e19605e — T-INT-01 because it       
+  asserts identity at rulesCommit,    
+  which moved there, and T-INT-04     
+  because it compiles the vendored    
+  copy, whose Turn.h bytes changed;   
   T-INT-04 first passed at b23823f,   
   and T-INT-01 first closed at        
   d837fc8 on the widening of its own  
@@ -4833,12 +4830,12 @@ The cut line, read before adding a suite. Every acceptance ID in
 §4.7–§4.11 is either unmarked — the §4.5 MVP line needs it and no human
 read substitutes for it — or †, correctness infrastructure that does not
 close if the calendar takes it, because its fixtures live on §2.13.7’s
-stretch maps or its only unique coverage is an in-editor Automation
-pass. The † members are marked in §4.11’s build-order table and nowhere
-else, so that table is authoritative for the split and no count of it is
-stated here; what remains fixed is the rule that no rules-correctness
-invariant on the critical path §4.11 states is ever in it — those suites
-are the game, not the evidence about it.
+stretch maps or its only unique coverage is the editor pass. The †
+members are marked in §4.11’s build-order table and nowhere else, so
+that table is authoritative for the split and no count of it is stated
+here; what remains fixed is the rule that no rules-correctness invariant
+on the critical path §4.11 states is ever in it — those suites are the
+game, not the evidence about it.
 
 Shared conventions (Director-owned contract):
 
@@ -5707,7 +5704,7 @@ Shared conventions (Director-owned contract):
     Determinism: widgets are pure functions of view-model + events — snapshot
              plus presentation block; asserted end-to-end by T-INT-05 (§4.9).
     Acceptance: T-UI-01..02 and T-UI-05 headless (the queries and the snapshot
-             builder are headless functions); T-UI-03..04 in-editor Automation;
+             builder are headless functions); T-UI-03..04 in the editor pass;
              GATE-CAP-PARTIAL headless, on the snapshot rather than on a widget —
              which is why it carries no † and does not stand down if the editor
              pass does. A marked ID may not guard a rules invariant (§4.11's †
@@ -7027,7 +7024,7 @@ that commit and at c2edae0 (§3). GATE-DATA-VENDOR reads dataCommit and
 logs it; what it asserts is the file hashes and not the commit’s
 currency, because the UE project cannot see the crew repo at test time —
 the same discipline that makes this document cite commits rather than
-heads everywhere else. A parity gate (T-DATA-05, Unreal Automation)
+heads everywhere else. A parity gate (T-DATA-05, the editor pass)
 iterates every imported row and asserts it equals the CSV
 field-for-field. Nothing is authored twice, so the headless sim and the
 engine can never disagree about a stat. Missing column or unparseable
@@ -7142,7 +7139,7 @@ itself.
                  including Bridge's NEGATIVE defense and Water impassable-to-land
       T-DATA-03  exactly one unit row has CanCapture == true (Infantry, §2.7)
       T-DATA-04  sanity: all costs > 0; RangeMin <= RangeMax; HP > 0
-      T-DATA-05  (editor, Unreal Automation) every imported DataTable row equals the
+      T-DATA-05  (the editor pass) every imported DataTable row equals the
                  CSV field-for-field, and EUnitType mirrors strat::UnitType exactly
       T-DATA-06  effectiveness.csv is 4×4, indexed in the pinned type order, every
                  cell ∈ {0.5, 1.0, 1.5}; the SHIPPED file is all-1.0 (re-asserting
@@ -7295,51 +7292,51 @@ the runtime path — the MCP plugin remains editor-only tooling,
 experimental, off the critical path (§3 guardrails, §4.2, §4.5).
 
 3. Parity gates. The command log format of §4.10 is the instrument: the
-same recorded match is replayed by the headless harness and by an
-in-editor Automation test through the UBT-compiled module, and both must
-land on the same canonical state hash. This is what catches the one
-genuinely engine-shaped risk — a compiler/CRT divergence in the damage
-formula’s round — mechanically instead of by playtest anecdote.
+same recorded match is replayed by the headless harness and by the
+editor pass through the UBT-compiled module, and both must land on the
+same canonical state hash. This is what catches the one genuinely
+engine-shaped risk — a compiler/CRT divergence in the damage formula’s
+round — mechanically instead of by playtest anecdote.
 
 No further spec-stub pass is owed for part 2 (ruled 2026-08-05). The
 stub below is already full: its invariants carry the bridge’s own —
 T-INT-02, T-INT-03 and T-INT-05 — beside a Determinism line and an
 Acceptance line, so what part 2 waits on is not specification. The
-in-editor Automation harness it waited on landed at fed8ae9 in the
-Stratocracy UE project repo (§3), so what part 2 waits on now is the
-bridge’s own code — the load mapping, the command surface, the event
-list, the actor and the widget. The other blocker recorded here was
-§4.10’s canonical state hash, T-INT-02’s and T-INT-03’s subject, which
-build-order row 10’s part (b) built at ec15be6 (§3). The harness was
-recorded here among what part 2 was blocked on, and it took no week on
-§4.4’s calendar; both blockers this paragraph named have since been
-removed, and part 2 is blocked on its own unbuilt code. What “the editor
-pass” denotes, stated once here and cited elsewhere (ruled 2026-08-05):
-the in-editor Automation harness this paragraph names. It is a runner
-and nothing more, and running it supplies none of the subjects the IDs
-scheduled into it assert against — those are separate requirements. The
-harness is also not sufficient, and among what the other editor-pass IDs
-need besides it are the subjects named here rather than left to be
-discovered at the pass: T-INT-02 needs a vendored replayer, and Replay
-is ruled out of vendoring until a bridge consumer exists; T-INT-03 needs
-the command surface, which is part of the unbuilt bridge; T-INT-05,
-T-UI-03 and T-UI-04 need real Stratocracy widgets; and T-SAVE-06 is
-asserted jointly with T-INT-02. T-DATA-05 is not one of them, having
-closed at fed8ae9 (§3); what it needed was imported DataTables and a
-UENUM mirror of the unit type, and those stay named here because the
-measurement that follows quantifies over every subject this passage
-names. None of those subjects exists at a13626f, measured in the UE
-project repo there: the identifier EUnitType occurs zero times
+editor pass it waited on landed at fed8ae9 in the Stratocracy UE project
+repo (§3), so what part 2 waits on now is the bridge’s own code — the
+load mapping, the command surface, the event list, the actor and the
+widget. The other blocker recorded here was §4.10’s canonical state
+hash, T-INT-02’s and T-INT-03’s subject, which build-order row 10’s part
+(b) built at ec15be6 (§3). The harness was recorded here among what part
+2 was blocked on, and it took no week on §4.4’s calendar; both blockers
+this paragraph named have since been removed, and part 2 is blocked on
+its own unbuilt code. What “the editor pass” denotes, stated once here
+and cited elsewhere (ruled 2026-08-05): the specific run this paragraph
+names — introduced above as the editor pass that part 2 waited on. It is
+a runner and nothing more, and running it supplies none of the subjects
+the IDs scheduled into it assert against — those are separate
+requirements. The harness is also not sufficient, and among what the
+other editor-pass IDs need besides it are the subjects named here rather
+than left to be discovered at the pass: T-INT-02 needs a vendored
+replayer, and Replay is ruled out of vendoring until a bridge consumer
+exists; T-INT-03 needs the command surface, which is part of the unbuilt
+bridge; T-INT-05, T-UI-03 and T-UI-04 need real Stratocracy widgets; and
+T-SAVE-06 is asserted jointly with T-INT-02. T-DATA-05 is not one of
+them, having closed at fed8ae9 (§3); what it needed was imported
+DataTables and a UENUM mirror of the unit type, and those stay named
+here because the measurement that follows quantifies over every subject
+this passage names. None of those subjects exists at a13626f, measured
+in the UE project repo there: the identifier EUnitType occurs zero times
 case-sensitively in the tracked tree; UENUM occurs zero times anywhere
 under Source/, a zero controlled against UCLASS, which does occur there;
 and every tracked DataTable and widget asset belongs to the
 AdvancedTurnBasedTileToolkit marketplace content or to the UE template.
 The stub below carries its own Inputs line — a §4.10 replay file and the
-§4.8 tables imported in-editor — which lists what that stub draws on;
-the imported tables are not among the DataTable assets measured above.
-T-DATA-05’s two subjects have since been built (§3): at fed8ae9 the
-UENUM mirror EUnitType and the imported DT_Units, DT_Terrain and
-DT_Effectiveness exist, alongside FUnitRow, FTerrainRow and
+§4.8 tables imported in the editor pass — which lists what that stub
+draws on; the imported tables are not among the DataTable assets
+measured above. T-DATA-05’s two subjects have since been built (§3): at
+fed8ae9 the UENUM mirror EUnitType and the imported DT_Units, DT_Terrain
+and DT_Effectiveness exist, alongside FUnitRow, FTerrainRow and
 FEffectivenessRow — all of them in the Stratocracy module and none in
 Source/StratRules/, which is the constraint stated below. The a13626f
 measurement above is unmoved by that, and it remains the live statement
@@ -7357,13 +7354,16 @@ printed output at named commits — at b23823f, where the runner prints by
 name that no in-editor Automation harness exists, and at 41a1452, where
 the lines for the IDs that did not run state that no in-editor pass
 exists at that commit. The denotation is settled by the ruling above and
-does not turn on which form a section reaches for. A rename would have
-to reconcile with those commit-pinned §3 records and is deferred to its
-own round. No name is changed in this revision.
+does not turn on which form a section reaches for. The deferred rename
+landed in this round (ruled 2026-08-07): every present-tense
+denotational use elsewhere in this document now reads the editor pass,
+or a grammatically adjusted form of it, reconciling with those
+commit-pinned §3 records and with this paragraph’s own citation of them,
+immediately above — by leaving both untouched.
 
     SPEC STUB: Integration parity              (Director → Systems Engineer / UI Scaffolder)
     Inputs:  vendored StratRules sources + recorded source commit; a §4.10 replay
-             file; the §4.8 tables imported in-editor — among this stub's
+             file; the §4.8 tables imported in the editor pass — among this stub's
              invariants, T-INT-02 requires them (ruled 2026-08-06): it replays a
              command log in-engine to a canonical state hash, and the commands it
              applies resolve against the unit definitions the bridge maps from
@@ -7396,7 +7396,7 @@ own round. No name is changed in this revision.
                 detects — the first of g++, clang++, c++, cl found on PATH. Any
                 one of them compiling clean satisfies this invariant; it does not
                 require all four. The gate run itself is the assert
-      T-INT-05  (editor, Automation) presentation statelessness: after any event
+      T-INT-05  (the editor pass) presentation statelessness: after any event
                 sequence, rebuilding all widgets/actors from the current view-model
                 alone — §4.7 Stub 8's snapshot plus its presentation block —
                 reproduces the same displayed values (nothing lives only in a
@@ -7569,45 +7569,45 @@ T-TURN-01..09 first closed at ad77b13 — and row 6 at d8284f1, so rows
 the critical path’s remaining link, its dependency cell in the table
 below reading 5, 7 — both landed before it. Row 8 has since landed too,
 at 7c36303, on a partial pass that leaves its ledger row unflipped, as
-row 7’s does (§3): T-UI-03 and T-UI-04 are the in-editor half and no
-in-editor pass exists at that commit, and T-UI-05 was then headless and
+row 7’s does (§3): T-UI-03 and T-UI-04 are the editor-pass half and no
+editor pass exists at that commit, and T-UI-05 was then headless and
 unimplemented — minted 2026-08-04, after that commit. T-UI-05 is green
 at 41a1452 (§3), the rebuild at which the snapshot additions ruled
 beside it were built, so the IDs this row still lacks are T-UI-03 and
 T-UI-04, and among what the row’s flip waits on are the real Stratocracy
 widgets those IDs assert against, which are measured absent at a13626f
-(§4.9) — the in-editor Automation pass those two also lacked landed at
-fed8ae9 (§3) — the row staying unflipped on the widgets. Row 9’s
-headless half has since landed, at b23823f in the crew repo with the
-vendored tree at 99fcb84 in the UE project repo, which is what this
-row’s cell means by closing as soon as vendoring lands. T-INT-01 and
-T-INT-04 are green at e19605e, over the vendored tree at a13626f, the
-standalone gate that asserts T-INT-04 running under clang++, and not at
-the landings that first passed them: T-INT-01 asserts identity at
-rulesCommit, and rulesCommit moved there, while T-INT-04 compiles the
-vendored copy, whose Turn.h bytes changed. Neither ID’s text changed
-there, so both are closure movements rather than widenings; earlier,
-T-INT-01’s written text was widened at d837fc8, over an input that did
-not exist before it, so it closed there under the closure convention
-§4.5 states (§3). Each landing stands as the landing it was; what moves
-is where an ID’s green is credited — the treatment row 5 already has,
-whose T-TURN-01..10 closes at its rebuild while T-TURN-01..09 first
-closed at ad77b13. Row 9’s acceptance set does not close, on the Q29
-reading rows 7 and 8 stand on: T-INT-02, T-INT-03 and T-INT-05 did not
-run, and among what they wait on besides the harness that has since
-landed are a vendored replayer, the bridge’s command surface and real
-Stratocracy widgets, one per ID (§4.9). Row 2 is green: T-DATA-01..04
-and 06 pass headless and T-DATA-05 passed 4/4 in the editor pass at
-fed8ae9, so the full set closes across the repo pair Q34 rules on and
-the ledger row flips (§3). Its † bullet below priced that flip as the
-cost of losing the pass; the pass ran, so the mark can no longer fire.
-Note row 10’s format spec must exist by the row-9 integration pass,
-because T-INT-02’s input file is a §4.10 save. Rows 9 and 10 therefore
-state their dependencies in two parts — what each gate needs in order to
-run, and what it needs in order to close — because both are scoped to
-the command set of the log they replay, and week 2’s log carries only
-{Move, Attack} (§4.4). Reading either row’s requirement as a single set
-is what put a gate in a week this table could not supply it.
+(§4.9) — the editor pass those two also lacked landed at fed8ae9 (§3) —
+the row staying unflipped on the widgets. Row 9’s headless half has
+since landed, at b23823f in the crew repo with the vendored tree at
+99fcb84 in the UE project repo, which is what this row’s cell means by
+closing as soon as vendoring lands. T-INT-01 and T-INT-04 are green at
+e19605e, over the vendored tree at a13626f, the standalone gate that
+asserts T-INT-04 running under clang++, and not at the landings that
+first passed them: T-INT-01 asserts identity at rulesCommit, and
+rulesCommit moved there, while T-INT-04 compiles the vendored copy,
+whose Turn.h bytes changed. Neither ID’s text changed there, so both are
+closure movements rather than widenings; earlier, T-INT-01’s written
+text was widened at d837fc8, over an input that did not exist before it,
+so it closed there under the closure convention §4.5 states (§3). Each
+landing stands as the landing it was; what moves is where an ID’s green
+is credited — the treatment row 5 already has, whose T-TURN-01..10
+closes at its rebuild while T-TURN-01..09 first closed at ad77b13. Row
+9’s acceptance set does not close, on the Q29 reading rows 7 and 8 stand
+on: T-INT-02, T-INT-03 and T-INT-05 did not run, and among what they
+wait on besides the harness that has since landed are a vendored
+replayer, the bridge’s command surface and real Stratocracy widgets, one
+per ID (§4.9). Row 2 is green: T-DATA-01..04 and 06 pass headless and
+T-DATA-05 passed 4/4 in the editor pass at fed8ae9, so the full set
+closes across the repo pair Q34 rules on and the ledger row flips (§3).
+Its † bullet below priced that flip as the cost of losing the pass; the
+pass ran, so the mark can no longer fire. Note row 10’s format spec must
+exist by the row-9 integration pass, because T-INT-02’s input file is a
+§4.10 save. Rows 9 and 10 therefore state their dependencies in two
+parts — what each gate needs in order to run, and what it needs in order
+to close — because both are scoped to the command set of the log they
+replay, and week 2’s log carries only {Move, Attack} (§4.4). Reading
+either row’s requirement as a single set is what put a gate in a week
+this table could not supply it.
 
   ----------------------------------------------------------------------------------------------------
   #              System (ledger row)   Depends on                Headless?        Acceptance test IDs
@@ -7617,8 +7617,8 @@ is what put a gate in a week this table could not supply it.
 
   2              Data tables (§4.8,    — (MoveClass column       Loader +         T-DATA-01..06
                  incl. effectiveness   blocked on Q2)            T-DATA-06 yes;   (T-DATA-05 †)
-                 CSV)                                            import parity    
-                                                                 in-editor        
+                 CSV)                                            import parity in 
+                                                                 the editor pass  
 
   3              Movement &            1, 2                      Yes              T-MOVE-01..06
                  pathfinding (Stub 3)                                             
@@ -7655,14 +7655,14 @@ is what put a gate in a week this table could not supply it.
 
   8              UI binding (Stub 8)   5, 7 (snapshot needs full Contract +       T-UI-01..05
                                        state)                    queries yes;     (T-UI-03, 04 †) +
-                                                                 widgets          GATE-CAP-PARTIAL
-                                                                 in-editor        
+                                                                 widgets in the   GATE-CAP-PARTIAL
+                                                                 editor pass      
 
   9              Presentation bridge & Run vs close. Vendoring   Source/compile   T-INT-01..05
                  integration — §4.9    and T-INT-01/04 depend on gates yes;       (T-INT-02, 05 †)
                  (proposed ledger row) no rules row at all — the replay parity +  
-                                       sync script and the       statelessness    
-                                       standalone gate run are   in-editor        
+                                       sync script and the       statelessness in 
+                                       standalone gate run are   the editor pass  
                                        the assert — and close as                  
                                        soon as vendoring lands,                   
                                        which T-INT-04 first did                   
@@ -7736,21 +7736,20 @@ is what put a gate in a week this table could not supply it.
                                        beside GATE-REPLAY-*,                      
                                        which mint no acceptance                   
                                        ID. T-SAVE-06 waits on                     
-                                       the in-editor Automation                   
-                                       harness and T-SAVE-07 on                   
-                                       a self-play log written                    
-                                       in this format, so this                    
-                                       row holds code without                     
-                                       closing its set (§3).                      
-                                       Part (c) has since                         
-                                       landed, at 1ee890e, on a                   
-                                       third registry row whose                   
-                                       link set encodes exactly                   
-                                       the dependency this cell                   
-                                       states — rows 4, 5 and 6:                  
-                                       T-SAVE-07 is green there                   
-                                       under clang++ and MSVC                     
-                                       both, beside                               
+                                       the editor pass and                        
+                                       T-SAVE-07 on a self-play                   
+                                       log written in this                        
+                                       format, so this row holds                  
+                                       code without closing its                   
+                                       set (§3). Part (c) has                     
+                                       since landed, at 1ee890e,                  
+                                       on a third registry row                    
+                                       whose link set encodes                     
+                                       exactly the dependency                     
+                                       this cell states — rows                    
+                                       4, 5 and 6: T-SAVE-07 is                   
+                                       green there under clang++                  
+                                       and MSVC both, beside                      
                                        GATE-BALANCE-*, which                      
                                        mint no acceptance ID.                     
                                        That log carries the four                  
@@ -7777,17 +7776,17 @@ is what put a gate in a week this table could not supply it.
                                        and Replay is ruled out                    
                                        of vendoring until a                       
                                        bridge consumer exists.                    
-                                       The in-editor Automation                   
-                                       harness this ID also                       
-                                       lacked landed at fed8ae9                   
-                                       in the Stratocracy UE                      
-                                       project repo (§3). Both                    
-                                       what the editor pass                       
-                                       denotes and what running                   
-                                       it does not supply are                     
-                                       stated at §4.9. Slot I/O                   
-                                       is week 5 and no headless                  
-                                       gate waits on it                           
+                                       The editor pass this ID                    
+                                       also lacked landed at                      
+                                       fed8ae9 in the                             
+                                       Stratocracy UE project                     
+                                       repo (§3). Both what the                   
+                                       editor pass denotes and                    
+                                       what running it does not                   
+                                       supply are stated at                       
+                                       §4.9. Slot I/O is week 5                   
+                                       and no headless gate                       
+                                       waits on it                                
   ----------------------------------------------------------------------------------------------------
 
 † — the cut line (§4.7 head). A marked ID does not close if the calendar
@@ -7795,14 +7794,14 @@ takes it, and what each mark costs is a claim, never a rule: no marked
 ID guards a rules invariant, so nothing in the game changes behaviour
 when one stands down. Unmarked is the default and the majority.
 
-- T-DATA-05 — row 2’s only in-editor half, and closed, 4/4 at fed8ae9 in
-  the Stratocracy UE project repo (§3), so the mark prices nothing the
-  calendar can still take. What it priced while it stood: the fallback
-  was a Director read of two frozen tables (4 unit rows × 11 columns, 7
-  terrain rows × 10), and the cost was row 2’s ledger flip. The mark is
-  kept (ruled 2026-08-06): a closed ID keeps its †, and no rule about
-  marks in general is minted by that — what a mark costs is a claim and
-  never a rule, as the head of this list says.
+- T-DATA-05 — row 2’s only editor-pass half, and closed, 4/4 at fed8ae9
+  in the Stratocracy UE project repo (§3), so the mark prices nothing
+  the calendar can still take. What it priced while it stood: the
+  fallback was a Director read of two frozen tables (4 unit rows × 11
+  columns, 7 terrain rows × 10), and the cost was row 2’s ledger flip.
+  The mark is kept (ruled 2026-08-06): a closed ID keeps its †, and no
+  rule about marks in general is minted by that — what a mark costs is a
+  claim and never a rule, as the head of this list says.
 - T-SCN-08, 09, 11 — their fixtures are stretch-map-resident, and
   §2.13.7 states the condition plainly: if week 4 is consumed by
   balance, “the set stays on paper.” T-SCN-08 then loses fixtures (a)
@@ -7817,13 +7816,13 @@ when one stands down. Unmarked is the default and the majority.
       opening §2.11.8 ranks must-have. Cost: row 7’s ledger flip, on the
       Q29 reading applied per acceptance ID as well as per row — an ID
       closes only when its whole written fixture set has run.
-- T-UI-03, 04 — in-editor Automation over widget bindings, where a
+- T-UI-03, 04 — editor-pass Automation over widget bindings, where a
   Director reading the screen is a real check. T-UI-01/02 and T-UI-05
   stay unmarked: all three are headless, T-UI-01 is what makes §2.11.3’s
   forecast equal the resolution, and T-UI-05 is the sole assertion that
   the snapshot tells the truth about the state the module holds — the
   contract every other ID in the row reads through.
-- T-INT-02, 05 and T-SAVE-06 — the in-editor half of the parity pair
+- T-INT-02, 05 and T-SAVE-06 — the editor-pass half of the parity pair
   (T-SAVE-06 is asserted jointly with T-INT-02). This is the most
   expensive mark in the list and its cost is a §3 cost rather than a §1
   one: without it the shipped engine build is never proven identical to
