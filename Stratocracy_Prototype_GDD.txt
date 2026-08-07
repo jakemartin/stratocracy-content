@@ -6934,24 +6934,48 @@ blocked until the Director answers.
                                                                                                           file, so a change to
                                                                                                           them is a change to
                                                                                                           both halves’ subject.
-                                                                                                          That rules which IDs
-                                                                                                          re-open and nothing
-                                                                                                          about what this ledger
-                                                                                                          shows in the interval
-                                                                                                          between the edit and
-                                                                                                          the re-run; the pinned
+                                                                                                          What this ledger shows
+                                                                                                          between a §4.8 CSV edit
+                                                                                                          and the re-run that
+                                                                                                          closes the new pair is
+                                                                                                          ruled with it
+                                                                                                          (2026-08-06): across
+                                                                                                          that interval row 2
+                                                                                                          keeps its live ✓. §3
+                                                                                                          makes a row verified
+                                                                                                          when it cites the
+                                                                                                          commit and passing test
+                                                                                                          IDs that back it; row
+                                                                                                          2’s cell cites b1ea992
+                                                                                                          and fed8ae9, and a CSV
+                                                                                                          edit falsifies neither
+                                                                                                          citation, so the ✓ is a
+                                                                                                          claim about named
+                                                                                                          evidence and not about
+                                                                                                          the current working
+                                                                                                          tree — the pinned
                                                                                                           record is untouched
                                                                                                           either way, since green
                                                                                                           at b1ea992 over the UE
                                                                                                           tree at fed8ae9 stays
                                                                                                           true of those commits,
                                                                                                           which is what pinning
-                                                                                                          is for. It is
-                                                                                                          registered already
-                                                                                                          marked RULED because
-                                                                                                          the Director ruled it
-                                                                                                          in the session that
-                                                                                                          found it.
+                                                                                                          is for. The display
+                                                                                                          cannot mislead in
+                                                                                                          silence, because the
+                                                                                                          gates refuse loudly for
+                                                                                                          as long as that
+                                                                                                          interval lasts: an
+                                                                                                          edited CSV FAILs
+                                                                                                          GATE-DATA-VENDOR on a
+                                                                                                          hash mismatch and the
+                                                                                                          parity check on a
+                                                                                                          value, both measured
+                                                                                                          (§3). It is registered
+                                                                                                          already marked RULED
+                                                                                                          because the Director
+                                                                                                          ruled it in the session
+                                                                                                          that found it.
   -------------------------------------------------------------------------------------------------------------------------------
 
 4.8 Data contract — DataTable schemas
@@ -6961,30 +6985,32 @@ canonical CSV, authored in the crew repo (data/). The headless loader
 parses it directly; the UE project vendors it verbatim beside a manifest
 recording each file’s sha256 and the crew commit it came from, and the
 editor imports the vendored copy into a UDataTable whose row struct
-derives FTableRowBase. GATE-DATA-VENDOR asserts that the vendored bytes
-are the recorded ones, so the two readers are reading one authored file
-rather than two that resemble each other; it mints no acceptance ID, on
-the GATE-AI-SMOKE and GATE-SAVE-PARSE precedent (§3). The manifest’s
-dataCommit names the commit the vendored bytes came from, and it
-advances when and only when those bytes change (ruled 2026-08-06). A
-crew commit that does not touch the data directory leaves it where it
-is, so a dataCommit behind the crew commit this document stands at is
-the expected state and not a stale one: it records b1ea992, and the
-three CSVs are byte-identical at that commit and at c2edae0 (§3).
-GATE-DATA-VENDOR reads dataCommit and logs it; what it asserts is the
-file hashes and not the commit’s currency, because the UE project cannot
-see the crew repo at test time — the same discipline that makes this
-document cite commits rather than heads everywhere else. A parity gate
-(T-DATA-05, Unreal Automation) iterates every imported row and asserts
-it equals the CSV field-for-field. Nothing is authored twice, so the
-headless sim and the engine can never disagree about a stat. Missing
-column or unparseable value = hard load failure, never a silent default.
-UStruct bool fields carry no b prefix, and that is an engine constraint
-rather than a style choice (ruled 2026-08-06):
-DataTableUtils::GetPropertyImportNames accepts only GetName() and
-GetAuthoredName(), there is no metadata bridge, and
-meta=(DisplayName=...) was tried and failed identically, so a
-bCanCapture field cannot be fed by a CanCapture column. The CSV column
+derives FTableRowBase. That copy is made by sync_stratdata.py, the CSV
+counterpart of the script that vendors the C++ sources; vendored covers
+both, and the two mechanisms are distinguished once at §4.9.
+GATE-DATA-VENDOR asserts that the vendored bytes are the recorded ones,
+so the two readers are reading one authored file rather than two that
+resemble each other; it mints no acceptance ID, on the GATE-AI-SMOKE and
+GATE-SAVE-PARSE precedent (§3). The manifest’s dataCommit names the
+commit the vendored bytes came from, and it advances when and only when
+those bytes change (ruled 2026-08-06). A crew commit that does not touch
+the data directory leaves it where it is, so a dataCommit behind the
+crew commit this document stands at is the expected state and not a
+stale one: it records b1ea992, and the three CSVs are byte-identical at
+that commit and at c2edae0 (§3). GATE-DATA-VENDOR reads dataCommit and
+logs it; what it asserts is the file hashes and not the commit’s
+currency, because the UE project cannot see the crew repo at test time —
+the same discipline that makes this document cite commits rather than
+heads everywhere else. A parity gate (T-DATA-05, Unreal Automation)
+iterates every imported row and asserts it equals the CSV
+field-for-field. Nothing is authored twice, so the headless sim and the
+engine can never disagree about a stat. Missing column or unparseable
+value = hard load failure, never a silent default. UStruct bool fields
+carry no b prefix, and that is an engine constraint rather than a style
+choice (ruled 2026-08-06): DataTableUtils::GetPropertyImportNames
+accepts only GetName() and GetAuthoredName(), there is no metadata
+bridge, and meta=(DisplayName=...) was tried and failed identically, so
+a bCanCapture field cannot be fed by a CanCapture column. The CSV column
 names and the headless field names are unchanged by that, so the
 transformation between the two sides stays empty.
 
@@ -7127,7 +7153,21 @@ path-for-path with no rename map. Driver is in the set and is not
 optional: Ai.good.cpp links against it. Nothing else is vendored — a UBT
 module cannot hold a second main(), which excludes every test_*.cpp,
 driver_main.cpp and selfplay.cpp, and the *.buggy.cpp files are pass-1
-fixtures, not shippable code. The set is declared, not inferred (ruled
+fixtures, not shippable code. One word, two mechanisms, and this is the
+single statement of both (ruled 2026-08-06). Vendored means the same
+thing in each: bytes copied out of a named commit’s object store into
+the UE project, and gated for identity. What differs is which bytes, by
+which script, under which gate — the crew’s C++ sources into
+Source/StratRules/ by sync_stratrules.py under T-INT-01, and the §4.8
+CSVs into the UE project’s data directory by sync_stratdata.py under
+GATE-DATA-VENDOR. The sentence above is about the first, and its
+quantifier is scoped by its own stated reason: a UBT module cannot hold
+a second main(), which is a constraint on C++ sources, so the CSVs sit
+outside it by construction rather than by exception. The word is not
+split, and the reason is that the artifact does not split it:
+sync_stratdata.py, its manifest note and its crew commit message all say
+vendor, so a rename confined to this document would diverge the document
+from the thing it describes. The set is declared, not inferred (ruled
 2026-08-05). ue_module/vendored_set.json in the crew repo names it, and
 both sync_stratrules.py and T-INT-01‘s check read that declaration from
 the git object store at the commit in question, so neither takes its
