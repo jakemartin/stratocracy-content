@@ -679,13 +679,16 @@ matches.
   rules, not one: the slot is held only while a build waits and clears
   the moment the unit spawns, while the per-turn limit binds for the
   rest of that turn either way — a factory whose build spawns at once
-  has still spent its build for the turn. The player cannot currently
-  reach the waiting case: §2.11.5 disables the Build buttons while a
-  factory is boxed in, so for the player queue time and spawn time are
-  the same instant, and the waiting build is an AI-only path today (§2.9
-  builds without the UI). Whether the player should be able to queue
-  into a boxed-in factory is Q31 (§4.7). Fame has no hard cap —
-  deployment is throttled by board space, not a point ceiling.
+  has still spent its build for the turn. The player can reach the
+  waiting case: §2.11.5’s Build buttons stay enabled while a factory is
+  boxed in (ruled this revision — Q31, §4.7), so a player may queue a
+  build at a boxed-in factory exactly as at any other factory, with the
+  Fame commitment this clause prices — committed at queue time, not
+  refundable (Q8(c), §4.7) — shown before the click. The waiting build
+  is no longer an AI-only path: player and AI alike can reach it, though
+  no gate today asserts a player-queued one (Q31, §4.7). Fame has no
+  hard cap — deployment is throttled by board space, not a point
+  ceiling.
 - Combat Fame: destroying an enemy unit pays exactly half its §2.4 cost
   — Infantry +50, Recon +75, Artillery +100, Tank +150 (Q5, §4.7; every
   value an integer). Destroying the enemy flag pays a flat +500 and ends
@@ -1467,14 +1470,20 @@ it:
   — the price list is also the strategy lesson (§2.4 costs).
 - The spawn rule (§2.7: factory hex if free, else an adjacent free hex)
   is one static line in the footer. If the factory is fully boxed in,
-  the footer swaps to Boxed in — build waits for a free hex. and Build
-  buttons disable: the space-throttle (§2.7) explains itself at the
-  moment it applies. Both the swap and the disable read the snapshot’s
+  the footer swaps to Boxed in — build waits for a free hex. but the
+  Build buttons stay enabled and clickable: a click still queues the
+  build and commits its Fame at that instant, exactly as it does at an
+  open factory (§2.7’s waiting-build rule; Q31, §4.7 — ruled: the player
+  may queue into a boxed-in factory). The footer names the wait; it does
+  not gate the click, and the commitment it is naming is visible before
+  that click the same way any other build’s cost is — the row already
+  shows the price, and pressing [Build] spends it whether or not a hex
+  is free the instant it does. The footer swap reads the snapshot’s
   per-factory spawnBlocked — board geometry, computed by the module, no
-  board scan the widget runs for itself. They do not read buildWaiting,
+  board scan the widget runs for itself. It does not read buildWaiting,
   which is the narrower §2.7 fact that a build is holding this factory’s
   slot until it spawns: a boxed-in factory need not have anything
-  queued.
+  queued, and the footer’s wait line shows either way.
 - When any unit is affordable and the factory has not built this turn,
   the factory tile shows a small BUILD pulse — the nudge that connects
   hoarded Fame to an army (a first-session failure mode, §2.11.6
@@ -5595,11 +5604,15 @@ Shared conventions (Director-owned contract):
                         difference is the case §2.11.5 must display: a boxed-in
                         factory with nothing queued has `spawnBlocked` true and
                         `buildWaiting` false, which `buildWaiting` alone cannot
-                        express. Q31 asks whether a player may queue into a
-                        boxed-in factory; `buildWaiting` is the field such a
-                        ruling would bind to, and nothing here rules it — today
-                        the waiting build is an AI-only path (Q31) and no gate
-                        asserts a player-queued one.
+                        express. Q31 is RULED: the player may queue into a
+                        boxed-in factory, reaching the same waiting-build state
+                        the AI already reaches. `buildWaiting` is the field the
+                        ruling binds to, and `spawnBlocked`/`buildWaiting` were
+                        already built DISTINCT for exactly this case, under
+                        T-UI-05 — no rebuild is needed for the ruling to hold.
+                        The ruling changes what the GDD claims is reachable, not
+                        the test suite: no gate asserts a player-queued waiting
+                        build today, and none is written this round either.
              per-side  {fameTotal, fameCombat, objectivesHeld X of N, survivingHP,
                         incomePerTurn}
                         `fameTotal` and `fameCombat` are mirrors. The other three
@@ -5772,19 +5785,19 @@ snapshot, where it is GATE-CAP-PARTIAL; row 8 has since landed at
 a fixture configured with captureTurns = 2, a state the shipped scenario
 cannot reach at N = 1 (Q4). It mints no numbered acceptance ID, so no
 §4.5 count moves on its account, and T-CAP-05 closes there, ruled
-2026-08-04 (Q14). Seventeen of the thirty-four rows are ruled; the other
-seventeen remain open but readable — Q1, Q2, Q3, Q10–Q19, Q29, Q30, Q31
-and Q32 — each carrying a stated reading rather than a blank, which is
-why none of them blocks a gate outright. Three are worth naming: Q2
-leaves T-MOVE-07 reserved-but-unwritten, Q11’s reading is “no undo”, and
-Q30’s is partial and deliberately not hardened. (An earlier draft of
-this paragraph named only those three and called them the whole
-remainder — the test behind it looked for rows containing the word
-“unruled” rather than rows not marked RULED, and so could not see the
-other twelve.) Q33 and Q34 are registered already marked RULED, so each
-enters the ruled side and the open list above is unchanged. The
-convention is unchanged: where a row states no reading, its gate stays
-blocked until the Director answers.
+2026-08-04 (Q14). Eighteen of the thirty-four rows are ruled; the other
+sixteen remain open but readable — Q1, Q2, Q3, Q10–Q19, Q29, Q30 and Q32
+— each carrying a stated reading rather than a blank, which is why none
+of them blocks a gate outright. Three are worth naming: Q2 leaves
+T-MOVE-07 reserved-but-unwritten, Q11’s reading is “no undo”, and Q30’s
+is partial and deliberately not hardened. (An earlier draft of this
+paragraph named only those three and called them the whole remainder —
+the test behind it looked for rows containing the word “unruled” rather
+than rows not marked RULED, and so could not see the other twelve.) Q33
+and Q34 are registered already marked RULED, so each enters the ruled
+side and the open list above is unchanged. The convention is unchanged:
+where a row states no reading, its gate stays blocked until the Director
+answers.
 
   -------------------------------------------------------------------------------------------------------------------------------
   ID                Question                                                       Blocks                 Assumption in force
@@ -6022,20 +6035,23 @@ blocked until the Director answers.
                                                                                                           enabled while boxed in
                                                                                                           — and the commitment
                                                                                                           shown before the click
-                                                                                                          — is registered as Q31,
-                                                                                                          not assumed. (b) Limit:
-                                                                                                          one build per factory
-                                                                                                          per turn, player and AI
-                                                                                                          alike, matching what
-                                                                                                          §2.9 already describes
-                                                                                                          for the AI; a waiting
-                                                                                                          build holds that
-                                                                                                          factory’s slot until it
-                                                                                                          spawns. (c) Commitment:
-                                                                                                          Fame is committed at
-                                                                                                          queue time and is not
-                                                                                                          refundable, so
-                                                                                                          fameTotal moves once
+                                                                                                          — was registered as
+                                                                                                          Q31, now RULED:
+                                                                                                          enabled, with the
+                                                                                                          commitment shown before
+                                                                                                          the click (§4.7). (b)
+                                                                                                          Limit: one build per
+                                                                                                          factory per turn,
+                                                                                                          player and AI alike,
+                                                                                                          matching what §2.9
+                                                                                                          already describes for
+                                                                                                          the AI; a waiting build
+                                                                                                          holds that factory’s
+                                                                                                          slot until it spawns.
+                                                                                                          (c) Commitment: Fame is
+                                                                                                          committed at queue time
+                                                                                                          and is not refundable,
+                                                                                                          so fameTotal moves once
                                                                                                           and never reverses and
                                                                                                           no cancel affordance is
                                                                                                           owed by §2.11.
@@ -6791,26 +6807,36 @@ blocked until the Director answers.
                                                                                                           refusal condition
                                                                                                           depends on any of it.
 
-  Q31               Queuing a build at a boxed-in factory. §2.7 says a build that  §2.11.5’s Build-button §2.11.5 ships as
-                    cannot spawn waits, and Q8(c) prices that wait as a            rule; §2.7’s           written: Build is
-                    non-refundable commitment — but §2.11.5 disables the Build     waiting-build clause;  disabled while boxed
-                    buttons while a factory is boxed in, so the player can never   Q8(c)’s commitment,    in, so the waiting
-                    create the state the clause prices. Should the buttons be      which today binds only build is an AI-only
-                    enabled, with the commitment shown before the click, or is the on ordinary player     path (§2.9 builds
-                    waiting build correctly an AI-only path?                       builds                 without the UI) and for
-                                                                                                          the player queue time
-                                                                                                          and spawn time are the
-                                                                                                          same instant. No gate
-                                                                                                          asserts a player-queued
-                                                                                                          waiting build.
-                                                                                                          Registered rather than
-                                                                                                          assumed because Q8(c)
-                                                                                                          ruled on a state the UI
-                                                                                                          makes unreachable — the
-                                                                                                          ruling stands, its
-                                                                                                          player-facing half is
-                                                                                                          simply not exercised
-                                                                                                          yet.
+  Q31               ~~Queuing a build at a boxed-in factory.~~ RULED (this         §2.11.5’s Build-button Ruled: enabled. The
+                    revision). §2.7 says a build that cannot spawn waits, and      rule (amended this     player may queue a
+                    Q8(c) prices that wait as a non-refundable commitment; §2.11.5 revision by the UX     build at a boxed-in
+                    disabled the Build buttons while boxed in, so the player could author to stay enabled factory, with the Fame
+                    not create the state the clause prices. Should the buttons be  while boxed in — cited commitment this clause
+                    enabled, with the commitment shown before the click, or is the here as ruled, its     prices — committed at
+                    waiting build correctly an AI-only path?                       widget text not        queue time, not
+                                                                                   restated); §2.7’s      refundable (Q8(c),
+                                                                                   waiting-build clause;  §4.7) — shown before
+                                                                                   Q8(c)’s commitment,    the click, same as any
+                                                                                   which now binds on a   other build. §2.7’s
+                                                                                   player-queued build    build-and-spawn bullet
+                                                                                   the same as any other  is corrected to match:
+                                                                                                          the player-cannot-reach
+                                                                                                          clause is retracted,
+                                                                                                          and the waiting build
+                                                                                                          is no longer stated as
+                                                                                                          an AI-only path. This
+                                                                                                          ruling changes what the
+                                                                                                          GDD claims about the
+                                                                                                          Build button, not the
+                                                                                                          test suite: no gate
+                                                                                                          today asserts or
+                                                                                                          exercises a
+                                                                                                          player-queued waiting
+                                                                                                          build, and none is
+                                                                                                          written this revision —
+                                                                                                          the ruling mints no
+                                                                                                          acceptance ID and moves
+                                                                                                          no §4.5 count.
 
   Q32               Three §2.13.1 validation checks that no T-SCN- ID asserts.     Nothing today: no      The invariants ship as
                     §2.13.1’s validation-invariants bullet names every             T-SCN- ID gates the    written. Row 7
