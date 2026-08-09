@@ -4074,34 +4074,45 @@ accepted=True, and row 10’s part (b) is 36/36 there, including seven
 GATE-REPLAY-FIXTURE clauses. GATE-BRIDGE-DEFS mints no acceptance ID, on
 the GATE-DATA-VENDOR, GATE-AI-SMOKE and GATE-CAP-PARTIAL precedent.
 T-INT-02, T-INT-03 and T-SAVE-06 ran and passed, and none of them
-closes. The parity fixture they run over carries Move, Attack and
-EndTurn and carries no Capture and no Build; §4.11 states that
+closes. The parity fixture they ran over at 0897cb5 carried Move, Attack
+and EndTurn and no Capture and no Build; §4.11 states that
 T-INT-02/03/05 re-open on the Capture/Build/EndTurn rows 4–5 added and
 close on rows 1–5, and Q29 reports a partial pass as a run and never as
-a closure. What their closure waits on is a parity fixture carrying the
-complete §4.9 command set, and the two commands this fixture lacks are
-absent for different reasons. Capture cannot be produced at all:
+a closure. Among what their closure waits on is a further editor pass,
+and none has run since 0897cb5. The committed fixture carries the
+complete §4.9 command set at c2f5860 and is vendored at that commit into
+the UE project at 4ceaf93; the two commands it had lacked were absent
+for different reasons. Capture cannot be produced by the AI at all:
 AiCommandKind is {Build, Move, Attack, EndTurn} and has no Capture
-member, so nothing reading that enum can emit one. Build can be
-produced, and this fixture’s harness never asks for it: the harness
-builds its AiState without assigning buildlist, and chooseBuild iterates
-that list and returns -1 when it is empty, before Fame is consulted;
-Balance’s equivalent view does assign a buildlist. Fame sufficiency is
-not what stops it — startingFame is 200 a side, Infantry’s CostFame is
-100, side 0 owns the Factory hex at column 1 row 4 with IsSpawnPoint
-true, and queueBuild refuses only when fameTotal is below the cost. No
-acceptance ID was written here and none closed, so §4.5’s written, green
-and unclosed figures do not move at this landing — 71, 62 and 9 — row
-9’s unclosed count stays 3 and row 10’s stays 1. No ledger row is
-created, flipped or removed by this landing. The suite was proven able
-to FAIL on three known-bad inputs, each restored afterwards. The parity
-fixture’s stateHash altered with the manifest untouched: T-INT-02 FAIL
-and GATE-DATA-VENDOR FAIL. The same forgery with the manifest updated to
-match: GATE-DATA-VENDOR passes and T-INT-02 FAILS alone, which is what
-shows that ID asserting on its own rather than riding the vendor gate’s
-sha256. units.csv row order reversed with the manifest updated:
-GATE-BRIDGE-DEFS FAIL. The same discipline was applied on the crew side
-before the fixture existed: with the parity fixture absent
+member, so nothing reading that enum can emit one, and it gained none at
+c2f5860 — Ai.h keeps capture completion a turn-boundary event owned by
+row 4. The fixture carries the kind because appendAiTurn appends one
+Capture per side at the close of that side’s turn, outside the AI’s
+choice: openTurn already ticks capture on an objective the side held, so
+what the appended command catches is an objective the side moved onto
+during the turn just played. §4.10’s required unit field on Capture is
+written as the side’s lowest unit id with canCapture, and applyCommand
+never reads it. Build can be produced, and the harness that emitted the
+fixture replayed at 0897cb5 never asked for it: aiViewOf built its
+AiState without assigning buildlist, and chooseBuild iterates that list
+and returns -1 when it is empty, before Fame is consulted; Balance’s
+equivalent view does assign a buildlist. Fame sufficiency was not what
+stopped it — startingFame is 200 a side, Infantry’s CostFame is 100,
+side 0 owns the Factory hex at column 1 row 4 with IsSpawnPoint true,
+and queueBuild refuses only when fameTotal is below the cost. At c2f5860
+aiViewOf supplies Infantry, looked up by Id, and the fixture carries
+Build. No acceptance ID was written here and none closed, so §4.5’s
+written, green and unclosed figures do not move at this landing — 71, 62
+and 9 — row 9’s unclosed count stays 3 and row 10’s stays 1. No ledger
+row is created, flipped or removed by this landing. The suite was proven
+able to FAIL on three known-bad inputs, each restored afterwards. The
+parity fixture’s stateHash altered with the manifest untouched: T-INT-02
+FAIL and GATE-DATA-VENDOR FAIL. The same forgery with the manifest
+updated to match: GATE-DATA-VENDOR passes and T-INT-02 FAILS alone,
+which is what shows that ID asserting on its own rather than riding the
+vendor gate’s sha256. units.csv row order reversed with the manifest
+updated: GATE-BRIDGE-DEFS FAIL. The same discipline was applied on the
+crew side before the fixture existed: with the parity fixture absent
 GATE-REPLAY-FIXTURE blocks on clauses (b)(c)(e)(f)(g) while (a) and (d)
 pass, and against the bundled buggy replayer it blocks on (f) and (g)
 while (a)–(e) pass. The third input recorded something not previously
@@ -4524,13 +4535,17 @@ the game” claim holds.
                                       surface landed there, and the
                                       editor pass all three also lacked
                                       had landed at fed8ae9 in the same
-                                      repo (§3). What their closure waits
-                                      on is a parity fixture carrying the
-                                      complete §4.9 command set, which
-                                      rows 4–5 supply and the fixture run
-                                      there does not carry (§3). T-INT-05
-                                      did not close here either, and what
-                                      it lacks is the real Stratocracy
+                                      repo (§3). Among what their closure
+                                      waits on is a further editor pass,
+                                      none having run since the one at
+                                      0897cb5: rows 4–5 supply Capture
+                                      and Build, the fixture that pass
+                                      replayed did not carry them, and
+                                      the committed fixture carries the
+                                      complete §4.9 command set at
+                                      c2f5860 (§3). T-INT-05 did not
+                                      close here either, and what it
+                                      lacks is the real Stratocracy
                                       widgets it asserts against,
                                       measured absent at a13626f (§4.9).
                                       T-UI-05 was scheduled here too
@@ -4798,15 +4813,15 @@ Stratocracy widgets T-INT-05, T-UI-03 and T-UI-04 assert against (§4.9).
   and T-INT-03 having run and passed  
   there at 0897cb5 in the Stratocracy 
   UE project repo against the crew    
-  half cb8e12b without closing, what  
-  their closure waits on being a      
-  parity fixture carrying the         
-  complete §4.9 command set, and      
-  T-INT-05 not having run and lacking 
-  those same widgets — its other two  
-  having closed and both now credited 
-  at 9289c1d, over the vendored tree  
-  at 0897cb5 — T-INT-01 because it    
+  half cb8e12b without closing, among 
+  what their closure waits on being a 
+  further editor pass, none having    
+  run since 0897cb5, and T-INT-05 not 
+  having run and lacking those same   
+  widgets — its other two having      
+  closed and both now credited at     
+  9289c1d, over the vendored tree at  
+  0897cb5 — T-INT-01 because it       
   asserts identity at rulesCommit,    
   which moved to cb8e12b, and         
   T-INT-04 because it compiles the    
@@ -4832,9 +4847,10 @@ Stratocracy widgets T-INT-05, T-UI-03 and T-UI-04 assert against (§4.9).
   cb8e12b without closing — it is     
   asserted jointly with T-INT-02,     
   whose replay runs in-engine, and    
-  what its closure waits on is a      
-  parity fixture carrying the         
-  complete §4.9 command set (§3)      
+  among what its closure waits on is  
+  a further editor pass replaying the 
+  widened fixture in-engine, none     
+  having run since 0897cb5 (§3)       
   -----------------------------------------------------------------------
 
 4.6 Token budget
@@ -7181,13 +7197,14 @@ commit the vendored bytes came from, and it advances when and only when
 those bytes change (ruled 2026-08-06). A crew commit that does not touch
 the data directory leaves it where it is, so a dataCommit behind the
 crew commit this document stands at is the expected state and not a
-stale one: it records b1ea992, and the three CSVs are byte-identical at
-that commit and at c2edae0 (§3). GATE-DATA-VENDOR reads dataCommit and
-logs it; what it asserts is the file hashes and not the commit’s
-currency, because the UE project cannot see the crew repo at test time —
-the same discipline that makes this document cite commits rather than
-heads everywhere else. A parity gate (T-DATA-05, the editor pass)
-iterates every imported row and asserts it equals the CSV
+stale one. The manifest recorded 862a225 at 0897cb5 and records c2f5860
+at 4ceaf93, which re-vendored the widened parity fixture; the three CSVs
+are byte-identical across those two vendorings. GATE-DATA-VENDOR reads
+dataCommit and logs it; what it asserts is the file hashes and not the
+commit’s currency, because the UE project cannot see the crew repo at
+test time — the same discipline that makes this document cite commits
+rather than heads everywhere else. A parity gate (T-DATA-05, the editor
+pass) iterates every imported row and asserts it equals the CSV
 field-for-field. Nothing is authored twice, so the headless sim and the
 engine can never disagree about a stat. Missing column or unparseable
 value = hard load failure, never a silent default. UStruct bool fields
@@ -7504,10 +7521,12 @@ Stratocracy widgets; and T-SAVE-06 is asserted jointly with T-INT-02.
 Save and Replay were vendored into Source/StratRules/ at 0897cb5 in the
 Stratocracy UE project repo against the crew half cb8e12b, where the
 command surface landed with them and T-INT-02, T-INT-03 and T-SAVE-06
-ran and passed in the editor pass without closing, their closure waiting
-on a parity fixture carrying the complete §4.9 command set (§3); the
-widgets the other three assert over are not built. T-DATA-05 is not one
-of them, having closed at fed8ae9 (§3); what it needed was imported
+ran and passed in the editor pass without closing, among what their
+closure waits on being a further editor pass, none having run since the
+one at 0897cb5; the committed parity fixture carries the complete §4.9
+command set at c2f5860, vendored into the UE project at 4ceaf93 (§3);
+the widgets the other three assert over are not built. T-DATA-05 is not
+one of them, having closed at fed8ae9 (§3); what it needed was imported
 DataTables and a UENUM mirror of the unit type, and those stay named
 here because the measurement that follows quantifies over every subject
 this passage names. None of those subjects exists at a13626f, measured
@@ -7891,9 +7910,12 @@ could not supply it.
                                        half cb8e12b without                       
                                        closing: the parity                        
                                        fixture replayed there                     
-                                       carries Move, Attack and                   
-                                       EndTurn and carries no                     
-                                       Capture and no Build (§3)                  
+                                       carried Move, Attack and                   
+                                       EndTurn and no Capture                     
+                                       and no Build, and the                      
+                                       committed fixture carries                  
+                                       the complete §4.9 command                  
+                                       set at c2f5860 (§3)                        
 
   10             Save & replay — §4.10 Three parts, three        Yes, all but     T-SAVE-01..07
                  (proposed ledger row) dependency sets. (a)      slot I/O         (T-SAVE-06 †) +
@@ -7988,12 +8010,14 @@ could not supply it.
                                        half cb8e12b, asserted                     
                                        jointly with T-INT-02,                     
                                        whose replay runs                          
-                                       in-engine. What its                        
+                                       in-engine. Among what its                  
                                        closure waits on is a                      
-                                       parity fixture carrying                    
-                                       the complete §4.9 command                  
-                                       set. The editor pass this                  
-                                       ID also lacked landed at                   
+                                       further editor pass                        
+                                       replaying the widened                      
+                                       fixture in-engine, none                    
+                                       having run since 0897cb5.                  
+                                       The editor pass this ID                    
+                                       also lacked landed at                      
                                        fed8ae9 in the same repo                   
                                        (§3). Both what the                        
                                        editor pass denotes and                    
