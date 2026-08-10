@@ -4086,13 +4086,25 @@ for different reasons. Capture cannot be produced by the AI at all:
 AiCommandKind is {Build, Move, Attack, EndTurn} and has no Capture
 member, so nothing reading that enum can emit one, and it gained none at
 c2f5860 — Ai.h keeps capture completion a turn-boundary event owned by
-row 4. The fixture carries the kind because appendAiTurn appends one
-Capture per side at the close of that side’s turn, outside the AI’s
-choice: openTurn already ticks capture on an objective the side held, so
-what the appended command catches is an objective the side moved onto
-during the turn just played. §4.10’s required unit field on Capture is
-written as the side’s lowest unit id with canCapture, and applyCommand
-never reads it. Build can be produced, and the harness that emitted the
+row 4. The fixture carries the kind because appendAiTurn, as at crew
+11ef8ce, appends a Capture at the close of a side’s turn, outside the
+AI’s choice: openTurn already ticks capture on an objective the side
+held, so what the appended command catches is an objective the side
+moved onto during the turn just played. That append is conditional
+rather than automatic — g.turn.running must be true at that close, among
+other conditions the emitter applies — so the cadence follows the turn
+loop and not the turn count. In the fixture committed at c2f5860 the
+append landed at every side-turn of turns 1 through 6, so the set of
+{turn, side} pairs carrying a Capture is identical to the set carrying
+an EndTurn: twelve pairs, each carrying a unit. Turn 7 carries neither
+kind for either side — the log’s final entry is
+{"turn": 7, "side": 0, "kind": "Attack"}, the save’s result reads
+Decisive, and that side-turn’s eleven commands fall short of the
+emitter’s 32-iteration bound; what follows from that record is that the
+match ended during that side-turn, so g.turn.running was false when the
+AI returned EndTurn. §4.10’s required unit field on Capture is written
+as the side’s lowest unit id with canCapture, and applyCommand never
+reads it. Build can be produced, and the harness that emitted the
 fixture replayed at 0897cb5 never asked for it: aiViewOf built its
 AiState without assigning buildlist, and chooseBuild iterates that list
 and returns -1 when it is empty, before Fame is consulted; Balance’s
@@ -4174,12 +4186,14 @@ crew commit the checks were run at is 9289c1d. Crew 9289c1d’s message
 names the unvendored module Selfplay at three places; the vendored-set
 declaration the identity check reads has named that module Balance since
 e19605e, which is earlier than 9289c1d, and the naming record above
-states why the other spelling is impossible. The tree was corrected at
-the crew tip; the message cannot be. Each of the two messages was
-written from a fact block the addendum round had not yet gated. Where a
-commit message and this ledger disagree, this ledger is the record.
-Legend: Author ∈ {agent, agent+human, human}; Agent-verified ∈ {✓, —};
-Evidence cites the git commit + passing test IDs so any row is
+states why the other spelling is impossible. The tree was corrected in
+the crew repo at 5072d10, subject line
+Name the unvendored module Balance, not Selfplay, which changed
+crew/tools.py alone. The message cannot be corrected. Each of the two
+messages was written from a fact block the addendum round had not yet
+gated. Where a commit message and this ledger disagree, this ledger is
+the record. Legend: Author ∈ {agent, agent+human, human}; Agent-verified
+∈ {✓, —}; Evidence cites the git commit + passing test IDs so any row is
 independently checkable.
 
   -------------------------------------------------------------------------------------------------------
