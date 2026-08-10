@@ -4137,12 +4137,34 @@ over. Sentences of the form “they do not run here” are true of every
 headless suite in that repo and were kept. That same commit introduced
 false claims of its own: fourteen clauses across ten files — two runner
 modules, three test and harness sources, the README and four spec
-documents — assert that T-SAVE-06 and T-INT-02 closed in the editor pass
-at 0897cb5. They ran and passed and did not close, so all fourteen are
-false. In almost every case such a clause sits beside a true negative —
-that no headless build can close T-SAVE-06, that it is marked † and
-asserted jointly with T-INT-02 — and the true negative stands. Two
-commit messages carry claims measurement contradicts, and neither can be
+documents — asserted that T-SAVE-06 and T-INT-02 closed in the editor
+pass at 0897cb5. They ran and passed and did not close, so all fourteen
+are false. In almost every case such a clause sat beside a true negative
+— that no headless build can close T-SAVE-06, that it is marked † and
+asserted jointly with T-INT-02. All fourteen were deleted at b5f524d,
+across those same ten files — three in crew/tools.py, two each in
+cpp_reference/test_replay.cpp and spec/integration_spec.md, one in each
+of the remaining seven — in a 10-file, +26 / −31 diff that removed
+clause text and no file, and every adjacent true negative was kept as
+written there. Deleting a sentence does not make what it said true:
+T-SAVE-06 and T-INT-02 still ran and did not close at 0897cb5, so all
+fourteen remain false, and what ended at b5f524d is their presence in
+the crew repo and nothing else. Three sites had also asserted that the
+two IDs were not open — false because T-SAVE-06 and T-INT-02 ran and
+passed at 0897cb5 without closing, so both remain open — and those
+assertions were deleted with the closure clause:
+cpp_reference/test_balance.cpp, cpp_reference/test_replay.cpp in main(),
+and cpp_reference/test_save.cpp. Two sites carried a true description of
+what the bridge does with data/parity_fixture.save, and that description
+was kept and re-pinned to the bridge landing at UE 0897cb5 rather than
+to a closure — cpp_reference/test_replay.cpp’s main() and
+crew/tools.py’s certify_week1_fn. §4.5’s written, green and unclosed
+figures do not move at b5f524d — 71, 62 and 9, row 9’s unclosed count
+staying 3 and row 10’s 1 — because none of the ten files it touched is a
+vendored module source and none is in the Stratocracy UE project repo at
+all, so no acceptance ID’s subject changed. b5f524d records a deletion
+and not a gate run, and no gate figure is cited for it. Two commit
+messages carry claims measurement contradicts, and neither can be
 amended. UE 0897cb5’s message states that T-INT-01 and T-INT-04 do not
 re-date and cites crew cb8e12b as the commit both are green at; both
 halves are false. Both re-date, on the file-count and rulesCommit
@@ -7188,31 +7210,60 @@ recording each file’s sha256 and the crew commit it came from, and the
 editor imports the vendored copy into a UDataTable whose row struct
 derives FTableRowBase. That copy is made by sync_stratdata.py, the CSV
 counterpart of the script that vendors the C++ sources; vendored covers
-both, and the two mechanisms are distinguished once at §4.9.
-GATE-DATA-VENDOR asserts that the vendored bytes are the recorded ones,
-so the two readers are reading one authored file rather than two that
-resemble each other; it mints no acceptance ID, on the GATE-AI-SMOKE and
-GATE-SAVE-PARSE precedent (§3). The manifest’s dataCommit names the
-commit the vendored bytes came from, and it advances when and only when
-those bytes change (ruled 2026-08-06). A crew commit that does not touch
-the data directory leaves it where it is, so a dataCommit behind the
-crew commit this document stands at is the expected state and not a
-stale one. The manifest recorded 862a225 at 0897cb5 and records c2f5860
-at 4ceaf93, which re-vendored the widened parity fixture; the three CSVs
-are byte-identical across those two vendorings. GATE-DATA-VENDOR reads
-dataCommit and logs it; what it asserts is the file hashes and not the
-commit’s currency, because the UE project cannot see the crew repo at
-test time — the same discipline that makes this document cite commits
-rather than heads everywhere else. A parity gate (T-DATA-05, the editor
-pass) iterates every imported row and asserts it equals the CSV
-field-for-field. Nothing is authored twice, so the headless sim and the
-engine can never disagree about a stat. Missing column or unparseable
-value = hard load failure, never a silent default. UStruct bool fields
-carry no b prefix, and that is an engine constraint rather than a style
-choice (ruled 2026-08-06): DataTableUtils::GetPropertyImportNames
-accepts only GetName() and GetAuthoredName(), there is no metadata
-bridge, and meta=(DisplayName=...) was tried and failed identically, so
-a bCanCapture field cannot be fed by a CanCapture column. The CSV column
+both, and the two mechanisms are distinguished once at §4.9. On the data
+path the vendored bytes are five files in three kinds, and the extent
+matters because the ruling below quantifies over them: the three tables
+this section schematises — units.csv, terrain.csv, effectiveness.csv —
+the shipped scenario file ferrum_crossing.json (§4.7 Stub 7), and the
+committed parity fixture parity_fixture.save (§4.10).
+Data/StratData.manifest.json at 4ceaf93 records a sha256 for each of
+those five names and no others. Only the three tables are §4.8 tables.
+The other two travel this path because both sides must read the same
+bytes: §4.9 part 2’s bridge loads the shipped scenario through
+strat::loadScenario, and T-INT-02 requires the headless and in-engine
+replays to seed GameState from those bytes rather than from two copies;
+the fixture the editor pass replays would compare the engine against
+itself if it were re-emitted engine-side. Neither is imported into any
+UDataTable, and T-DATA-05 asserts over the tables alone — being carried
+makes neither a table. Both joined on 2026-08-07, the fixture at 5c47cc1
+(§3). What is stated here is the extent of the data-side payload and not
+the meaning of vendored, which §4.9 states once for both mechanisms.
+GATE-DATA-VENDOR asserts that the vendored bytes are the recorded ones —
+all five files, all three kinds — so the two readers are reading one
+authored file rather than two that resemble each other; the manifest
+itself is not one of those five, and it is verified by recomputation
+rather than by hash-match for a stated reason: it records dataCommit, so
+it cannot be stored at that commit — the same discipline
+StratRules.manifest.json is under (§4.9). GATE-DATA-VENDOR mints no
+acceptance ID, on the GATE-AI-SMOKE and GATE-SAVE-PARSE precedent (§3).
+The manifest’s dataCommit names the commit the vendored bytes came from,
+and it advances when and only when those bytes change (ruled
+2026-08-06). A crew commit that does not touch the data directory leaves
+it where it is, so a dataCommit behind the crew commit this document
+stands at is the expected state and not a stale one. The manifest
+recorded 862a225 at 0897cb5 and records c2f5860 at 4ceaf93, which
+re-vendored the widened parity fixture; the three CSVs are
+byte-identical across those two vendorings, and that is the rule working
+rather than an exception to it. Exactly one data-touching crew commit
+falls between those two vendorings — c2f5860 — and it changed exactly
+one file, data/parity_fixture.save. A vendored file changed, so
+dataCommit advanced; had none changed, it would have stayed where it
+was. Read against the three tables alone the same advance would be a
+counterexample, which is why the extent is stated above rather than left
+to the reader. GATE-DATA-VENDOR reads dataCommit and logs it; what it
+asserts is the file hashes and not the commit’s currency, because the UE
+project cannot see the crew repo at test time — the same discipline that
+makes this document cite commits rather than heads everywhere else. A
+parity gate (T-DATA-05, the editor pass) iterates every imported row and
+asserts it equals the CSV field-for-field. Nothing is authored twice, so
+the headless sim and the engine can never disagree about a stat. Missing
+column or unparseable value = hard load failure, never a silent default.
+UStruct bool fields carry no b prefix, and that is an engine constraint
+rather than a style choice (ruled 2026-08-06):
+DataTableUtils::GetPropertyImportNames accepts only GetName() and
+GetAuthoredName(), there is no metadata bridge, and
+meta=(DisplayName=...) was tried and failed identically, so a
+bCanCapture field cannot be fed by a CanCapture column. The CSV column
 names and the headless field names are unchanged by that, so the
 transformation between the two sides stays empty.
 
@@ -7360,13 +7411,15 @@ this is the single statement of both (ruled 2026-08-06). Vendored means
 the same thing in each: bytes copied out of a named commit’s object
 store into the UE project, and gated for identity. What differs is which
 bytes, by which script, under which gate — the crew’s C++ sources into
-Source/StratRules/ by sync_stratrules.py under T-INT-01, and the §4.8
-CSVs into the UE project’s data directory by sync_stratdata.py under
+Source/StratRules/ by sync_stratrules.py under T-INT-01, and the data
+payload whose extent §4.8 states — five files in three kinds: the three
+§4.8 CSVs, the shipped scenario file and the committed parity fixture —
+into the UE project’s data directory by sync_stratdata.py under
 GATE-DATA-VENDOR. The sentence above is about the first, and its
 quantifier is scoped by its own stated reason: a UBT module cannot hold
-a second main(), which is a constraint on C++ sources, so the CSVs sit
-outside it by construction rather than by exception. The word is not
-split, and the reason is that the artifact does not split it:
+a second main(), which is a constraint on C++ sources, so all three data
+kinds sit outside it by construction rather than by exception. The word
+is not split, and the reason is that the artifact does not split it:
 sync_stratdata.py, its manifest note and its crew commit message all say
 vendor, so a rename confined to this document would diverge the document
 from the thing it describes. The set is declared, not inferred (ruled
