@@ -96,9 +96,26 @@ Bible" and the section matcher latched onto it — imprecise grounding. Renaming
 "Setting and Voice Guide" made retrieval return only the `## Tone bible` section, so each
 generation now gets the tight, relevant context instead of the whole document.
 
+## Rebuilding the GDD's derived files
+
+`Stratocracy_Prototype_GDD.md` is the source. The `.txt` and `.pdf` beside it are
+derived, and **all three are expected to move together** — after any merge into
+the `.md`, run:
+
+```
+python build_docs.py          # both;  --txt / --pdf for one;  --check to locate the tools
+```
+
+The route is pandoc → standalone HTML → wkhtmltopdf, and `.txt` via `pandoc -t
+plain` — the same one every prior revision was built with. Neither tool is
+necessarily on `PATH`, so the script searches the known install locations and, on
+failure, prints every place it looked. A non-zero exit means a build failed, and
+no output file is replaced unless its own build succeeded.
+
 ## Layout
 
 ```
+build_docs.py        rebuilds Stratocracy_Prototype_GDD.txt and .pdf from the .md
 kb/rules.md          ground truth (RAG source + critic reference)
 kb/setting.md        tone bible + two factions
 pipeline/rules.py    parses rules.md into structured data
